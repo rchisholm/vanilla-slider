@@ -6,8 +6,7 @@
   "scripts": {
     "compile:js": "babel ./src -d ./dist",
     "minify:js": "node-minify --compressor uglify-js --input ./dist/russunit-slider.js --output ./dist/russunit-slider.min.js",
-    "compile:css": "sass ./src/russunit-slider.scss ./dist/russunit-slider.css",
-    "build": "npm run compile:css & npm run compile:js && npm run minify:js"
+    "build": "npm run compile:js && npm run minify:js"
   },
   "repository": {
     "type": "git",

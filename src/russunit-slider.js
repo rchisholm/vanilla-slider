@@ -33,6 +33,12 @@ class Slider {
             image.id = this.containerId + "-slide-" + index;
             image.src = imageURL;
             image.classList.add('russunit-slider-image');
+            image.style.margin = 'auto';
+            image.style.maxWidth = '100%;';
+            image.style.position = 'absolute';
+            image.style.top = 0;
+            image.style.left = 0;
+
             if(index > 0) {
                 image.style.visibility = 'hidden';
                 image.style.zIndex = 0;
@@ -43,6 +49,10 @@ class Slider {
             this.images[index] = image;
         });
         this.container.classList.add('russunit-slider-container');
+        this.container.style.marginLeft = 'auto';
+        this.container.style.marginRight = 'auto';
+        this.container.style.maxWidth = '100%';
+        this.container.style.display = 'block';
 
         /* initially set dynamic container size*/
         this.container.style.width = this.images[0].clientWidth;
