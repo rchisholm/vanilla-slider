@@ -53,6 +53,7 @@ class Slider {
         this.container.style.marginRight = 'auto';
         this.container.style.maxWidth = '100%';
         this.container.style.display = 'block';
+        // this.container.style.position = 'relative'; // not sure if this is necessary
 
         /* initially set dynamic container size*/
         this.container.style.width = this.images[0].clientWidth;
