@@ -1,0 +1,29 @@
+{
+  "name": "russunit-slider",
+  "version": "1.0.0",
+  "description": "lightweight vanilla js carousel",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel ./src -d ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/russunit/slider.git"
+  },
+  "keywords": [
+    "slider",
+    "carousel",
+    "javascript"
+  ],
+  "author": "Russell Chisholm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/russunit/slider/issues"
+  },
+  "homepage": "https://github.com/russunit/slider#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7"
+  }
+}
