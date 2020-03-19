@@ -4,7 +4,8 @@
   "description": "lightweight vanilla js carousel",
   "main": "index.js",
   "scripts": {
-    "build": "babel ./src -d ./dist"
+    "build": "babel ./src -d ./dist && node-minify --compressor uglify-js --input ./dist/russunit-slider.js --output ./dist/russunit-slider.min.js"
+    
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,8 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.8.7"
+    "@babel/preset-env": "^7.8.7",
+    "@node-minify/cli": "^5.3.0",
+    "@node-minify/uglify-js": "^5.3.0"
   }
 }
