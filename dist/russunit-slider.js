@@ -32,7 +32,7 @@ var Slider = function Slider(options) {
     image = document.createElement('IMG');
     image.id = _this.containerId + "-slide-" + index;
     image.src = imageURL;
-    image.classList.add('mhc-slider-image');
+    image.classList.add('russunit-slider-image');
 
     if (index > 0) {
       image.style.visibility = 'hidden';
@@ -42,7 +42,7 @@ var Slider = function Slider(options) {
 
     _this.images[index] = image;
   });
-  this.container.classList.add('mhc-slider-container');
+  this.container.classList.add('russunit-slider-container');
   this.container.style.width = this.images[0].clientWidth;
   this.container.style.height = this.images[0].clientHeight;
   this.container.setAttribute('current-index', this.currentIndex);
