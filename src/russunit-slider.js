@@ -5,11 +5,19 @@
  */
 class Slider {
     constructor(options) {
-        this.containerId = options.containerId;
-        this.imageURLs = options.imageURLs;
-        this.currentIndex = 0;
-        this.sliderLock = false;
-        this.images = [];
+        
+        this.transitionStyles = ['overlay']; // available transition styles
+        this.containerId = options.containerId; // id of container div
+        this.imageURLs = options.imageURLs; // array or URLs of images
+        this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
+        this.transitionTime = options.transitionTime; // time for transition to take place
+        this.currentIndex = 0; // index of currently shown image 
+        this.sliderLock = false; // slider is locked and can't transition
+        this.images = []; // image elements
+
+        // adjusting values
+        this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : false;
+        this.transitionTime = this.transitionTime ? this.transitionTime : 250;
         
         if(!Array.isArray(this.imageURLs)) {
             throw("Slider error: imageURLs must be an array of strings");
@@ -27,19 +35,30 @@ class Slider {
             image.classList.add('russunit-slider-image');
             if(index > 0) {
                 image.style.visibility = 'hidden';
+                image.style.zIndex = 0;
+            } else {
+                image.style.zIndex = 2;
             }
             this.container.appendChild(image);
             this.images[index] = image;
         });
         this.container.classList.add('russunit-slider-container');
+
+        /* initially set dynamic container size*/
         this.container.style.width = this.images[0].clientWidth;
         this.container.style.height = this.images[0].clientHeight;
-        
-        this.container.setAttribute('current-index', this.currentIndex);
-        this.container.setAttribute('num-slides', this.images.length);
-        this.container.setAttribute('slider-lock', false);
 
-        // functions
+        /* alternative to above 2 lines if container loads with width/height 0 */
+        // var count = 0;
+        // do {
+        //     console.log('asjusting container size...');
+        //     this.containerWidth = this.images[0].clientWidth;
+        //     this.containerHeight = this.images[0].clientHeight;
+        //     count++;
+        // } while (this.containerWidth < 1 && count < 500);
+        // this.container.style.width = this.containerWidth;
+        // this.container.style.height = this.containerHeight;
+
 
         /**
          * resize container, called on resizing browser window. only shrinks
@@ -67,18 +86,7 @@ class Slider {
          * go to the next slide, then execute the callback
          */
         this.nextSlide = (callback = null) => {
-            if(!this.sliderLock) {
-                this.sliderLock = true;
-                console.log("this.currentIndex: " + this.currentIndex);
-                slideFadeReplace(this.images[this.currentIndex], this.images[this.getNextIndex()], () => {
-                    console.log("this.currentIndex: " + this.currentIndex);
-                    this.currentIndex = (this.currentIndex + 1) % this.images.length;
-                    this.sliderLock = false;
-                    if(typeof callback === 'function') {
-                        callback();
-                    }
-                }, { toggleVisibility: true });
-            }
+            this.goToSlide(this.getNextIndex(), callback);
         };
 
 
@@ -86,44 +94,53 @@ class Slider {
          * go to the previous slide, then execute the callback
          */
         this.prevSlide = (callback = null) => {
-            if(!this.sliderLock) {
-                this.sliderLock = true;
-                slideFadeReplace(this.images[this.currentIndex], this.images[this.getPrevIndex()], () => {
-                    this.currentIndex = this.getPrevIndex();
-                    this.sliderLock = false;
-                    if(typeof callback === 'function') {
-                        callback();
-                    }
-                }, { toggleVisibility: true });
-            }
+            this.goToSlide(this.getPrevIndex(), callback);
         };
 
 
         /**
          * go to the slide at index (if possible), then execute the callback
          */
-        this. goToSlide = (index, callback = null) => {
-            if(typeof index !== 'number' || index < 0 || index + 1 > this.images.length) {
-                console.log('Slider error: invalid index in goToSlide: ' + index);
+        this.goToSlide = (newIndex, callback = null) => {
+            if(typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.images.length) {
+                console.log('Slider error: invalid index in goToSlide: ' + newIndex);
                 if(typeof callback === 'function') {
                     callback();
                 }
-            }
-            if(index === this.currentIndex) {
-                console.log('Slider error: current index in goToSlide: ' + index);
+            } else if(newIndex === this.currentIndex) {
+                console.log('Slider error: current index in goToSlide: ' + newIndex);
                 if(typeof callback === 'function') {
                     callback();
                 }
-            }
-            if(!this.sliderLock) {
-                this.sliderLock = true;
-                slideFadeReplace(this.images[this.currentIndex], this.images[index], () => {
-                    this.currentIndex = index;
+            } else if(!this.sliderLock) {
+                var finishSlide = () => {
+                    this.currentIndex = newIndex;
                     this.sliderLock = false;
                     if(typeof callback === 'function') {
                         callback();
                     }
-                }, { toggleVisibility: true });
+                };
+                this.sliderLock = true;
+                if(!this.transitionStyle) {
+                    slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], finishSlide, { 
+                        toggleVisibility: true, 
+                        fadeTime: (this.transitionTime / 2)
+                    });
+                } else if (this.transitionStyle === 'overlay') {
+                    this.images[newIndex].style.zIndex = 1;
+                    this.images[newIndex].style.opacity = 1;
+                    this.images[newIndex].style.visibility = 'visible';
+                    slideFadeOut(this.images[this.currentIndex], () => {
+                        this.images[this.currentIndex].style.zIndex = 0;
+                        this.images[newIndex].style.zIndex = 2;
+                        finishSlide();
+                    }, { 
+                        toggleVisibility: true, 
+                        fadeTime: this.transitionTime 
+                    });
+                }
+            } else {
+                console.log('Slider error: slider is locked.');
             }
         };
         window.addEventListener('resize', this.resizeContainer);
@@ -142,21 +159,24 @@ class Slider {
  * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
  */
 function slideFadeReplace(fadeOutTarget, fadeInTarget, callback = function () {}, options = []) {
+    
+    // static values
+    const defaultWaitTime = 2000;
+    const defaultFadeTime = 250;
 
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
     options.display = options.display ? options.display : false;
-    options.fadeTime = options.fadeTime ? options.fadeTime : 250;
+    options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
 
     if (options.waitTime) {
-        options.waitTime = options.waitTime === true ? 2000 : options.waitTime;
+        options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
         setTimeout(function () {
             options.waitTime = false;
             slideFadeReplace(fadeOutTarget, fadeInTarget, callback, options);
         }, options.waitTime);
     } else {
-        debugConsoleLog('slideFadeReplace');
         slideFadeOut(fadeOutTarget, function () {
             slideFadeIn(fadeInTarget, callback, options);
         }, options);
@@ -173,7 +193,6 @@ function slideFadeReplace(fadeOutTarget, fadeInTarget, callback = function () {}
  * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
  */
 function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
-    debugConsoleLog('slideFadeOut');
 
     // check cb
     if(typeof callback !== 'function') {
@@ -185,9 +204,14 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
         fadeOutTarget = document.getElementById(fadeOutTarget);
     }
 
+    // static values
+    const defaultWaitTime = 2000;
+    const defaultFadeTime = 250;
+    const opacityIntervalDividend = 25;
+
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
-    options.fadeTime = options.fadeTime ? options.fadeTime : 250;
+    options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
 
     var isVisible = options.toggleVisibility ? function(element) { return element.style.visibility !== "hidden"; } : function(element) {return element.style.display !== "none";};
@@ -196,15 +220,16 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     if(fadeOutTarget) {
         if (isVisible(fadeOutTarget)) {
             if (options.waitTime) {
-                options.waitTime = options.waitTime === true ? 2000 : options.waitTime;
+                options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
+                options.waitTime = typeof options.waitTime === 'number' ? options.waitTime : defaultWaitTime;
                 setTimeout(function () {
                     options.waitTime = false;
                     slideFadeOut(fadeOutTarget, callback, options);
                 }, options.waitTime);
             } else {
                 if (fadeOutTarget) {
-                    options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : 250;
-                    var opacityInterval = 25 / options.fadeTime;
+                    options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
+                    var opacityInterval = opacityIntervalDividend / options.fadeTime;
                     fadeOutTarget.style.opacity = 1;
                     var fadeOutEffect = setInterval(function () {
                         if (fadeOutTarget.style.opacity > 0) {
@@ -222,7 +247,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
             // setTimeout(callback, options.fadeTime);
         }
     } else {
-        debugConsoleError('fadeOut error: no such element exists.');
+        console.log('fadeOut error: no such element exists.');
     }
 }
 
@@ -237,7 +262,6 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
  * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
  */
 function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
-    debugConsoleLog('slideFadeIn');
 
     // check cb
     if(typeof callback !== 'function') {
@@ -249,10 +273,15 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
         fadeInTarget = document.getElementById(fadeInTarget);
     }
 
+    // static values
+    const defaultWaitTime = 2000;
+    const defaultFadeTime = 250;
+    const opacityIntervalDividend = 25;
+
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
     options.display = options.display ? options.display : false;
-    options.fadeTime = options.fadeTime ? options.fadeTime : 250;
+    options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
 
     // option values
@@ -260,19 +289,20 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
     options.display = options.display === true ? 'flex' : options.display;
     var isVisible = options.toggleVisibility ? function(element) { return element.style.visibility !== "hidden"; } : function(element) {return element.style.display !== "none";};
     var makeVisible = options.toggleVisibility ? function(element) { element.style.visibility = "visible"; } : function(element) { element.style.display = options.display; };
-    options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : 250;
+    options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
 
     if(fadeInTarget) {
         if (!isVisible(fadeInTarget)) {
             if (options.waitTime) {
-                options.waitTime = options.waitTime === true ? 2000 : options.waitTime;
+                options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
+                options.waitTime = typeof options.waitTime === 'number' ? options.waitTime : defaultWaitTime;
                 setTimeout(function () {
                     options.waitTime = false;
                     slideFadeIn(fadeInTarget, callback, options);
                 }, options.waitTime);
             } else {
                 if (fadeInTarget) {
-                    var opacityInterval = 25 / options.fadeTime;
+                    var opacityInterval = opacityIntervalDividend / options.fadeTime;
                     fadeInTarget.style.opacity = 0;
                     makeVisible(fadeInTarget);
                     var fadeInEffect = setInterval(function () {
@@ -290,6 +320,6 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
             // setTimeout(callback, options.fadeTime);
         }
     } else {
-        debugConsoleError('fadeIn error: no such element exists: ');
+        console.log('fadeIn error: no such element exists: ');
     }
 }
