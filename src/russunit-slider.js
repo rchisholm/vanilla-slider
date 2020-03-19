@@ -34,7 +34,7 @@ class Slider {
             image.src = imageURL;
             image.classList.add('russunit-slider-image');
             image.style.margin = 'auto';
-            image.style.maxWidth = '100%;';
+            image.style.maxWidth = '100%';
             image.style.position = 'absolute';
             image.style.top = 0;
             image.style.left = 0;
