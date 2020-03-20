@@ -112,7 +112,7 @@ class Slider {
             var bulletContainer = document.createElement('DIV');
             bulletContainer.id = this.containerId + '-bullet-container';
             bulletContainer.classList.add('russunit-slider-bullet-container');
-            bulletContainer.style.zIndex = 4;
+            bulletContainer.style.zIndex = 5;
             bulletContainer.style.position = 'relative';
             bulletContainer.style.margin = 'auto auto 0';
             bulletContainer.style.textAlign = 'center';
@@ -124,7 +124,7 @@ class Slider {
                 bullet.id = this.containerId + '-bullet-' + index;
                 bullet.classList.add('russunit-slider-bullet');
                 bullet.style.color = '#fff';
-                bullet.style.zIndex = 4;
+                bullet.style.zIndex = 5;
                 bullet.style.fontSize = '2em';
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
@@ -134,6 +134,20 @@ class Slider {
                 }
                 bulletContainer.appendChild(bullet);
             });
+            // hide bullets
+            if(this.bulletsHide) {
+                bulletContainer.style.visibility = 'hidden';
+                bulletContainer.style.opacity = 0;
+                bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+                this.container.addEventListener('mouseenter', () => {
+                    bulletContainer.style.visibility = 'visible';
+                    bulletContainer.style.opacity = 1;
+                });
+                this.container.addEventListener('mouseleave', () => {
+                    bulletContainer.style.visibility = 'hidden';
+                    bulletContainer.style.opacity = 0;
+                });
+            }
         }
         if(this.arrows) {
             // create arrow container
@@ -294,7 +308,6 @@ class Slider {
 
         if(this.bullets) {
             this.images.forEach((element, index) => {
-                bullet.id = this.containerId + '-bullet-' + index;
                 document.getElementById(this.containerId + '-bullet-' + index).addEventListener('click', () => {
                     this.goToSlide(index);
                 });

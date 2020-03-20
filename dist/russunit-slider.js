@@ -138,7 +138,7 @@ function Slider(options) {
     var bulletContainer = document.createElement('DIV');
     bulletContainer.id = this.containerId + '-bullet-container';
     bulletContainer.classList.add('russunit-slider-bullet-container');
-    bulletContainer.style.zIndex = 4;
+    bulletContainer.style.zIndex = 5;
     bulletContainer.style.position = 'relative';
     bulletContainer.style.margin = 'auto auto 0';
     bulletContainer.style.textAlign = 'center';
@@ -150,7 +150,7 @@ function Slider(options) {
       bullet.id = _this.containerId + '-bullet-' + index;
       bullet.classList.add('russunit-slider-bullet');
       bullet.style.color = '#fff';
-      bullet.style.zIndex = 4;
+      bullet.style.zIndex = 5;
       bullet.style.fontSize = '2em';
       bullet.style.margin = '0 5px';
       bullet.style.cursor = 'pointer';
@@ -161,7 +161,21 @@ function Slider(options) {
       }
 
       bulletContainer.appendChild(bullet);
-    });
+    }); // hide bullets
+
+    if (this.bulletsHide) {
+      bulletContainer.style.visibility = 'hidden';
+      bulletContainer.style.opacity = 0;
+      bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+      this.container.addEventListener('mouseenter', function () {
+        bulletContainer.style.visibility = 'visible';
+        bulletContainer.style.opacity = 1;
+      });
+      this.container.addEventListener('mouseleave', function () {
+        bulletContainer.style.visibility = 'hidden';
+        bulletContainer.style.opacity = 0;
+      });
+    }
   }
 
   if (this.arrows) {
@@ -336,7 +350,6 @@ function Slider(options) {
 
   if (this.bullets) {
     this.images.forEach(function (element, index) {
-      bullet.id = _this.containerId + '-bullet-' + index;
       document.getElementById(_this.containerId + '-bullet-' + index).addEventListener('click', function () {
         _this.goToSlide(index);
       });
