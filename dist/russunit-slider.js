@@ -43,6 +43,8 @@ function Slider(options) {
 
   this.transitionZoom = options.transitionZoom; // 
 
+  this.bullets = options.bullets; //
+
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -53,6 +55,7 @@ function Slider(options) {
   this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
+  this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
 
   if (!Array.isArray(this.imageURLs)) {
     throw "Slider error: imageURLs must be an array of strings";
@@ -60,7 +63,8 @@ function Slider(options) {
 
   if (!document.getElementById(this.containerId)) {
     throw "Slider error: conatinerId must be a valid element's id";
-  }
+  } // place images in cointainer
+
 
   var image;
   this.container = document.getElementById(this.containerId);
@@ -94,17 +98,45 @@ function Slider(options) {
     }
 
     _this.images[index] = image;
-  });
+  }); // style container
+
   this.container.classList.add('russunit-slider-container');
   this.container.style.marginLeft = 'auto';
   this.container.style.marginRight = 'auto';
   this.container.style.maxWidth = '100%';
-  this.container.style.display = 'block';
+  this.container.style.display = 'flex';
   this.container.style.overflow = 'hidden';
   this.container.style.position = 'relative';
+
+  if (this.bullets) {
+    // create bullet container
+    var bulletContainer = document.createElement('DIV');
+    bulletContainer.id = this.containerId + '-bullet-container';
+    bulletContainer.classList.add('russunit-slider-bullet-container');
+    bulletContainer.style.zIndex = 4;
+    bulletContainer.style.position = 'relative';
+    bulletContainer.style.margin = 'auto auto 0';
+    bulletContainer.style.textAlign = 'center';
+    this.container.appendChild(bulletContainer); // create bullets
+
+    var bullet;
+    this.images.forEach(function (element, index) {
+      bullet = document.createElement('SPAN');
+      bullet.id = _this.containerId + '-bullet-' + index;
+      bullet.classList.add('russunit-slider-bullet');
+      bullet.style.color = '#fff';
+      bullet.style.zIndex = 4;
+      bullet.style.fontSize = '2em';
+      bullet.style.margin = '0 5px';
+      bullet.style.cursor = 'pointer';
+      bullet.innerHTML = '&bull;';
+      bulletContainer.appendChild(bullet);
+    });
+  }
   /**
    * resize container, called on resizing browser window
    */
+
 
   this.resizeContainer = function () {
     _this.container.style.width = _this.container.parentNode.clientWidth;
@@ -212,6 +244,15 @@ function Slider(options) {
       console.log('Slider error: slider is locked.');
     }
   };
+
+  if (this.bullets) {
+    this.images.forEach(function (element, index) {
+      bullet.id = _this.containerId + '-bullet-' + index;
+      document.getElementById(_this.containerId + '-bullet-' + index).addEventListener('click', function () {
+        _this.goToSlide(index);
+      });
+    });
+  }
 };
 /**
  * fades the first target out, then fades the second target in.

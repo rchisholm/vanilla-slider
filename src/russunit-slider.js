@@ -84,9 +84,9 @@ class Slider {
         this.container.style.marginLeft = 'auto';
         this.container.style.marginRight = 'auto';
         this.container.style.maxWidth = '100%';
-        this.container.style.display = 'block';
+        this.container.style.display = 'flex';
         this.container.style.overflow = 'hidden';
-        this.container.style.position = 'flex';
+        this.container.style.position = 'relative';
         if(this.bullets) {
             // create bullet container
             var bulletContainer = document.createElement('DIV');
@@ -107,6 +107,8 @@ class Slider {
                 bullet.style.zIndex = 4;
                 bullet.style.fontSize = '2em';
                 bullet.style.margin = '0 5px';
+                bullet.style.cursor = 'pointer';
+                bullet.innerHTML = '&bull;';
                 bulletContainer.appendChild(bullet);
             });
         }
