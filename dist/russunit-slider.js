@@ -100,7 +100,7 @@ function Slider(options) {
   this.container.style.overflow = 'hidden';
   this.container.style.position = 'relative';
   /**
-   * resize container, called on resizing browser window. only shrinks
+   * resize container, called on resizing browser window
    */
 
   this.resizeContainer = function () {
@@ -277,8 +277,8 @@ function slideFadeOut(fadeOutTarget) {
   var defaultWaitTime = 2000;
   var defaultFadeTime = 500;
   var intervalTime = 20;
-  var xDirections = ['left', 'right'];
-  var yDirections = ['up', 'down'];
+  var xDirections = ['left', 'right', 'random'];
+  var yDirections = ['up', 'down', 'random'];
   var zooms = ['in', 'out']; // default options
 
   options.waitTime = options.waitTime ? options.waitTime : false;
@@ -303,6 +303,11 @@ function slideFadeOut(fadeOutTarget) {
       // set zoom/direction
       if (options.directionX) {
         options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
+
+        if (options.directionX === 'random') {
+          options.directionX = ['right', 'left', null][Math.floor(Math.random() * 3)];
+        }
+
         var xDirectionInterval;
 
         switch (options.directionX) {
@@ -318,6 +323,11 @@ function slideFadeOut(fadeOutTarget) {
 
       if (options.directionY) {
         options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
+
+        if (options.directionY === 'random') {
+          options.directionY = ['up', 'down', null][Math.floor(Math.random() * 3)];
+        }
+
         var yDirectionInterval;
 
         switch (options.directionY) {

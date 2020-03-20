@@ -247,8 +247,8 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     const defaultWaitTime = 2000;
     const defaultFadeTime = 500;
     const intervalTime = 20;
-    const xDirections = ['left', 'right'];
-    const yDirections = ['up', 'down'];
+    const xDirections = ['left', 'right', 'random'];
+    const yDirections = ['up', 'down', 'random'];
     const zooms = ['in', 'out'];
 
     // default options
@@ -276,6 +276,9 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
             // set zoom/direction
             if(options.directionX) {
                 options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
+                if(options.directionX === 'random') {
+                    options.directionX = ['right', 'left', null][Math.floor(Math.random() * 3)];
+                }
                 var xDirectionInterval;
                 switch(options.directionX) {
                     case 'right':
@@ -288,6 +291,9 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
             }
             if(options.directionY) {
                 options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
+                if(options.directionY === 'random') {
+                    options.directionY = ['up', 'down', null][Math.floor(Math.random() * 3)];
+                }
                 var yDirectionInterval;
                 switch(options.directionY) {
                     case 'up':
