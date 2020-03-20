@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* jshint esversion:6 */
@@ -45,6 +47,7 @@ function Slider(options) {
 
   this.bullets = options.bullets; //
 
+  this.bulletColor = options.bulletColor;
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -55,7 +58,19 @@ function Slider(options) {
   this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
-  this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
+  this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false; // check color
+
+  if (this.bulletColor) {
+    var isColor = function isColor(strColor) {
+      var s = new Option().style;
+      s.color = strColor;
+      return s.color == strColor;
+    };
+
+    this.bulletColor = _typeof(isColor(this.bulletColor)) ? this.bulletColor : 'red';
+  } else {
+    this.bulletColor = 'ff6600'; // default bulletColor
+  }
 
   if (!Array.isArray(this.imageURLs)) {
     throw "Slider error: imageURLs must be an array of strings";
@@ -130,6 +145,11 @@ function Slider(options) {
       bullet.style.margin = '0 5px';
       bullet.style.cursor = 'pointer';
       bullet.innerHTML = '&bull;';
+
+      if (index === 0) {
+        bullet.style.color = _this.bulletColor;
+      }
+
       bulletContainer.appendChild(bullet);
     });
   }
@@ -228,6 +248,9 @@ function Slider(options) {
         callback();
       }
     } else if (!_this.sliderLock) {
+      document.getElementById(_this.containerId + '-bullet-' + _this.currentIndex).style.color = '#fff';
+      document.getElementById(_this.containerId + '-bullet-' + newIndex).style.color = _this.bulletColor;
+
       var finishSlide = function finishSlide() {
         _this.currentIndex = newIndex;
         _this.sliderLock = false;

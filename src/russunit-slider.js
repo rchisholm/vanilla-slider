@@ -30,6 +30,7 @@ class Slider {
         this.transitionDirectionY = options.transitionDirectionY; // 
         this.transitionZoom = options.transitionZoom; // 
         this.bullets = options.bullets; //
+        this.bulletColor = options.bulletColor;
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -40,6 +41,18 @@ class Slider {
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
         this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
         this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
+
+        // check color
+        if(this.bulletColor) {
+            var isColor = (strColor) => {
+                var s = new Option().style;
+                s.color = strColor;
+                return s.color == strColor;
+            };
+            this.bulletColor = typeof isColor(this.bulletColor) ? this.bulletColor : 'red';
+        } else {
+            this.bulletColor = 'ff6600'; // default bulletColor
+        }
 
         if (!Array.isArray(this.imageURLs)) {
             throw ("Slider error: imageURLs must be an array of strings");
@@ -109,6 +122,9 @@ class Slider {
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
                 bullet.innerHTML = '&bull;';
+                if(index === 0) {
+                    bullet.style.color = this.bulletColor;
+                }
                 bulletContainer.appendChild(bullet);
             });
         }
@@ -198,6 +214,8 @@ class Slider {
                     callback();
                 }
             } else if (!this.sliderLock) {
+                document.getElementById(this.containerId + '-bullet-' + this.currentIndex).style.color = '#fff';
+                document.getElementById(this.containerId + '-bullet-' + newIndex).style.color = this.bulletColor;
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
                     this.sliderLock = false;
