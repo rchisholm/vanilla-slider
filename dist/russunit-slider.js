@@ -75,16 +75,20 @@ function Slider(options) {
     if (index > 0) {
       image.style.visibility = 'hidden';
       image.style.zIndex = 0;
-
-      image.onload = function () {
-        _this.container.style.width = image.naturalWidth;
-        _this.container.style.height = image.naturalHeight;
-      };
     } else {
       image.style.zIndex = 2;
     }
 
     _this.container.appendChild(image);
+
+    if (index === _this.imageURLs.length - 1) {
+      image.onload = function () {
+        _this.container.style.width = Math.min(image.naturalWidth, window.innerWidth);
+        _this.container.style.height = Math.min(image.naturalHeight, window.innerHeight);
+        _this.container.style.width = image.clientWidth;
+        _this.container.style.height = image.clientHeight;
+      };
+    }
 
     _this.images[index] = image;
   });
@@ -100,13 +104,15 @@ function Slider(options) {
    */
 
   this.resizeContainer = function () {
+    // TODO: get this to set Math.max(clientWidth, container's parent's width), then something with the height
     _this.container.style.width = _this.images[0].clientWidth;
     _this.container.style.height = _this.images[0].clientHeight;
   };
+
+  window.addEventListener('resize', this.resizeContainer);
   /**
    * get the index of the next slide
    */
-
 
   this.getNextIndex = function () {
     return (_this.currentIndex + 1) % _this.images.length;
@@ -202,8 +208,6 @@ function Slider(options) {
       console.log('Slider error: slider is locked.');
     }
   };
-
-  window.addEventListener('resize', this.resizeContainer);
 };
 /**
  * fades the first target out, then fades the second target in.
@@ -358,9 +362,9 @@ function slideFadeOut(fadeOutTarget) {
             }
           } else {
             clearInterval(fadeOutEffect);
-            makeInvisible(fadeOutTarget);
-            console.log('top: ' + fadeOutTarget.style.top);
-            console.log('left: ' + fadeOutTarget.style.left);
+            makeInvisible(fadeOutTarget); // console.log('top: ' + fadeOutTarget.style.top);
+            // console.log('left: ' + fadeOutTarget.style.left);
+
             fadeOutTarget.style.top = 0;
             fadeOutTarget.style.left = 0;
             callback();

@@ -59,14 +59,18 @@ class Slider {
             if (index > 0) {
                 image.style.visibility = 'hidden';
                 image.style.zIndex = 0;
-                image.onload = () => {
-                    this.container.style.width = image.naturalWidth;
-                    this.container.style.height = image.naturalHeight;
-                }
             } else {
                 image.style.zIndex = 2;
             }
             this.container.appendChild(image);
+            if(index === this.imageURLs.length - 1) {
+                image.onload = () => {
+                    this.container.style.width = Math.min(image.naturalWidth, window.innerWidth);
+                    this.container.style.height = Math.min(image.naturalHeight, window.innerHeight);
+                    this.container.style.width = image.clientWidth;
+                    this.container.style.height = image.clientHeight;
+                }
+            }
             this.images[index] = image;
         });
         this.container.classList.add('russunit-slider-container');
@@ -82,9 +86,12 @@ class Slider {
          * resize container, called on resizing browser window. only shrinks
          */
         this.resizeContainer = () => {
+            // TODO: get this to set Math.max(clientWidth, container's parent's width), then something with the height
             this.container.style.width = this.images[0].clientWidth;
             this.container.style.height = this.images[0].clientHeight;
         };
+
+        window.addEventListener('resize', this.resizeContainer);
 
         /**
          * get the index of the next slide
@@ -172,8 +179,6 @@ class Slider {
                 console.log('Slider error: slider is locked.');
             }
         };
-
-        window.addEventListener('resize', this.resizeContainer);
     }
 
 
@@ -323,8 +328,8 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                     } else {
                         clearInterval(fadeOutEffect);
                         makeInvisible(fadeOutTarget);
-                        console.log('top: ' + fadeOutTarget.style.top);
-                        console.log('left: ' + fadeOutTarget.style.left);
+                        // console.log('top: ' + fadeOutTarget.style.top);
+                        // console.log('left: ' + fadeOutTarget.style.left);
                         fadeOutTarget.style.top = 0;
                         fadeOutTarget.style.left = 0;
                         callback();
