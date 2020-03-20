@@ -241,7 +241,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     // static values
     const defaultWaitTime = 2000;
     const defaultFadeTime = 500;
-    const opacityIntervalDividend = 20;
+    const intervalTime = 20;
     const xDirections = ['left', 'right'];
     const yDirections = ['up', 'down'];
     const zooms = ['in', 'out'];
@@ -303,7 +303,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                 }, options.waitTime);
             } else {
                 options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
-                var opacityInterval = opacityIntervalDividend / options.fadeTime;
+                var opacityInterval = intervalTime / options.fadeTime;
                 fadeOutTarget.style.opacity = 1;
                 var fadeOutEffect = setInterval(function () {
                     if (fadeOutTarget.style.opacity > 0) {
@@ -318,16 +318,18 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         }
                         // zoom a little bit
                         if(options.zoom) {
-                            fadeOutTarget.style.transform = 'scale(1.01)';
+                            // zoom here...
                         }
                     } else {
                         clearInterval(fadeOutEffect);
                         makeInvisible(fadeOutTarget);
+                        console.log('top: ' + fadeOutTarget.style.top);
+                        console.log('left: ' + fadeOutTarget.style.left);
                         fadeOutTarget.style.top = 0;
                         fadeOutTarget.style.left = 0;
                         callback();
                     }
-                }, options.fadeTime * opacityInterval);
+                }, intervalTime);
             }
         } else {
             callback();
@@ -363,7 +365,7 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
     // static values
     const defaultWaitTime = 2000;
     const defaultFadeTime = 250;
-    const opacityIntervalDividend = 25;
+    const intervalTime = 20;
 
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
@@ -397,7 +399,7 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
                 }, options.waitTime);
             } else {
                 if (fadeInTarget) {
-                    var opacityInterval = opacityIntervalDividend / options.fadeTime;
+                    var opacityInterval = intervalTime / options.fadeTime;
                     fadeInTarget.style.opacity = 0;
                     makeVisible(fadeInTarget);
                     var fadeInEffect = setInterval(function () {
@@ -407,7 +409,7 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
                             clearInterval(fadeInEffect);
                             callback();
                         }
-                    }, options.fadeTime * opacityInterval);
+                    }, intervalTime);
                 }
             }
         } else {

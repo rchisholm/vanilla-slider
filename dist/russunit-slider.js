@@ -272,7 +272,7 @@ function slideFadeOut(fadeOutTarget) {
 
   var defaultWaitTime = 2000;
   var defaultFadeTime = 500;
-  var opacityIntervalDividend = 20;
+  var intervalTime = 20;
   var xDirections = ['left', 'right'];
   var yDirections = ['up', 'down'];
   var zooms = ['in', 'out']; // default options
@@ -338,7 +338,7 @@ function slideFadeOut(fadeOutTarget) {
         }, options.waitTime);
       } else {
         options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
-        var opacityInterval = opacityIntervalDividend / options.fadeTime;
+        var opacityInterval = intervalTime / options.fadeTime;
         fadeOutTarget.style.opacity = 1;
         var fadeOutEffect = setInterval(function () {
           if (fadeOutTarget.style.opacity > 0) {
@@ -354,17 +354,18 @@ function slideFadeOut(fadeOutTarget) {
             } // zoom a little bit
 
 
-            if (options.zoom) {
-              fadeOutTarget.style.transform = 'scale(1.01)';
+            if (options.zoom) {// zoom here...
             }
           } else {
             clearInterval(fadeOutEffect);
             makeInvisible(fadeOutTarget);
+            console.log('top: ' + fadeOutTarget.style.top);
+            console.log('left: ' + fadeOutTarget.style.left);
             fadeOutTarget.style.top = 0;
             fadeOutTarget.style.left = 0;
             callback();
           }
-        }, options.fadeTime * opacityInterval);
+        }, intervalTime);
       }
     } else {
       callback(); // setTimeout(callback, options.fadeTime);
@@ -402,7 +403,7 @@ function slideFadeIn(fadeInTarget) {
 
   var defaultWaitTime = 2000;
   var defaultFadeTime = 250;
-  var opacityIntervalDividend = 25; // default options
+  var intervalTime = 20; // default options
 
   options.waitTime = options.waitTime ? options.waitTime : false;
   options.display = options.display ? options.display : false;
@@ -434,7 +435,7 @@ function slideFadeIn(fadeInTarget) {
         }, options.waitTime);
       } else {
         if (fadeInTarget) {
-          var opacityInterval = opacityIntervalDividend / options.fadeTime;
+          var opacityInterval = intervalTime / options.fadeTime;
           fadeInTarget.style.opacity = 0;
           makeVisible(fadeInTarget);
           var fadeInEffect = setInterval(function () {
@@ -444,7 +445,7 @@ function slideFadeIn(fadeInTarget) {
               clearInterval(fadeInEffect);
               callback();
             }
-          }, options.fadeTime * opacityInterval);
+          }, intervalTime);
         }
       }
     } else {
