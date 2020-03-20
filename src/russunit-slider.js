@@ -56,7 +56,7 @@ class Slider {
                 s.color = strColor;
                 return s.color == strColor;
             };
-            this.bulletColor = typeof isColor(this.bulletColor) ? this.bulletColor : 'red';
+            this.bulletColor = isColor(this.bulletColor) ? this.bulletColor : 'red';
         } else {
             this.bulletColor = 'red'; // default bulletColor
         }
