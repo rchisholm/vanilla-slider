@@ -49,6 +49,8 @@ function Slider(options) {
 
   this.bulletColor = options.bulletColor; // 
 
+  this.bulletsHide = options.bulletsHide; //
+
   this.arrows = options.arrows; //
 
   this.arrowsHide = options.arrowsHide; // 
@@ -64,6 +66,7 @@ function Slider(options) {
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
+  this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
   this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
   this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false; // check color
 
@@ -201,23 +204,16 @@ function Slider(options) {
     arrowContainer.appendChild(rightArrow); // hide arrows
 
     if (this.arrowsHide) {
-      rightArrow.style.visibility = 'hidden';
-      rightArrow.style.opacity = 0;
-      rightArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
-      leftArrow.style.visibility = 'hidden';
-      leftArrow.style.opacity = 0;
-      leftArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+      arrowContainer.style.visibility = 'hidden';
+      arrowContainer.style.opacity = 0;
+      arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
       this.container.addEventListener('mouseenter', function () {
-        rightArrow.style.visibility = 'visible';
-        leftArrow.style.visibility = 'visible';
-        rightArrow.style.opacity = 1;
-        leftArrow.style.opacity = 1;
+        arrowContainer.style.visibility = 'visible';
+        arrowContainer.style.opacity = 1;
       });
       this.container.addEventListener('mouseleave', function () {
-        rightArrow.style.visibility = 'hidden';
-        leftArrow.style.visibility = 'hidden';
-        rightArrow.style.opacity = 0;
-        leftArrow.style.opacity = 0;
+        arrowContainer.style.visibility = 'hidden';
+        arrowContainer.style.opacity = 0;
       });
     }
   }
