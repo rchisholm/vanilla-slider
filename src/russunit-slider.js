@@ -214,8 +214,10 @@ class Slider {
                     callback();
                 }
             } else if (!this.sliderLock) {
-                document.getElementById(this.containerId + '-bullet-' + this.currentIndex).style.color = '#fff';
-                document.getElementById(this.containerId + '-bullet-' + newIndex).style.color = this.bulletColor;
+                if(this.bullets) {
+                    document.getElementById(this.containerId + '-bullet-' + this.currentIndex).style.color = '#fff';
+                    document.getElementById(this.containerId + '-bullet-' + newIndex).style.color = this.bulletColor;
+                }
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
                     this.sliderLock = false;

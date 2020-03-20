@@ -69,7 +69,7 @@ function Slider(options) {
 
     this.bulletColor = _typeof(isColor(this.bulletColor)) ? this.bulletColor : 'red';
   } else {
-    this.bulletColor = 'ff6600'; // default bulletColor
+    this.bulletColor = 'red'; // default bulletColor
   }
 
   if (!Array.isArray(this.imageURLs)) {
