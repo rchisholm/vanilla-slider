@@ -104,9 +104,9 @@ function Slider(options) {
    */
 
   this.resizeContainer = function () {
-    // TODO: get this to set Math.max(clientWidth, container's parent's width), then something with the height
-    _this.container.style.width = _this.images[0].clientWidth;
-    _this.container.style.height = _this.images[0].clientHeight;
+    _this.container.style.width = _this.container.parentNode.clientWidth;
+    var imageXYRatio = _this.images[0].naturalWidth / _this.images[0].naturalHeight;
+    _this.container.style.height = parseFloat(_this.container.style.width.replace('px', '')) / imageXYRatio;
   };
 
   window.addEventListener('resize', this.resizeContainer);
@@ -303,28 +303,30 @@ function slideFadeOut(fadeOutTarget) {
       // set zoom/direction
       if (options.directionX) {
         options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
+        var xDirectionInterval;
 
         switch (options.directionX) {
           case 'right':
-            var xDirectionInterval = 1;
+            xDirectionInterval = 1;
             break;
 
           case 'left':
-            var xDirectionInterval = -1;
+            xDirectionInterval = -1;
             break;
         }
       }
 
       if (options.directionY) {
         options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
+        var yDirectionInterval;
 
         switch (options.directionY) {
           case 'up':
-            var yDirectionInterval = -1;
+            yDirectionInterval = -1;
             break;
 
           case 'down':
-            var yDirectionInterval = 1;
+            yDirectionInterval = 1;
             break;
         }
       }

@@ -83,12 +83,12 @@ class Slider {
 
 
         /**
-         * resize container, called on resizing browser window. only shrinks
+         * resize container, called on resizing browser window
          */
         this.resizeContainer = () => {
-            // TODO: get this to set Math.max(clientWidth, container's parent's width), then something with the height
-            this.container.style.width = this.images[0].clientWidth;
-            this.container.style.height = this.images[0].clientHeight;
+            this.container.style.width = this.container.parentNode.clientWidth;
+            var imageXYRatio = this.images[0].naturalWidth / this.images[0].naturalHeight;
+            this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio;
         };
 
         window.addEventListener('resize', this.resizeContainer);
