@@ -4,13 +4,26 @@
  * slider class
  */
 class Slider {
+
+    /**
+     * 
+     * @param {{containerId: string, imageURLs: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
+     * options.containerId: id of element which shall be the container for the slider;
+     * options.imageURLs: array of URLs for images;
+     * options.transitionStyle: style of transition - 'default' or 'overlay';
+     * options.transitionTime: time in ms until transition is finished;
+     * options.containerPosition: position style property for the container - 'relative', etc;
+     */
     constructor(options) {
 
         this.transitionStyles = ['default', 'overlay']; // available transition styles
+
         this.containerId = options.containerId; // id of container div
         this.imageURLs = options.imageURLs; // array or URLs of images
         this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
         this.transitionTime = options.transitionTime; // time for transition to take place
+        this.containerPosition = options.containerPosition // position style property for the container (if defined)
+
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
         this.images = []; // image elements
@@ -18,6 +31,7 @@ class Slider {
         // adjusting values
         this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
+        this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
 
         if (!Array.isArray(this.imageURLs)) {
             throw ("Slider error: imageURLs must be an array of strings");
@@ -53,7 +67,9 @@ class Slider {
         this.container.style.marginRight = 'auto';
         this.container.style.maxWidth = '100%';
         this.container.style.display = 'block';
-        // this.container.style.position = 'relative'; // not sure if this is necessary
+        if(this.containerPosition) {
+            this.container.style.position = this.containerPosition;
+        }
 
         /* initially set dynamic container size*/
         this.container.style.width = this.images[0].clientWidth;
