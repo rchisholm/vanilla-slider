@@ -29,6 +29,7 @@ class Slider {
         this.transitionDirectionX = options.transitionDirectionX; // 
         this.transitionDirectionY = options.transitionDirectionY; // 
         this.transitionZoom = options.transitionZoom; // 
+        this.bullets = options.bullets; //
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -38,6 +39,7 @@ class Slider {
         this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
         this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
+        this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
 
         if (!Array.isArray(this.imageURLs)) {
             throw ("Slider error: imageURLs must be an array of strings");
@@ -46,6 +48,7 @@ class Slider {
             throw ("Slider error: conatinerId must be a valid element's id");
         }
 
+        // place images in cointainer
         var image;
         this.container = document.getElementById(this.containerId);
         this.imageURLs.forEach((imageURL, index) => {
@@ -76,14 +79,37 @@ class Slider {
             }
             this.images[index] = image;
         });
+        // style container
         this.container.classList.add('russunit-slider-container');
         this.container.style.marginLeft = 'auto';
         this.container.style.marginRight = 'auto';
         this.container.style.maxWidth = '100%';
         this.container.style.display = 'block';
         this.container.style.overflow = 'hidden';
-        this.container.style.position = 'relative';
-
+        this.container.style.position = 'flex';
+        if(this.bullets) {
+            // create bullet container
+            var bulletContainer = document.createElement('DIV');
+            bulletContainer.id = this.containerId + '-bullet-container';
+            bulletContainer.classList.add('russunit-slider-bullet-container');
+            bulletContainer.style.zIndex = 4;
+            bulletContainer.style.position = 'relative';
+            bulletContainer.style.margin = 'auto auto 0';
+            bulletContainer.style.textAlign = 'center';
+            this.container.appendChild(bulletContainer);
+            // create bullets
+            var bullet;
+            this.images.forEach((element, index) => {
+                bullet = document.createElement('SPAN');
+                bullet.id = this.containerId + '-bullet-' + index;
+                bullet.classList.add('russunit-slider-bullet');
+                bullet.style.color = '#fff';
+                bullet.style.zIndex = 4;
+                bullet.style.fontSize = '2em';
+                bullet.style.margin = '0 5px';
+                bulletContainer.appendChild(bullet);
+            });
+        }
 
         /**
          * resize container, called on resizing browser window
@@ -183,6 +209,17 @@ class Slider {
                 console.log('Slider error: slider is locked.');
             }
         };
+
+        if(this.bullets) {
+            this.images.forEach((element, index) => {
+                bullet.id = this.containerId + '-bullet-' + index;
+                document.getElementById(this.containerId + '-bullet-' + index).addEventListener('click', () => {
+                    this.goToSlide(index);
+                });
+            });
+        }
+
+
     }
 
 
