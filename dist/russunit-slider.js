@@ -12,10 +12,13 @@ var Slider =
  * 
  * @param {{containerId: string, imageURLs: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
  * options.containerId: id of element which shall be the container for the slider;
+ * options.containerPosition: position style property for the container - 'relative', etc;
  * options.imageURLs: array of URLs for images;
  * options.transitionStyle: style of transition - 'default' or 'overlay';
  * options.transitionTime: time in ms until transition is finished;
- * options.containerPosition: position style property for the container - 'relative', etc;
+ * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
+ * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
+ * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
  */
 function Slider(options) {
   var _this = this;
@@ -168,7 +171,8 @@ function Slider(options) {
         toggleVisibility: true,
         fadeTime: _this.transitionTime,
         directionX: _this.transitionDirectionX,
-        directionY: _this.transitionDirectionY
+        directionY: _this.transitionDirectionY,
+        zoom: _this.transitionZoom
       });
     }
   };
@@ -279,7 +283,7 @@ function slideFadeOut(fadeOutTarget) {
   var intervalTime = 20;
   var xDirections = ['left', 'right', 'random'];
   var yDirections = ['up', 'down', 'random'];
-  var zooms = ['in', 'out']; // default options
+  var zooms = ['in', 'out', 'random']; // default options
 
   options.waitTime = options.waitTime ? options.waitTime : false;
   options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
@@ -343,6 +347,22 @@ function slideFadeOut(fadeOutTarget) {
 
       if (options.zoom) {
         options.zoom = zooms.includes(options.zoom) ? options.zoom : null;
+
+        if (options.zoom === 'random') {
+          options.zoom = ['in', 'out', null][Math.floor(Math.random() * 3)];
+        }
+
+        var zoomInterval;
+
+        switch (options.zoom) {
+          case 'in':
+            zoomInterval = 0.005;
+            break;
+
+          case 'out':
+            zoomInterval = -0.005;
+            break;
+        }
       }
 
       if (options.waitTime) {
@@ -370,7 +390,12 @@ function slideFadeOut(fadeOutTarget) {
             } // zoom a little bit
 
 
-            if (options.zoom) {// zoom here...
+            if (options.zoom) {
+              if (!fadeOutTarget.style.transform) {
+                fadeOutTarget.style.transform = 'scale(1)';
+              }
+
+              fadeOutTarget.style.transform = 'scale(' + (parseFloat(fadeOutTarget.style.transform.replace('scale(', '').replace(')', '')) + zoomInterval) + ')';
             }
           } else {
             clearInterval(fadeOutEffect);
@@ -379,6 +404,7 @@ function slideFadeOut(fadeOutTarget) {
 
             fadeOutTarget.style.top = 0;
             fadeOutTarget.style.left = 0;
+            fadeOutTarget.style.transform = 'scale(1)';
             callback();
           }
         }, intervalTime);

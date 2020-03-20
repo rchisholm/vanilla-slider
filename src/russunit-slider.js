@@ -15,7 +15,7 @@ class Slider {
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
-     * options.transitionZoom: 
+     * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
      */
     constructor(options) {
 
@@ -148,7 +148,8 @@ class Slider {
                     toggleVisibility: true,
                     fadeTime: this.transitionTime,
                     directionX: this.transitionDirectionX,
-                    directionY: this.transitionDirectionY
+                    directionY: this.transitionDirectionY,
+                    zoom: this.transitionZoom
                 });
             }
         };
@@ -252,7 +253,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     const intervalTime = 20;
     const xDirections = ['left', 'right', 'random'];
     const yDirections = ['up', 'down', 'random'];
-    const zooms = ['in', 'out'];
+    const zooms = ['in', 'out', 'random'];
 
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
@@ -309,6 +310,18 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
             }
             if(options.zoom) {
                 options.zoom = zooms.includes(options.zoom) ? options.zoom : null;
+                if(options.zoom === 'random') {
+                    options.zoom = ['in', 'out', null][Math.floor(Math.random() * 3)];
+                }
+                var zoomInterval;
+                switch(options.zoom) {
+                    case 'in':
+                        zoomInterval = 0.005;
+                        break;
+                    case 'out':
+                        zoomInterval = -0.005;
+                        break;
+                }
             }
             if (options.waitTime) {
                 options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
@@ -334,7 +347,10 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         }
                         // zoom a little bit
                         if(options.zoom) {
-                            
+                            if(!fadeOutTarget.style.transform) {
+                                fadeOutTarget.style.transform = 'scale(1)';
+                            }
+                            fadeOutTarget.style.transform = 'scale(' + (parseFloat(fadeOutTarget.style.transform.replace('scale(', '').replace(')', '')) + zoomInterval) + ')';
                         }
                     } else {
                         clearInterval(fadeOutEffect);
@@ -343,6 +359,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         // console.log('left: ' + fadeOutTarget.style.left);
                         fadeOutTarget.style.top = 0;
                         fadeOutTarget.style.left = 0;
+                        fadeOutTarget.style.transform = 'scale(1)';
                         callback();
                     }
                 }, intervalTime);
