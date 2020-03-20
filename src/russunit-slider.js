@@ -9,10 +9,13 @@ class Slider {
      * 
      * @param {{containerId: string, imageURLs: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
      * options.containerId: id of element which shall be the container for the slider;
+     * options.containerPosition: position style property for the container - 'relative', etc;
      * options.imageURLs: array of URLs for images;
      * options.transitionStyle: style of transition - 'default' or 'overlay';
      * options.transitionTime: time in ms until transition is finished;
-     * options.containerPosition: position style property for the container - 'relative', etc;
+     * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
+     * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
+     * options.transitionZoom: 
      */
     constructor(options) {
 
@@ -331,7 +334,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         }
                         // zoom a little bit
                         if(options.zoom) {
-                            // zoom here...
+                            
                         }
                     } else {
                         clearInterval(fadeOutEffect);
