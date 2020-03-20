@@ -159,24 +159,6 @@ class Slider {
                 };
                 this.sliderLock = true;
                 this.transitionSlide[this.transitionStyle](newIndex, finishSlide);
-                // if (!this.transitionStyle) {
-                //     slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], finishSlide, {
-                //         toggleVisibility: true,
-                //         fadeTime: (this.transitionTime / 2)
-                //     });
-                // } else if (this.transitionStyle === 'overlay') {
-                //     this.images[newIndex].style.zIndex = 1;
-                //     this.images[newIndex].style.opacity = 1;
-                //     this.images[newIndex].style.visibility = 'visible';
-                //     slideFadeOut(this.images[this.currentIndex], () => {
-                //         this.images[this.currentIndex].style.zIndex = 0;
-                //         this.images[newIndex].style.zIndex = 2;
-                //         finishSlide();
-                //     }, {
-                //         toggleVisibility: true,
-                //         fadeTime: this.transitionTime
-                //     });
-                // }
             } else {
                 console.log('Slider error: slider is locked.');
             }
