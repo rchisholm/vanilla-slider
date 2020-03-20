@@ -248,8 +248,10 @@ function Slider(options) {
         callback();
       }
     } else if (!_this.sliderLock) {
-      document.getElementById(_this.containerId + '-bullet-' + _this.currentIndex).style.color = '#fff';
-      document.getElementById(_this.containerId + '-bullet-' + newIndex).style.color = _this.bulletColor;
+      if (_this.bullets) {
+        document.getElementById(_this.containerId + '-bullet-' + _this.currentIndex).style.color = '#fff';
+        document.getElementById(_this.containerId + '-bullet-' + newIndex).style.color = _this.bulletColor;
+      }
 
       var finishSlide = function finishSlide() {
         _this.currentIndex = newIndex;
