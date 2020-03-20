@@ -19,13 +19,13 @@ class Slider {
         this.transitionStyles = ['default', 'overlay']; // available transition styles
 
         this.containerId = options.containerId; // id of container div
-        this.containerPosition = options.containerPosition // position style property for the container (if defined)
+        this.containerPosition = options.containerPosition; // position style property for the container (if defined)
         this.imageURLs = options.imageURLs; // array or URLs of images
         this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
         this.transitionTime = options.transitionTime; // time for transition to take place
-        this.transitionDirectionX = options.transitionDirectionX // 
-        this.transitionDirectionY = options.transitionDirectionY // 
-        this.transitionZoom = options.transitionZoom // 
+        this.transitionDirectionX = options.transitionDirectionX; // 
+        this.transitionDirectionY = options.transitionDirectionY; // 
+        this.transitionZoom = options.transitionZoom; // 
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -69,7 +69,7 @@ class Slider {
                     this.container.style.height = Math.min(image.naturalHeight, window.innerHeight);
                     this.container.style.width = image.clientWidth;
                     this.container.style.height = image.clientHeight;
-                }
+                };
             }
             this.images[index] = image;
         });
@@ -148,7 +148,7 @@ class Slider {
                     directionY: this.transitionDirectionY
                 });
             }
-        }
+        };
 
 
         /**
@@ -276,23 +276,25 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
             // set zoom/direction
             if(options.directionX) {
                 options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
+                var xDirectionInterval;
                 switch(options.directionX) {
                     case 'right':
-                        var xDirectionInterval = 1;
+                        xDirectionInterval = 1;
                         break;
                     case 'left':
-                        var xDirectionInterval = -1;
+                        xDirectionInterval = -1;
                         break;
                 }
             }
             if(options.directionY) {
                 options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
+                var yDirectionInterval;
                 switch(options.directionY) {
                     case 'up':
-                        var yDirectionInterval = -1;
+                        yDirectionInterval = -1;
                         break;
                     case 'down':
-                        var yDirectionInterval = 1;
+                        yDirectionInterval = 1;
                         break;
                 }
             }
