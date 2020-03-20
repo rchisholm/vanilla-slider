@@ -19,10 +19,13 @@ class Slider {
         this.transitionStyles = ['default', 'overlay']; // available transition styles
 
         this.containerId = options.containerId; // id of container div
+        this.containerPosition = options.containerPosition // position style property for the container (if defined)
         this.imageURLs = options.imageURLs; // array or URLs of images
         this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
         this.transitionTime = options.transitionTime; // time for transition to take place
-        this.containerPosition = options.containerPosition // position style property for the container (if defined)
+        this.transitionDirectionX = options.transitionDirectionX // 
+        this.transitionDirectionY = options.transitionDirectionY // 
+        this.transitionZoom = options.transitionZoom // 
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -56,6 +59,10 @@ class Slider {
             if (index > 0) {
                 image.style.visibility = 'hidden';
                 image.style.zIndex = 0;
+                image.onload = () => {
+                    this.container.style.width = image.naturalWidth;
+                    this.container.style.height = image.naturalHeight;
+                }
             } else {
                 image.style.zIndex = 2;
             }
@@ -67,24 +74,8 @@ class Slider {
         this.container.style.marginRight = 'auto';
         this.container.style.maxWidth = '100%';
         this.container.style.display = 'block';
-        if(this.containerPosition) {
-            this.container.style.position = this.containerPosition;
-        }
-
-        /* initially set dynamic container size*/
-        this.container.style.width = this.images[0].clientWidth;
-        this.container.style.height = this.images[0].clientHeight;
-
-        /* alternative to above 2 lines if container loads with width/height 0 */
-        // var count = 0;
-        // do {
-        //     console.log('asjusting container size...');
-        //     this.containerWidth = this.images[0].clientWidth;
-        //     this.containerHeight = this.images[0].clientHeight;
-        //     count++;
-        // } while (this.containerWidth < 1 && count < 500);
-        // this.container.style.width = this.containerWidth;
-        // this.container.style.height = this.containerHeight;
+        this.container.style.overflow = 'hidden';
+        this.container.style.position = 'relative';
 
 
         /**
@@ -145,7 +136,9 @@ class Slider {
                     callback();
                 }, {
                     toggleVisibility: true,
-                    fadeTime: this.transitionTime
+                    fadeTime: this.transitionTime,
+                    directionX: this.transitionDirectionX,
+                    directionY: this.transitionDirectionY
                 });
             }
         }
@@ -226,10 +219,12 @@ function slideFadeReplace(fadeOutTarget, fadeInTarget, callback = function () {}
  * fades the target out
  * @param {element||string} fadeOutTarget element to fade out, or its id
  * @param {function} callback function executed when fade is finished
- * @param {{waitTime: any, fadeTime: number, toggleVisibility: boolean}} options options object for fade:
+ * @param {{waitTime: any, fadeTime: number, toggleVisibility: boolean, direction: string, zoom: string}} options options object for fade:
  * options.waitTime: wait before executing - true for 2 sec, false for 0 sec, num for other (ms);
  * options.fadeTime: time for the fadeIn/fadeOut effects, defaults to 250;
  * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
+ * options.direction: direction for the fading out element to fly away if position:aboslute (left, right, up, down) - null to stay still;
+ * options.zoom: direction for the fading element to zoom if position:absolute (in, out) - null to stay same size
  */
 function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
 
@@ -246,12 +241,19 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     // static values
     const defaultWaitTime = 2000;
     const defaultFadeTime = 250;
-    const opacityIntervalDividend = 25;
+    const opacityIntervalDividend = 20;
+    const xDirections = ['left', 'right'];
+    const yDirections = ['up', 'down'];
+    const zooms = ['in', 'out'];
 
     // default options
     options.waitTime = options.waitTime ? options.waitTime : false;
     options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
+    options.directionX = options.directionX ? options.directionX : null; 
+    options.directionY = options.directionY ? options.directionY : null; 
+    options.zoom = options.zoom ? options.zoom : null; 
+
 
     var isVisible = options.toggleVisibility ? function (element) {
         return element.style.visibility !== "hidden";
@@ -266,6 +268,32 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
 
     if (fadeOutTarget) {
         if (isVisible(fadeOutTarget)) {
+            // set zoom/direction
+            if(options.directionX) {
+                options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
+                switch(options.directionX) {
+                    case 'right':
+                        var xDirectionInterval = 1;
+                        break;
+                    case 'left':
+                        var xDirectionInterval = -1;
+                        break;
+                }
+            }
+            if(options.directionY) {
+                options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
+                switch(options.directionY) {
+                    case 'up':
+                        var yDirectionInterval = -1;
+                        break;
+                    case 'down':
+                        var yDirectionInterval = 1;
+                        break;
+                }
+            }
+            if(options.zoom) {
+                options.zoom = zooms.includes(options.zoom) ? options.zoom : null;
+            }
             if (options.waitTime) {
                 options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
                 options.waitTime = typeof options.waitTime === 'number' ? options.waitTime : defaultWaitTime;
@@ -274,20 +302,32 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                     slideFadeOut(fadeOutTarget, callback, options);
                 }, options.waitTime);
             } else {
-                if (fadeOutTarget) {
-                    options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
-                    var opacityInterval = opacityIntervalDividend / options.fadeTime;
-                    fadeOutTarget.style.opacity = 1;
-                    var fadeOutEffect = setInterval(function () {
-                        if (fadeOutTarget.style.opacity > 0) {
-                            fadeOutTarget.style.opacity -= opacityInterval;
-                        } else {
-                            clearInterval(fadeOutEffect);
-                            makeInvisible(fadeOutTarget);
-                            callback();
+                options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
+                var opacityInterval = opacityIntervalDividend / options.fadeTime;
+                fadeOutTarget.style.opacity = 1;
+                var fadeOutEffect = setInterval(function () {
+                    if (fadeOutTarget.style.opacity > 0) {
+                        // fade out a little bit
+                        fadeOutTarget.style.opacity -= opacityInterval;
+                        // move a little bit in directions
+                        if(options.directionX) {
+                            fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + "px";
                         }
-                    }, options.fadeTime * opacityInterval);
-                }
+                        if(options.directionY) {
+                            fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + "px";
+                        }
+                        // zoom a little bit
+                        if(options.zoom) {
+                            fadeOutTarget.style.transform = 'scale(1.01)';
+                        }
+                    } else {
+                        clearInterval(fadeOutEffect);
+                        makeInvisible(fadeOutTarget);
+                        fadeOutTarget.style.top = 0;
+                        fadeOutTarget.style.left = 0;
+                        callback();
+                    }
+                }, options.fadeTime * opacityInterval);
             }
         } else {
             callback();
