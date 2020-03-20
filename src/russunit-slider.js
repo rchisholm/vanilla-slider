@@ -5,8 +5,8 @@
  */
 class Slider {
     constructor(options) {
-        
-        this.transitionStyles = ['overlay']; // available transition styles
+
+        this.transitionStyles = ['default', 'overlay']; // available transition styles
         this.containerId = options.containerId; // id of container div
         this.imageURLs = options.imageURLs; // array or URLs of images
         this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
@@ -16,14 +16,14 @@ class Slider {
         this.images = []; // image elements
 
         // adjusting values
-        this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : false;
+        this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
-        
-        if(!Array.isArray(this.imageURLs)) {
-            throw("Slider error: imageURLs must be an array of strings");
+
+        if (!Array.isArray(this.imageURLs)) {
+            throw ("Slider error: imageURLs must be an array of strings");
         }
-        if(!document.getElementById(this.containerId)) {
-            throw("Slider error: conatinerId must be a valid element's id");
+        if (!document.getElementById(this.containerId)) {
+            throw ("Slider error: conatinerId must be a valid element's id");
         }
 
         var image;
@@ -39,7 +39,7 @@ class Slider {
             image.style.top = 0;
             image.style.left = 0;
 
-            if(index > 0) {
+            if (index > 0) {
                 image.style.visibility = 'hidden';
                 image.style.zIndex = 0;
             } else {
@@ -84,7 +84,7 @@ class Slider {
         this.getNextIndex = () => {
             return (this.currentIndex + 1) % this.images.length;
         };
-    
+
         /**
          * get the index of the previous slide
          */
@@ -107,54 +107,84 @@ class Slider {
             this.goToSlide(this.getPrevIndex(), callback);
         };
 
+        // this.resetSlide = (index) => {
+        //     this.images[index].
+        // }
+
+        this.transitionSlide = {
+            'default': (newIndex, callback) => {
+                slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], callback, {
+                    toggleVisibility: true,
+                    fadeTime: (this.transitionTime / 2)
+                });
+            },
+            'overlay': (newIndex, callback) => {
+                this.images[newIndex].style.zIndex = 1;
+                this.images[newIndex].style.opacity = 1;
+                this.images[newIndex].style.visibility = 'visible';
+                slideFadeOut(this.images[this.currentIndex], () => {
+                    this.images[this.currentIndex].style.zIndex = 0;
+                    this.images[newIndex].style.zIndex = 2;
+                    callback();
+                }, {
+                    toggleVisibility: true,
+                    fadeTime: this.transitionTime
+                });
+            }
+        }
+
 
         /**
          * go to the slide at index (if possible), then execute the callback
          */
         this.goToSlide = (newIndex, callback = null) => {
-            if(typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.images.length) {
+            if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.images.length) {
                 console.log('Slider error: invalid index in goToSlide: ' + newIndex);
-                if(typeof callback === 'function') {
+                if (typeof callback === 'function') {
                     callback();
                 }
-            } else if(newIndex === this.currentIndex) {
+            } else if (newIndex === this.currentIndex) {
                 console.log('Slider error: current index in goToSlide: ' + newIndex);
-                if(typeof callback === 'function') {
+                if (typeof callback === 'function') {
                     callback();
                 }
-            } else if(!this.sliderLock) {
+            } else if (!this.sliderLock) {
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
                     this.sliderLock = false;
-                    if(typeof callback === 'function') {
+                    if (typeof callback === 'function') {
                         callback();
                     }
                 };
                 this.sliderLock = true;
-                if(!this.transitionStyle) {
-                    slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], finishSlide, { 
-                        toggleVisibility: true, 
-                        fadeTime: (this.transitionTime / 2)
-                    });
-                } else if (this.transitionStyle === 'overlay') {
-                    this.images[newIndex].style.zIndex = 1;
-                    this.images[newIndex].style.opacity = 1;
-                    this.images[newIndex].style.visibility = 'visible';
-                    slideFadeOut(this.images[this.currentIndex], () => {
-                        this.images[this.currentIndex].style.zIndex = 0;
-                        this.images[newIndex].style.zIndex = 2;
-                        finishSlide();
-                    }, { 
-                        toggleVisibility: true, 
-                        fadeTime: this.transitionTime 
-                    });
-                }
+                this.transitionSlide[this.transitionStyle](newIndex, finishSlide);
+                // if (!this.transitionStyle) {
+                //     slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], finishSlide, {
+                //         toggleVisibility: true,
+                //         fadeTime: (this.transitionTime / 2)
+                //     });
+                // } else if (this.transitionStyle === 'overlay') {
+                //     this.images[newIndex].style.zIndex = 1;
+                //     this.images[newIndex].style.opacity = 1;
+                //     this.images[newIndex].style.visibility = 'visible';
+                //     slideFadeOut(this.images[this.currentIndex], () => {
+                //         this.images[this.currentIndex].style.zIndex = 0;
+                //         this.images[newIndex].style.zIndex = 2;
+                //         finishSlide();
+                //     }, {
+                //         toggleVisibility: true,
+                //         fadeTime: this.transitionTime
+                //     });
+                // }
             } else {
                 console.log('Slider error: slider is locked.');
             }
         };
+
         window.addEventListener('resize', this.resizeContainer);
     }
+
+
 }
 
 /**
@@ -169,7 +199,7 @@ class Slider {
  * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
  */
 function slideFadeReplace(fadeOutTarget, fadeInTarget, callback = function () {}, options = []) {
-    
+
     // static values
     const defaultWaitTime = 2000;
     const defaultFadeTime = 250;
@@ -205,12 +235,12 @@ function slideFadeReplace(fadeOutTarget, fadeInTarget, callback = function () {}
 function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
 
     // check cb
-    if(typeof callback !== 'function') {
-        callback = function() {};
+    if (typeof callback !== 'function') {
+        callback = function () {};
     }
 
     // check target
-    if(typeof fadeOutTarget === 'string') {
+    if (typeof fadeOutTarget === 'string') {
         fadeOutTarget = document.getElementById(fadeOutTarget);
     }
 
@@ -224,10 +254,18 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
 
-    var isVisible = options.toggleVisibility ? function(element) { return element.style.visibility !== "hidden"; } : function(element) {return element.style.display !== "none";};
-    var makeInvisible = options.toggleVisibility ? function(element) { element.style.visibility = "hidden"; } : function(element) { element.style.display = "none"; };
+    var isVisible = options.toggleVisibility ? function (element) {
+        return element.style.visibility !== "hidden";
+    } : function (element) {
+        return element.style.display !== "none";
+    };
+    var makeInvisible = options.toggleVisibility ? function (element) {
+        element.style.visibility = "hidden";
+    } : function (element) {
+        element.style.display = "none";
+    };
 
-    if(fadeOutTarget) {
+    if (fadeOutTarget) {
         if (isVisible(fadeOutTarget)) {
             if (options.waitTime) {
                 options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
@@ -274,12 +312,12 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
 function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
 
     // check cb
-    if(typeof callback !== 'function') {
-        callback = function() {};
+    if (typeof callback !== 'function') {
+        callback = function () {};
     }
 
     // check target
-    if(typeof fadeInTarget === 'string') {
+    if (typeof fadeInTarget === 'string') {
         fadeInTarget = document.getElementById(fadeInTarget);
     }
 
@@ -297,11 +335,19 @@ function slideFadeIn(fadeInTarget, callback = function () {}, options = []) {
     // option values
     options.display = options.display === false ? 'block' : options.display;
     options.display = options.display === true ? 'flex' : options.display;
-    var isVisible = options.toggleVisibility ? function(element) { return element.style.visibility !== "hidden"; } : function(element) {return element.style.display !== "none";};
-    var makeVisible = options.toggleVisibility ? function(element) { element.style.visibility = "visible"; } : function(element) { element.style.display = options.display; };
+    var isVisible = options.toggleVisibility ? function (element) {
+        return element.style.visibility !== "hidden";
+    } : function (element) {
+        return element.style.display !== "none";
+    };
+    var makeVisible = options.toggleVisibility ? function (element) {
+        element.style.visibility = "visible";
+    } : function (element) {
+        element.style.display = options.display;
+    };
     options.fadeTime = typeof options.fadeTime === 'number' ? options.fadeTime : defaultFadeTime;
 
-    if(fadeInTarget) {
+    if (fadeInTarget) {
         if (!isVisible(fadeInTarget)) {
             if (options.waitTime) {
                 options.waitTime = options.waitTime === true ? defaultWaitTime : options.waitTime;
