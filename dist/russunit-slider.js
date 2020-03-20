@@ -271,7 +271,7 @@ function slideFadeOut(fadeOutTarget) {
 
 
   var defaultWaitTime = 2000;
-  var defaultFadeTime = 250;
+  var defaultFadeTime = 500;
   var opacityIntervalDividend = 20;
   var xDirections = ['left', 'right'];
   var yDirections = ['up', 'down'];

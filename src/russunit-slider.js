@@ -240,7 +240,7 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
 
     // static values
     const defaultWaitTime = 2000;
-    const defaultFadeTime = 250;
+    const defaultFadeTime = 500;
     const opacityIntervalDividend = 20;
     const xDirections = ['left', 'right'];
     const yDirections = ['up', 'down'];
