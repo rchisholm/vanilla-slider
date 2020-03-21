@@ -133,7 +133,7 @@ class Slider {
                 bullet.id = this.containerId + '-bullet-' + index;
                 bullet.classList.add('russunit-slider-bullet');
                 bullet.style.color = '#fff';
-                bullet.style.zIndex = 5;
+                bullet.style.zIndex = 10;
                 bullet.style.fontSize = '2em';
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
@@ -178,7 +178,7 @@ class Slider {
             this.leftArrow.id = this.containerId + '-arrow-left';
             this.leftArrow.classList.add('russunit-slider-arrow');
             this.leftArrow.classList.add('russunit-slider-arrow-left');
-            this.leftArrow.style.zIndex = 4;
+            this.leftArrow.style.zIndex = 10;
             this.leftArrow.style.color = '#fff';
             this.leftArrow.style.fontSize = '2em';
             this.leftArrow.style.margin = 'auto 10px';
@@ -190,7 +190,7 @@ class Slider {
             this.rightArrow.id = this.containerId + '-arrow-right';
             this.rightArrow.classList.add('russunit-slider-arrow');
             this.rightArrow.classList.add('russunit-slider-arrow-right');
-            this.rightArrow.style.zIndex = 4;
+            this.rightArrow.style.zIndex = 10;
             this.rightArrow.style.color = '#fff';
             this.rightArrow.style.fontSize = '2em';
             this.rightArrow.style.margin = 'auto 10px';
@@ -317,18 +317,21 @@ class Slider {
 
         if(this.bullets) {
             this.imageElements.forEach((element, index) => {
-                this.bullets[index].addEventListener('click', () => {
+                this.bullets[index].addEventListener('click', (event) => {
                     this.goToSlide(index);
+                    event.stopPropagation();
                 });
             });
         }
 
         if(this.arrows) {
-            this.leftArrow.addEventListener('click', () => {
+            this.leftArrow.addEventListener('click', (event) => {
                 this.prevSlide();
+                event.stopPropagation();
             });
-            this.rightArrow.addEventListener('click', () => {
+            this.rightArrow.addEventListener('click', (event) => {
                 this.nextSlide();
+                event.stopPropagation();
             });
         }
 
