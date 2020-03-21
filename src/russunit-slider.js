@@ -73,9 +73,15 @@ class Slider {
         var imageLink;
         this.container = document.getElementById(this.containerId);
         this.images.forEach((image, index) => {
+            if(typeof image === 'string') {
+                image = {
+                    url: image,
+                    link: null
+                };
+            }
             imageElement = document.createElement('IMG');
             imageElement.id = this.containerId + "-slide-" + index;
-            imageElement.src = image;
+            imageElement.src = image.url;
             imageElement.classList.add('russunit-slider-image');
             imageElement.style.margin = 'auto';
             imageElement.style.maxWidth = '100%';
