@@ -110,16 +110,7 @@ function Slider(options) {
       imageElement.style.zIndex = 2;
     }
 
-    if (image.link) {
-      imageLink = document.createElement('A');
-      imageLink.href = image.link;
-
-      _this.container.appendChild(imageLink);
-
-      imageLink.appendChild(imageElement);
-    } else {
-      _this.container.appendChild(imageElement);
-    }
+    _this.container.appendChild(imageElement);
 
     if (index === _this.images.length - 1) {
       imageElement.onload = function () {
@@ -159,7 +150,7 @@ function Slider(options) {
       bullet.id = _this.containerId + '-bullet-' + index;
       bullet.classList.add('russunit-slider-bullet');
       bullet.style.color = '#fff';
-      bullet.style.zIndex = 5;
+      bullet.style.zIndex = 10;
       bullet.style.fontSize = '2em';
       bullet.style.margin = '0 5px';
       bullet.style.cursor = 'pointer';
@@ -208,7 +199,7 @@ function Slider(options) {
     this.leftArrow.id = this.containerId + '-arrow-left';
     this.leftArrow.classList.add('russunit-slider-arrow');
     this.leftArrow.classList.add('russunit-slider-arrow-left');
-    this.leftArrow.style.zIndex = 4;
+    this.leftArrow.style.zIndex = 10;
     this.leftArrow.style.color = '#fff';
     this.leftArrow.style.fontSize = '2em';
     this.leftArrow.style.margin = 'auto 10px';
@@ -220,7 +211,7 @@ function Slider(options) {
     this.rightArrow.id = this.containerId + '-arrow-right';
     this.rightArrow.classList.add('russunit-slider-arrow');
     this.rightArrow.classList.add('russunit-slider-arrow-right');
-    this.rightArrow.style.zIndex = 4;
+    this.rightArrow.style.zIndex = 10;
     this.rightArrow.style.color = '#fff';
     this.rightArrow.style.fontSize = '2em';
     this.rightArrow.style.margin = 'auto 10px';
@@ -362,18 +353,24 @@ function Slider(options) {
 
   if (this.bullets) {
     this.imageElements.forEach(function (element, index) {
-      _this.bullets[index].addEventListener('click', function () {
+      _this.bullets[index].addEventListener('click', function (event) {
         _this.goToSlide(index);
+
+        event.stopPropagation();
       });
     });
   }
 
   if (this.arrows) {
-    this.leftArrow.addEventListener('click', function () {
+    this.leftArrow.addEventListener('click', function (event) {
       _this.prevSlide();
+
+      event.stopPropagation();
     });
-    this.rightArrow.addEventListener('click', function () {
+    this.rightArrow.addEventListener('click', function (event) {
       _this.nextSlide();
+
+      event.stopPropagation();
     });
   }
 };

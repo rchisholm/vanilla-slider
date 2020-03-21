@@ -89,14 +89,7 @@ class Slider {
             } else {
                 imageElement.style.zIndex = 2;
             }
-            if(image.link) {
-                imageLink = document.createElement('A');
-                imageLink.href = image.link;
-                this.container.appendChild(imageLink);
-                imageLink.appendChild(imageElement);
-            } else {
-                this.container.appendChild(imageElement);
-            }
+            this.container.appendChild(imageElement);
             if(index === this.images.length - 1) {
                 imageElement.onload = () => {
                     this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
