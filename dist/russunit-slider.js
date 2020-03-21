@@ -95,8 +95,10 @@ function Slider(options) {
   this.images.forEach(function (image, index) {
     if (typeof image === 'string') {
       image = {
-        url: image
+        url: image,
+        link: null
       };
+      _this.images[index] = image;
     }
 
     imageElement = document.createElement('IMG');
@@ -152,7 +154,7 @@ function Slider(options) {
     this.bulletContainer = document.createElement('DIV');
     this.bulletContainer.id = this.containerId + '-bullet-container';
     this.bulletContainer.classList.add('russunit-slider-bullet-container');
-    this.bulletContainer.style.zIndex = 5;
+    this.bulletContainer.style.zIndex = 6;
     this.bulletContainer.style.position = 'relative';
     this.bulletContainer.style.margin = 'auto auto 0';
     this.bulletContainer.style.textAlign = 'center';
@@ -165,7 +167,7 @@ function Slider(options) {
       bullet.id = _this.containerId + '-bullet-' + index;
       bullet.classList.add('russunit-slider-bullet');
       bullet.style.color = '#fff';
-      bullet.style.zIndex = 5;
+      bullet.style.zIndex = 7;
       bullet.style.fontSize = '2em';
       bullet.style.margin = '0 5px';
       bullet.style.cursor = 'pointer';
@@ -214,7 +216,7 @@ function Slider(options) {
     this.leftArrow.id = this.containerId + '-arrow-left';
     this.leftArrow.classList.add('russunit-slider-arrow');
     this.leftArrow.classList.add('russunit-slider-arrow-left');
-    this.leftArrow.style.zIndex = 4;
+    this.leftArrow.style.zIndex = 5;
     this.leftArrow.style.color = '#fff';
     this.leftArrow.style.fontSize = '2em';
     this.leftArrow.style.margin = 'auto 10px';
@@ -226,7 +228,7 @@ function Slider(options) {
     this.rightArrow.id = this.containerId + '-arrow-right';
     this.rightArrow.classList.add('russunit-slider-arrow');
     this.rightArrow.classList.add('russunit-slider-arrow-right');
-    this.rightArrow.style.zIndex = 4;
+    this.rightArrow.style.zIndex = 5;
     this.rightArrow.style.color = '#fff';
     this.rightArrow.style.fontSize = '2em';
     this.rightArrow.style.margin = 'auto 10px';
@@ -296,12 +298,46 @@ function Slider(options) {
     _this.goToSlide(_this.getPrevIndex(), callback);
   };
 
-  this.setImageLink = function (index) {
-    if (_this.images[index].link) {
-      if (_this.bullets) {}
+  this.setImageLink = function (newIndex) {
+    var oldIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-      if (_this.arrows) {}
-    } else {}
+    if (_this.images[newIndex].link) {
+      console.log('setting link...');
+
+      if (_this.bullets) {
+        _this.bulletContainer.addEventListener('click', function () {
+          window.location.href = _this.images[newIndex].link;
+        });
+
+        _this.bulletContainer.style.cursor = 'pointer';
+      }
+
+      if (_this.arrows) {
+        _this.arrowContainer.addEventListener('click', function () {
+          window.location.href = _this.images[newIndex].link;
+        });
+
+        _this.arrowContainer.style.cursor = 'pointer';
+      }
+    } else if (oldIndex) {
+      console.log('unsetting link...');
+
+      if (_this.bullets) {
+        _this.bulletContainer.removeEventListener('click', function () {
+          window.location.href = _this.images[oldIndex].link;
+        });
+
+        _this.bulletContainer.style.cursor = 'inherit';
+      }
+
+      if (_this.arrows) {
+        _this.arrowContainer.removeEventListener('click', function () {
+          window.location.href = _this.images[oldIndex].link;
+        });
+
+        _this.arrowContainer.style.cursor = 'inherit';
+      }
+    }
   };
   /**
    * transition from one slide to another
@@ -358,6 +394,8 @@ function Slider(options) {
       }
 
       var finishSlide = function finishSlide() {
+        _this.setImageLink(newIndex, _this.currentIndex);
+
         _this.currentIndex = newIndex;
         _this.sliderLock = false;
 
@@ -376,20 +414,28 @@ function Slider(options) {
 
   if (this.bullets) {
     this.imageElements.forEach(function (element, index) {
-      _this.bullets[index].addEventListener('click', function () {
+      _this.bullets[index].addEventListener('click', function (event) {
         _this.goToSlide(index);
+
+        event.stopPropagation();
       });
     });
   }
 
   if (this.arrows) {
-    this.leftArrow.addEventListener('click', function () {
+    this.leftArrow.addEventListener('click', function (event) {
       _this.prevSlide();
+
+      event.stopPropagation();
     });
-    this.rightArrow.addEventListener('click', function () {
+    this.rightArrow.addEventListener('click', function (event) {
       _this.nextSlide();
+
+      event.stopPropagation();
     });
   }
+
+  this.setImageLink(this.currentIndex);
 };
 /**
  * fades the first target out, then fades the second target in.

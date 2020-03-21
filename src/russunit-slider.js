@@ -74,7 +74,11 @@ class Slider {
         this.container = document.getElementById(this.containerId);
         this.images.forEach((image, index) => {
             if(typeof image === 'string') {
-                image = {url: image};
+                image = {
+                    url: image,
+                    link: null
+                };
+                this.images[index] = image;
             }
             imageElement = document.createElement('IMG');
             imageElement.id = this.containerId + "-slide-" + index;
@@ -123,7 +127,7 @@ class Slider {
             this.bulletContainer = document.createElement('DIV');
             this.bulletContainer.id = this.containerId + '-bullet-container';
             this.bulletContainer.classList.add('russunit-slider-bullet-container');
-            this.bulletContainer.style.zIndex = 5;
+            this.bulletContainer.style.zIndex = 6;
             this.bulletContainer.style.position = 'relative';
             this.bulletContainer.style.margin = 'auto auto 0';
             this.bulletContainer.style.textAlign = 'center';
@@ -136,7 +140,7 @@ class Slider {
                 bullet.id = this.containerId + '-bullet-' + index;
                 bullet.classList.add('russunit-slider-bullet');
                 bullet.style.color = '#fff';
-                bullet.style.zIndex = 5;
+                bullet.style.zIndex = 7;
                 bullet.style.fontSize = '2em';
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
@@ -181,7 +185,7 @@ class Slider {
             this.leftArrow.id = this.containerId + '-arrow-left';
             this.leftArrow.classList.add('russunit-slider-arrow');
             this.leftArrow.classList.add('russunit-slider-arrow-left');
-            this.leftArrow.style.zIndex = 4;
+            this.leftArrow.style.zIndex = 5;
             this.leftArrow.style.color = '#fff';
             this.leftArrow.style.fontSize = '2em';
             this.leftArrow.style.margin = 'auto 10px';
@@ -193,7 +197,7 @@ class Slider {
             this.rightArrow.id = this.containerId + '-arrow-right';
             this.rightArrow.classList.add('russunit-slider-arrow');
             this.rightArrow.classList.add('russunit-slider-arrow-right');
-            this.rightArrow.style.zIndex = 4;
+            this.rightArrow.style.zIndex = 5;
             this.rightArrow.style.color = '#fff';
             this.rightArrow.style.fontSize = '2em';
             this.rightArrow.style.margin = 'auto 10px';
@@ -256,16 +260,35 @@ class Slider {
             this.goToSlide(this.getPrevIndex(), callback);
         };
 
-        this.setImageLink = (index) => {
-            if(this.images[index].link) {
+        this.setImageLink = (newIndex, oldIndex = null) => {
+            if(this.images[newIndex].link) {
+                console.log('setting link...');
                 if(this.bullets) {
-
+                    this.bulletContainer.addEventListener('click', () => {
+                        window.location.href = this.images[newIndex].link;
+                    });
+                    this.bulletContainer.style.cursor = 'pointer';
                 }
                 if(this.arrows) {
-
+                    this.arrowContainer.addEventListener('click', () => {
+                        window.location.href = this.images[newIndex].link;
+                    });
+                    this.arrowContainer.style.cursor = 'pointer';
                 }
-            } else {
-
+            } else if(oldIndex){
+                console.log('unsetting link...');
+                if(this.bullets) {
+                    this.bulletContainer.removeEventListener('click', () => {
+                        window.location.href = this.images[oldIndex].link;
+                    });
+                    this.bulletContainer.style.cursor = 'inherit';
+                }
+                if(this.arrows) {
+                    this.arrowContainer.removeEventListener('click', () => {
+                        window.location.href = this.images[oldIndex].link;
+                    });
+                    this.arrowContainer.style.cursor = 'inherit';
+                }
             }
         };
 
@@ -318,6 +341,7 @@ class Slider {
                     this.bullets[newIndex].style.color = this.bulletColor;
                 }
                 var finishSlide = () => {
+                    this.setImageLink(newIndex, this.currentIndex);
                     this.currentIndex = newIndex;
                     this.sliderLock = false;
                     if (typeof callback === 'function') {
@@ -333,20 +357,25 @@ class Slider {
 
         if(this.bullets) {
             this.imageElements.forEach((element, index) => {
-                this.bullets[index].addEventListener('click', () => {
+                this.bullets[index].addEventListener('click', (event) => {
                     this.goToSlide(index);
+                    event.stopPropagation();
                 });
             });
         }
 
         if(this.arrows) {
-            this.leftArrow.addEventListener('click', () => {
+            this.leftArrow.addEventListener('click', (event) => {
                 this.prevSlide();
+                event.stopPropagation();
             });
-            this.rightArrow.addEventListener('click', () => {
+            this.rightArrow.addEventListener('click', (event) => {
                 this.nextSlide();
+                event.stopPropagation();
             });
         }
+
+        this.setImageLink(this.currentIndex);
 
 
     }
