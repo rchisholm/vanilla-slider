@@ -252,6 +252,11 @@ class Slider {
             this.goToSlide(this.getPrevIndex(), callback);
         };
 
+        this.setSlideLink = (index) => {
+            //TODO: if images[index].link, create an overlay (like arrowContainer) with z-index 8 which has a click listener to go  to the link.
+            // ... if not, remove that overlay (overlay must have same id and be a member of slider object)
+        }
+
         /**
          * transition from one slide to another
          */
@@ -302,6 +307,7 @@ class Slider {
                 }
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
+                    this.setSlideLink(newIndex);
                     this.sliderLock = false;
                     if (typeof callback === 'function') {
                         callback();
