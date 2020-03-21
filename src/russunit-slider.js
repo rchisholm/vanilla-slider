@@ -23,7 +23,7 @@ class Slider {
 
         this.containerId = options.containerId; // id of container div
         this.containerPosition = options.containerPosition; // position style property for the container (if defined)
-        this.imageURLs = options.imageURLs; // array or URLs of images
+        this.images = options.images; // array or URLs of images
         this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
         this.transitionTime = options.transitionTime; // time for transition to take place
         this.transitionDirectionX = options.transitionDirectionX; // 
@@ -37,7 +37,7 @@ class Slider {
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
-        this.images = []; // image elements
+        this.imageElements = []; // image elements
 
         // adjusting values
         this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
@@ -61,43 +61,54 @@ class Slider {
             this.bulletColor = 'red'; // default bulletColor
         }
 
-        if (!Array.isArray(this.imageURLs)) {
-            throw ("Slider error: imageURLs must be an array of strings");
+        if (!Array.isArray(this.images)) {
+            throw ("Slider error: images must be an array");
         }
         if (!document.getElementById(this.containerId)) {
             throw ("Slider error: conatinerId must be a valid element's id");
         }
 
         // place images in cointainer
-        var image;
+        var imageElement;
+        var imageLink;
         this.container = document.getElementById(this.containerId);
-        this.imageURLs.forEach((imageURL, index) => {
-            image = document.createElement('IMG');
-            image.id = this.containerId + "-slide-" + index;
-            image.src = imageURL;
-            image.classList.add('russunit-slider-image');
-            image.style.margin = 'auto';
-            image.style.maxWidth = '100%';
-            image.style.position = 'absolute';
-            image.style.top = 0;
-            image.style.left = 0;
+        this.images.forEach((image, index) => {
+            if(typeof image === 'string') {
+                image = {url: image};
+            }
+            imageElement = document.createElement('IMG');
+            imageElement.id = this.containerId + "-slide-" + index;
+            imageElement.src = image.url;
+            imageElement.classList.add('russunit-slider-image');
+            imageElement.style.margin = 'auto';
+            imageElement.style.maxWidth = '100%';
+            imageElement.style.position = 'absolute';
+            imageElement.style.top = 0;
+            imageElement.style.left = 0;
 
             if (index > 0) {
-                image.style.visibility = 'hidden';
-                image.style.zIndex = 0;
+                imageElement.style.visibility = 'hidden';
+                imageElement.style.zIndex = 0;
             } else {
-                image.style.zIndex = 2;
+                imageElement.style.zIndex = 2;
             }
-            this.container.appendChild(image);
-            if(index === this.imageURLs.length - 1) {
-                image.onload = () => {
-                    this.container.style.width = Math.min(image.naturalWidth, window.innerWidth);
-                    this.container.style.height = Math.min(image.naturalHeight, window.innerHeight);
-                    this.container.style.width = image.clientWidth;
-                    this.container.style.height = image.clientHeight;
+            if(image.link) {
+                imageLink = document.createElement('A');
+                imageLink.href = image.link;
+                this.container.appendChild(imageLink);
+                imageLink.appendChild(imageElement);
+            } else {
+                this.container.appendChild(imageElement);
+            }
+            if(index === this.images.length - 1) {
+                imageElement.onload = () => {
+                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
+                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
+                    this.container.style.width = imageElement.clientWidth;
+                    this.container.style.height = imageElement.clientHeight;
                 };
             }
-            this.images[index] = image;
+            this.imageElements[index] = imageElement;
         });
         // style container
         this.container.classList.add('russunit-slider-container');
@@ -109,17 +120,18 @@ class Slider {
         this.container.style.position = 'relative';
         if(this.bullets) {
             // create bullet container
-            var bulletContainer = document.createElement('DIV');
-            bulletContainer.id = this.containerId + '-bullet-container';
-            bulletContainer.classList.add('russunit-slider-bullet-container');
-            bulletContainer.style.zIndex = 5;
-            bulletContainer.style.position = 'relative';
-            bulletContainer.style.margin = 'auto auto 0';
-            bulletContainer.style.textAlign = 'center';
-            this.container.appendChild(bulletContainer);
+            this.bulletContainer = document.createElement('DIV');
+            this.bulletContainer.id = this.containerId + '-bullet-container';
+            this.bulletContainer.classList.add('russunit-slider-bullet-container');
+            this.bulletContainer.style.zIndex = 5;
+            this.bulletContainer.style.position = 'relative';
+            this.bulletContainer.style.margin = 'auto auto 0';
+            this.bulletContainer.style.textAlign = 'center';
+            this.container.appendChild(this.bulletContainer);
             // create bullets
+            this.bullets = [];
             var bullet;
-            this.images.forEach((element, index) => {
+            this.imageElements.forEach((element, index) => {
                 bullet = document.createElement('SPAN');
                 bullet.id = this.containerId + '-bullet-' + index;
                 bullet.classList.add('russunit-slider-bullet');
@@ -132,73 +144,74 @@ class Slider {
                 if(index === 0) {
                     bullet.style.color = this.bulletColor;
                 }
-                bulletContainer.appendChild(bullet);
+                this.bullets[index] = bullet;
+                this.bulletContainer.appendChild(bullet);
             });
             // hide bullets
             if(this.bulletsHide) {
-                bulletContainer.style.visibility = 'hidden';
-                bulletContainer.style.opacity = 0;
-                bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+                this.bulletContainer.style.visibility = 'hidden';
+                this.bulletContainer.style.opacity = 0;
+                this.bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
                 this.container.addEventListener('mouseenter', () => {
-                    bulletContainer.style.visibility = 'visible';
-                    bulletContainer.style.opacity = 1;
+                    this.bulletContainer.style.visibility = 'visible';
+                    this.bulletContainer.style.opacity = 1;
                 });
                 this.container.addEventListener('mouseleave', () => {
-                    bulletContainer.style.visibility = 'hidden';
-                    bulletContainer.style.opacity = 0;
+                    this.bulletContainer.style.visibility = 'hidden';
+                    this.bulletContainer.style.opacity = 0;
                 });
             }
         }
         if(this.arrows) {
             // create arrow container
-            var arrowContainer = document.createElement('DIV');
-            arrowContainer.id = this.containerId + '-arrow-container';
-            arrowContainer.classList.add('russunit-slider-arrow-container');
-            arrowContainer.style.zIndex = 4;
-            arrowContainer.style.position = 'absolute';
-            arrowContainer.style.top = 0;
-            arrowContainer.style.left = 0;
-            arrowContainer.style.display = 'flex';
-            arrowContainer.style.width = '100%';
-            arrowContainer.style.height = '100%';
-            arrowContainer.style.justifyContent = 'space-between';
-            this.container.appendChild(arrowContainer);
+            this.arrowContainer = document.createElement('DIV');
+            this.arrowContainer.id = this.containerId + '-arrow-container';
+            this.arrowContainer.classList.add('russunit-slider-arrow-container');
+            this.arrowContainer.style.zIndex = 4;
+            this.arrowContainer.style.position = 'absolute';
+            this.arrowContainer.style.top = 0;
+            this.arrowContainer.style.left = 0;
+            this.arrowContainer.style.display = 'flex';
+            this.arrowContainer.style.width = '100%';
+            this.arrowContainer.style.height = '100%';
+            this.arrowContainer.style.justifyContent = 'space-between';
+            this.container.appendChild(this.arrowContainer);
             // create left arrow
-            var leftArrow = document.createElement('SPAN');
-            leftArrow.id = this.containerId + '-arrow-left';
-            leftArrow.classList.add('russunit-slider-arrow');
-            leftArrow.classList.add('russunit-slider-arrow-left');
-            leftArrow.style.zIndex = 4;
-            leftArrow.style.color = '#fff';
-            leftArrow.style.fontSize = '2em';
-            leftArrow.style.margin = 'auto 10px';
-            leftArrow.style.cursor = 'pointer';
-            leftArrow.innerHTML = '&lt;';
-            arrowContainer.appendChild(leftArrow);
+            this.leftArrow = document.createElement('SPAN');
+            this.leftArrow.id = this.containerId + '-arrow-left';
+            this.leftArrow.classList.add('russunit-slider-arrow');
+            this.leftArrow.classList.add('russunit-slider-arrow-left');
+            this.leftArrow.style.zIndex = 4;
+            this.leftArrow.style.color = '#fff';
+            this.leftArrow.style.fontSize = '2em';
+            this.leftArrow.style.margin = 'auto 10px';
+            this.leftArrow.style.cursor = 'pointer';
+            this.leftArrow.innerHTML = '&lt;';
+            this.arrowContainer.appendChild(this.leftArrow);
             // create right arrow
-            var rightArrow = document.createElement('SPAN');
-            rightArrow.id = this.containerId + '-arrow-right';
-            rightArrow.classList.add('russunit-slider-arrow');
-            rightArrow.classList.add('russunit-slider-arrow-right');
-            rightArrow.style.zIndex = 4;
-            rightArrow.style.color = '#fff';
-            rightArrow.style.fontSize = '2em';
-            rightArrow.style.margin = 'auto 10px';
-            rightArrow.style.cursor = 'pointer';
-            rightArrow.innerHTML = '&gt;';
-            arrowContainer.appendChild(rightArrow);
+            this.rightArrow = document.createElement('SPAN');
+            this.rightArrow.id = this.containerId + '-arrow-right';
+            this.rightArrow.classList.add('russunit-slider-arrow');
+            this.rightArrow.classList.add('russunit-slider-arrow-right');
+            this.rightArrow.style.zIndex = 4;
+            this.rightArrow.style.color = '#fff';
+            this.rightArrow.style.fontSize = '2em';
+            this.rightArrow.style.margin = 'auto 10px';
+            this.rightArrow.style.cursor = 'pointer';
+            this.rightArrow.innerHTML = '&gt;';
+            this.arrowContainer.appendChild(this.rightArrow);
             // hide arrows
             if(this.arrowsHide) {
-                arrowContainer.style.visibility = 'hidden';
-                arrowContainer.style.opacity = 0;
-                arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+                this.arrowContainer.style.visibility = 'hidden';
+                this.arrowContainer.style.opacity = 0;
+                this.arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
                 this.container.addEventListener('mouseenter', () => {
-                    arrowContainer.style.visibility = 'visible';
-                    arrowContainer.style.opacity = 1;
+                    this.arrowContainer.style.visibility = 'visible';
+                    this.arrowContainer.style.opacity = 1;
                 });
                 this.container.addEventListener('mouseleave', () => {
-                    arrowContainer.style.visibility = 'hidden';
-                    arrowContainer.style.opacity = 0;
+                    this.arrowContainer.style.visibility = 'hidden';
+                    this.arrowContainer.style.opacity = 0;
                 });
             }
         }
@@ -208,7 +221,7 @@ class Slider {
          */
         this.resizeContainer = () => {
             this.container.style.width = this.container.parentNode.clientWidth;
-            var imageXYRatio = this.images[0].naturalWidth / this.images[0].naturalHeight;
+            var imageXYRatio = this.imageElements[0].naturalWidth / this.imageElements[0].naturalHeight;
             this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio;
         };
 
@@ -218,14 +231,14 @@ class Slider {
          * get the index of the next slide
          */
         this.getNextIndex = () => {
-            return (this.currentIndex + 1) % this.images.length;
+            return (this.currentIndex + 1) % this.imageElements.length;
         };
 
         /**
          * get the index of the previous slide
          */
         this.getPrevIndex = () => {
-            return this.currentIndex < 1 ? this.images.length - 1 : this.currentIndex - 1;
+            return this.currentIndex < 1 ? this.imageElements.length - 1 : this.currentIndex - 1;
         };
 
         /**
@@ -243,24 +256,36 @@ class Slider {
             this.goToSlide(this.getPrevIndex(), callback);
         };
 
-        // this.resetSlide = (index) => {
-        //     this.images[index].
-        // }
+        this.setImageLink = (index) => {
+            if(this.images[index].link) {
+                if(this.bullets) {
 
+                }
+                if(this.arrows) {
+
+                }
+            } else {
+
+            }
+        };
+
+        /**
+         * transition from one slide to another
+         */
         this.transitionSlide = {
             'default': (newIndex, callback) => {
-                slideFadeReplace(this.images[this.currentIndex], this.images[newIndex], callback, {
+                slideFadeReplace(this.imageElements[this.currentIndex], this.imageElements[newIndex], callback, {
                     toggleVisibility: true,
                     fadeTime: (this.transitionTime / 2)
                 });
             },
             'overlay': (newIndex, callback) => {
-                this.images[newIndex].style.zIndex = 1;
-                this.images[newIndex].style.opacity = 1;
-                this.images[newIndex].style.visibility = 'visible';
-                slideFadeOut(this.images[this.currentIndex], () => {
-                    this.images[this.currentIndex].style.zIndex = 0;
-                    this.images[newIndex].style.zIndex = 2;
+                this.imageElements[newIndex].style.zIndex = 1;
+                this.imageElements[newIndex].style.opacity = 1;
+                this.imageElements[newIndex].style.visibility = 'visible';
+                slideFadeOut(this.imageElements[this.currentIndex], () => {
+                    this.imageElements[this.currentIndex].style.zIndex = 0;
+                    this.imageElements[newIndex].style.zIndex = 2;
                     callback();
                 }, {
                     toggleVisibility: true,
@@ -277,7 +302,7 @@ class Slider {
          * go to the slide at index (if possible), then execute the callback
          */
         this.goToSlide = (newIndex, callback = null) => {
-            if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.images.length) {
+            if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.imageElements.length) {
                 console.log('Slider error: invalid index in goToSlide: ' + newIndex);
                 if (typeof callback === 'function') {
                     callback();
@@ -289,8 +314,8 @@ class Slider {
                 }
             } else if (!this.sliderLock) {
                 if(this.bullets) {
-                    document.getElementById(this.containerId + '-bullet-' + this.currentIndex).style.color = '#fff';
-                    document.getElementById(this.containerId + '-bullet-' + newIndex).style.color = this.bulletColor;
+                    this.bullets[this.currentIndex].style.color = '#fff';
+                    this.bullets[newIndex].style.color = this.bulletColor;
                 }
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
@@ -307,18 +332,18 @@ class Slider {
         };
 
         if(this.bullets) {
-            this.images.forEach((element, index) => {
-                document.getElementById(this.containerId + '-bullet-' + index).addEventListener('click', () => {
+            this.imageElements.forEach((element, index) => {
+                this.bullets[index].addEventListener('click', () => {
                     this.goToSlide(index);
                 });
             });
         }
 
         if(this.arrows) {
-            document.getElementById(this.containerId + '-arrow-left').addEventListener('click', () => {
+            this.leftArrow.addEventListener('click', () => {
                 this.prevSlide();
             });
-            document.getElementById(this.containerId + '-arrow-right').addEventListener('click', () => {
+            this.rightArrow.addEventListener('click', () => {
                 this.nextSlide();
             });
         }

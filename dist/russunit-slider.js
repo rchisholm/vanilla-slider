@@ -31,7 +31,7 @@ function Slider(options) {
 
   this.containerPosition = options.containerPosition; // position style property for the container (if defined)
 
-  this.imageURLs = options.imageURLs; // array or URLs of images
+  this.images = options.images; // array or URLs of images
 
   this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
 
@@ -57,7 +57,7 @@ function Slider(options) {
 
   this.sliderLock = false; // slider is locked and can't transition
 
-  this.images = []; // image elements
+  this.imageElements = []; // image elements
   // adjusting values
 
   this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
@@ -80,8 +80,8 @@ function Slider(options) {
     this.bulletColor = 'red'; // default bulletColor
   }
 
-  if (!Array.isArray(this.imageURLs)) {
-    throw "Slider error: imageURLs must be an array of strings";
+  if (!Array.isArray(this.images)) {
+    throw "Slider error: images must be an array";
   }
 
   if (!document.getElementById(this.containerId)) {
@@ -89,38 +89,54 @@ function Slider(options) {
   } // place images in cointainer
 
 
-  var image;
+  var imageElement;
+  var imageLink;
   this.container = document.getElementById(this.containerId);
-  this.imageURLs.forEach(function (imageURL, index) {
-    image = document.createElement('IMG');
-    image.id = _this.containerId + "-slide-" + index;
-    image.src = imageURL;
-    image.classList.add('russunit-slider-image');
-    image.style.margin = 'auto';
-    image.style.maxWidth = '100%';
-    image.style.position = 'absolute';
-    image.style.top = 0;
-    image.style.left = 0;
-
-    if (index > 0) {
-      image.style.visibility = 'hidden';
-      image.style.zIndex = 0;
-    } else {
-      image.style.zIndex = 2;
-    }
-
-    _this.container.appendChild(image);
-
-    if (index === _this.imageURLs.length - 1) {
-      image.onload = function () {
-        _this.container.style.width = Math.min(image.naturalWidth, window.innerWidth);
-        _this.container.style.height = Math.min(image.naturalHeight, window.innerHeight);
-        _this.container.style.width = image.clientWidth;
-        _this.container.style.height = image.clientHeight;
+  this.images.forEach(function (image, index) {
+    if (typeof image === 'string') {
+      image = {
+        url: image
       };
     }
 
-    _this.images[index] = image;
+    imageElement = document.createElement('IMG');
+    imageElement.id = _this.containerId + "-slide-" + index;
+    imageElement.src = image.url;
+    imageElement.classList.add('russunit-slider-image');
+    imageElement.style.margin = 'auto';
+    imageElement.style.maxWidth = '100%';
+    imageElement.style.position = 'absolute';
+    imageElement.style.top = 0;
+    imageElement.style.left = 0;
+
+    if (index > 0) {
+      imageElement.style.visibility = 'hidden';
+      imageElement.style.zIndex = 0;
+    } else {
+      imageElement.style.zIndex = 2;
+    }
+
+    if (image.link) {
+      imageLink = document.createElement('A');
+      imageLink.href = image.link;
+
+      _this.container.appendChild(imageLink);
+
+      imageLink.appendChild(imageElement);
+    } else {
+      _this.container.appendChild(imageElement);
+    }
+
+    if (index === _this.images.length - 1) {
+      imageElement.onload = function () {
+        _this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
+        _this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
+        _this.container.style.width = imageElement.clientWidth;
+        _this.container.style.height = imageElement.clientHeight;
+      };
+    }
+
+    _this.imageElements[index] = imageElement;
   }); // style container
 
   this.container.classList.add('russunit-slider-container');
@@ -133,17 +149,18 @@ function Slider(options) {
 
   if (this.bullets) {
     // create bullet container
-    var bulletContainer = document.createElement('DIV');
-    bulletContainer.id = this.containerId + '-bullet-container';
-    bulletContainer.classList.add('russunit-slider-bullet-container');
-    bulletContainer.style.zIndex = 5;
-    bulletContainer.style.position = 'relative';
-    bulletContainer.style.margin = 'auto auto 0';
-    bulletContainer.style.textAlign = 'center';
-    this.container.appendChild(bulletContainer); // create bullets
+    this.bulletContainer = document.createElement('DIV');
+    this.bulletContainer.id = this.containerId + '-bullet-container';
+    this.bulletContainer.classList.add('russunit-slider-bullet-container');
+    this.bulletContainer.style.zIndex = 5;
+    this.bulletContainer.style.position = 'relative';
+    this.bulletContainer.style.margin = 'auto auto 0';
+    this.bulletContainer.style.textAlign = 'center';
+    this.container.appendChild(this.bulletContainer); // create bullets
 
+    this.bullets = [];
     var bullet;
-    this.images.forEach(function (element, index) {
+    this.imageElements.forEach(function (element, index) {
       bullet = document.createElement('SPAN');
       bullet.id = _this.containerId + '-bullet-' + index;
       bullet.classList.add('russunit-slider-bullet');
@@ -158,74 +175,76 @@ function Slider(options) {
         bullet.style.color = _this.bulletColor;
       }
 
-      bulletContainer.appendChild(bullet);
+      _this.bullets[index] = bullet;
+
+      _this.bulletContainer.appendChild(bullet);
     }); // hide bullets
 
     if (this.bulletsHide) {
-      bulletContainer.style.visibility = 'hidden';
-      bulletContainer.style.opacity = 0;
-      bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+      this.bulletContainer.style.visibility = 'hidden';
+      this.bulletContainer.style.opacity = 0;
+      this.bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
       this.container.addEventListener('mouseenter', function () {
-        bulletContainer.style.visibility = 'visible';
-        bulletContainer.style.opacity = 1;
+        _this.bulletContainer.style.visibility = 'visible';
+        _this.bulletContainer.style.opacity = 1;
       });
       this.container.addEventListener('mouseleave', function () {
-        bulletContainer.style.visibility = 'hidden';
-        bulletContainer.style.opacity = 0;
+        _this.bulletContainer.style.visibility = 'hidden';
+        _this.bulletContainer.style.opacity = 0;
       });
     }
   }
 
   if (this.arrows) {
     // create arrow container
-    var arrowContainer = document.createElement('DIV');
-    arrowContainer.id = this.containerId + '-arrow-container';
-    arrowContainer.classList.add('russunit-slider-arrow-container');
-    arrowContainer.style.zIndex = 4;
-    arrowContainer.style.position = 'absolute';
-    arrowContainer.style.top = 0;
-    arrowContainer.style.left = 0;
-    arrowContainer.style.display = 'flex';
-    arrowContainer.style.width = '100%';
-    arrowContainer.style.height = '100%';
-    arrowContainer.style.justifyContent = 'space-between';
-    this.container.appendChild(arrowContainer); // create left arrow
+    this.arrowContainer = document.createElement('DIV');
+    this.arrowContainer.id = this.containerId + '-arrow-container';
+    this.arrowContainer.classList.add('russunit-slider-arrow-container');
+    this.arrowContainer.style.zIndex = 4;
+    this.arrowContainer.style.position = 'absolute';
+    this.arrowContainer.style.top = 0;
+    this.arrowContainer.style.left = 0;
+    this.arrowContainer.style.display = 'flex';
+    this.arrowContainer.style.width = '100%';
+    this.arrowContainer.style.height = '100%';
+    this.arrowContainer.style.justifyContent = 'space-between';
+    this.container.appendChild(this.arrowContainer); // create left arrow
 
-    var leftArrow = document.createElement('SPAN');
-    leftArrow.id = this.containerId + '-arrow-left';
-    leftArrow.classList.add('russunit-slider-arrow');
-    leftArrow.classList.add('russunit-slider-arrow-left');
-    leftArrow.style.zIndex = 4;
-    leftArrow.style.color = '#fff';
-    leftArrow.style.fontSize = '2em';
-    leftArrow.style.margin = 'auto 10px';
-    leftArrow.style.cursor = 'pointer';
-    leftArrow.innerHTML = '&lt;';
-    arrowContainer.appendChild(leftArrow); // create right arrow
+    this.leftArrow = document.createElement('SPAN');
+    this.leftArrow.id = this.containerId + '-arrow-left';
+    this.leftArrow.classList.add('russunit-slider-arrow');
+    this.leftArrow.classList.add('russunit-slider-arrow-left');
+    this.leftArrow.style.zIndex = 4;
+    this.leftArrow.style.color = '#fff';
+    this.leftArrow.style.fontSize = '2em';
+    this.leftArrow.style.margin = 'auto 10px';
+    this.leftArrow.style.cursor = 'pointer';
+    this.leftArrow.innerHTML = '&lt;';
+    this.arrowContainer.appendChild(this.leftArrow); // create right arrow
 
-    var rightArrow = document.createElement('SPAN');
-    rightArrow.id = this.containerId + '-arrow-right';
-    rightArrow.classList.add('russunit-slider-arrow');
-    rightArrow.classList.add('russunit-slider-arrow-right');
-    rightArrow.style.zIndex = 4;
-    rightArrow.style.color = '#fff';
-    rightArrow.style.fontSize = '2em';
-    rightArrow.style.margin = 'auto 10px';
-    rightArrow.style.cursor = 'pointer';
-    rightArrow.innerHTML = '&gt;';
-    arrowContainer.appendChild(rightArrow); // hide arrows
+    this.rightArrow = document.createElement('SPAN');
+    this.rightArrow.id = this.containerId + '-arrow-right';
+    this.rightArrow.classList.add('russunit-slider-arrow');
+    this.rightArrow.classList.add('russunit-slider-arrow-right');
+    this.rightArrow.style.zIndex = 4;
+    this.rightArrow.style.color = '#fff';
+    this.rightArrow.style.fontSize = '2em';
+    this.rightArrow.style.margin = 'auto 10px';
+    this.rightArrow.style.cursor = 'pointer';
+    this.rightArrow.innerHTML = '&gt;';
+    this.arrowContainer.appendChild(this.rightArrow); // hide arrows
 
     if (this.arrowsHide) {
-      arrowContainer.style.visibility = 'hidden';
-      arrowContainer.style.opacity = 0;
-      arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+      this.arrowContainer.style.visibility = 'hidden';
+      this.arrowContainer.style.opacity = 0;
+      this.arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
       this.container.addEventListener('mouseenter', function () {
-        arrowContainer.style.visibility = 'visible';
-        arrowContainer.style.opacity = 1;
+        _this.arrowContainer.style.visibility = 'visible';
+        _this.arrowContainer.style.opacity = 1;
       });
       this.container.addEventListener('mouseleave', function () {
-        arrowContainer.style.visibility = 'hidden';
-        arrowContainer.style.opacity = 0;
+        _this.arrowContainer.style.visibility = 'hidden';
+        _this.arrowContainer.style.opacity = 0;
       });
     }
   }
@@ -236,7 +255,7 @@ function Slider(options) {
 
   this.resizeContainer = function () {
     _this.container.style.width = _this.container.parentNode.clientWidth;
-    var imageXYRatio = _this.images[0].naturalWidth / _this.images[0].naturalHeight;
+    var imageXYRatio = _this.imageElements[0].naturalWidth / _this.imageElements[0].naturalHeight;
     _this.container.style.height = parseFloat(_this.container.style.width.replace('px', '')) / imageXYRatio;
   };
 
@@ -246,7 +265,7 @@ function Slider(options) {
    */
 
   this.getNextIndex = function () {
-    return (_this.currentIndex + 1) % _this.images.length;
+    return (_this.currentIndex + 1) % _this.imageElements.length;
   };
   /**
    * get the index of the previous slide
@@ -254,7 +273,7 @@ function Slider(options) {
 
 
   this.getPrevIndex = function () {
-    return _this.currentIndex < 1 ? _this.images.length - 1 : _this.currentIndex - 1;
+    return _this.currentIndex < 1 ? _this.imageElements.length - 1 : _this.currentIndex - 1;
   };
   /**
    * go to the next slide, then execute the callback
@@ -275,25 +294,34 @@ function Slider(options) {
     var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
     _this.goToSlide(_this.getPrevIndex(), callback);
-  }; // this.resetSlide = (index) => {
-  //     this.images[index].
-  // }
+  };
+
+  this.setImageLink = function (index) {
+    if (_this.images[index].link) {
+      if (_this.bullets) {}
+
+      if (_this.arrows) {}
+    } else {}
+  };
+  /**
+   * transition from one slide to another
+   */
 
 
   this.transitionSlide = {
     'default': function _default(newIndex, callback) {
-      slideFadeReplace(_this.images[_this.currentIndex], _this.images[newIndex], callback, {
+      slideFadeReplace(_this.imageElements[_this.currentIndex], _this.imageElements[newIndex], callback, {
         toggleVisibility: true,
         fadeTime: _this.transitionTime / 2
       });
     },
     'overlay': function overlay(newIndex, callback) {
-      _this.images[newIndex].style.zIndex = 1;
-      _this.images[newIndex].style.opacity = 1;
-      _this.images[newIndex].style.visibility = 'visible';
-      slideFadeOut(_this.images[_this.currentIndex], function () {
-        _this.images[_this.currentIndex].style.zIndex = 0;
-        _this.images[newIndex].style.zIndex = 2;
+      _this.imageElements[newIndex].style.zIndex = 1;
+      _this.imageElements[newIndex].style.opacity = 1;
+      _this.imageElements[newIndex].style.visibility = 'visible';
+      slideFadeOut(_this.imageElements[_this.currentIndex], function () {
+        _this.imageElements[_this.currentIndex].style.zIndex = 0;
+        _this.imageElements[newIndex].style.zIndex = 2;
         callback();
       }, {
         toggleVisibility: true,
@@ -311,7 +339,7 @@ function Slider(options) {
   this.goToSlide = function (newIndex) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-    if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > _this.images.length) {
+    if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > _this.imageElements.length) {
       console.log('Slider error: invalid index in goToSlide: ' + newIndex);
 
       if (typeof callback === 'function') {
@@ -325,8 +353,8 @@ function Slider(options) {
       }
     } else if (!_this.sliderLock) {
       if (_this.bullets) {
-        document.getElementById(_this.containerId + '-bullet-' + _this.currentIndex).style.color = '#fff';
-        document.getElementById(_this.containerId + '-bullet-' + newIndex).style.color = _this.bulletColor;
+        _this.bullets[_this.currentIndex].style.color = '#fff';
+        _this.bullets[newIndex].style.color = _this.bulletColor;
       }
 
       var finishSlide = function finishSlide() {
@@ -347,18 +375,18 @@ function Slider(options) {
   };
 
   if (this.bullets) {
-    this.images.forEach(function (element, index) {
-      document.getElementById(_this.containerId + '-bullet-' + index).addEventListener('click', function () {
+    this.imageElements.forEach(function (element, index) {
+      _this.bullets[index].addEventListener('click', function () {
         _this.goToSlide(index);
       });
     });
   }
 
   if (this.arrows) {
-    document.getElementById(this.containerId + '-arrow-left').addEventListener('click', function () {
+    this.leftArrow.addEventListener('click', function () {
       _this.prevSlide();
     });
-    document.getElementById(this.containerId + '-arrow-right').addEventListener('click', function () {
+    this.rightArrow.addEventListener('click', function () {
       _this.nextSlide();
     });
   }
