@@ -7,10 +7,10 @@ class Slider {
 
     /**
      * 
-     * @param {{containerId: string, imageURLs: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
+     * @param {{containerId: string, images: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
      * options.containerId: id of element which shall be the container for the slider;
      * options.containerPosition: position style property for the container - 'relative', etc;
-     * options.imageURLs: array of URLs for images;
+     * options.images: array of URLs for images;
      * options.transitionStyle: style of transition - 'default' or 'overlay';
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
@@ -73,12 +73,9 @@ class Slider {
         var imageLink;
         this.container = document.getElementById(this.containerId);
         this.images.forEach((image, index) => {
-            if(typeof image === 'string') {
-                image = {url: image};
-            }
             imageElement = document.createElement('IMG');
             imageElement.id = this.containerId + "-slide-" + index;
-            imageElement.src = image.url;
+            imageElement.src = image;
             imageElement.classList.add('russunit-slider-image');
             imageElement.style.margin = 'auto';
             imageElement.style.maxWidth = '100%';
@@ -254,19 +251,6 @@ class Slider {
          */
         this.prevSlide = (callback = null) => {
             this.goToSlide(this.getPrevIndex(), callback);
-        };
-
-        this.setImageLink = (index) => {
-            if(this.images[index].link) {
-                if(this.bullets) {
-
-                }
-                if(this.arrows) {
-
-                }
-            } else {
-
-            }
         };
 
         /**
