@@ -7,10 +7,10 @@ class Slider {
 
     /**
      * 
-     * @param {{containerId: string, images: Array<string>, transitionStyle: string, transitionTime: number, containerPosition: string}} options options object for slider:
+     * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string}} options options object for slider:
      * options.containerId: id of element which shall be the container for the slider;
      * options.containerPosition: position style property for the container - 'relative', etc;
-     * options.images: array of URLs for images;
+     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
      * options.transitionStyle: style of transition - 'default' or 'overlay';
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
@@ -21,19 +21,19 @@ class Slider {
 
         this.transitionStyles = ['default', 'overlay']; // available transition styles
 
-        this.containerId = options.containerId; // id of container div
-        this.containerPosition = options.containerPosition; // position style property for the container (if defined)
-        this.images = options.images; // array or URLs of images
-        this.transitionStyle = options.transitionStyle; // style of transition, one of transitionStyles
-        this.transitionTime = options.transitionTime; // time for transition to take place
-        this.transitionDirectionX = options.transitionDirectionX; // 
-        this.transitionDirectionY = options.transitionDirectionY; // 
-        this.transitionZoom = options.transitionZoom; // 
-        this.bullets = options.bullets; //
-        this.bulletColor = options.bulletColor; // 
-        this.bulletsHide = options.bulletsHide; //
-        this.arrows = options.arrows; //
-        this.arrowsHide = options.arrowsHide; // 
+        this.containerId = options.containerId;
+        this.containerPosition = options.containerPosition;
+        this.images = options.images;
+        this.transitionStyle = options.transitionStyle;
+        this.transitionTime = options.transitionTime;
+        this.transitionDirectionX = options.transitionDirectionX;
+        this.transitionDirectionY = options.transitionDirectionY; 
+        this.transitionZoom = options.transitionZoom;
+        this.bullets = options.bullets;
+        this.bulletColor = options.bulletColor;
+        this.bulletsHide = options.bulletsHide;
+        this.arrows = options.arrows;
+        this.arrowsHide = options.arrowsHide;
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -75,13 +75,13 @@ class Slider {
         this.images.forEach((image, index) => {
             if(typeof image === 'string') {
                 image = {
-                    url: image,
-                    link: null
+                    imageUrl: image,
+                    linkUrl: null
                 };
             }
             imageElement = document.createElement('IMG');
             imageElement.id = this.containerId + "-slide-" + index;
-            imageElement.src = image.url;
+            imageElement.src = image.imageUrl;
             imageElement.classList.add('russunit-slider-image');
             imageElement.style.margin = 'auto';
             imageElement.style.maxWidth = '100%';
@@ -114,12 +114,28 @@ class Slider {
         this.container.style.display = 'flex';
         this.container.style.overflow = 'hidden';
         this.container.style.position = 'relative';
+
+        if(this.arrows) {
+            // create left arrow
+            this.leftArrow = document.createElement('SPAN');
+            this.leftArrow.id = this.containerId + '-arrow-left';
+            this.leftArrow.classList.add('russunit-slider-arrow');
+            this.leftArrow.classList.add('russunit-slider-arrow-left');
+            this.leftArrow.style.zIndex = 6;
+            this.leftArrow.style.color = '#fff';
+            this.leftArrow.style.fontSize = '2em';
+            this.leftArrow.style.margin = 'auto auto auto 10px';
+            this.leftArrow.style.cursor = 'pointer';
+            this.leftArrow.innerHTML = '&lt;';
+            this.container.appendChild(this.leftArrow);
+        }
+
         if(this.bullets) {
             // create bullet container
             this.bulletContainer = document.createElement('DIV');
             this.bulletContainer.id = this.containerId + '-bullet-container';
             this.bulletContainer.classList.add('russunit-slider-bullet-container');
-            this.bulletContainer.style.zIndex = 5;
+            this.bulletContainer.style.zIndex = 6;
             this.bulletContainer.style.position = 'relative';
             this.bulletContainer.style.margin = 'auto auto 0';
             this.bulletContainer.style.textAlign = 'center';
@@ -158,56 +174,42 @@ class Slider {
                 });
             }
         }
+
         if(this.arrows) {
-            // create arrow container
-            this.arrowContainer = document.createElement('DIV');
-            this.arrowContainer.id = this.containerId + '-arrow-container';
-            this.arrowContainer.classList.add('russunit-slider-arrow-container');
-            this.arrowContainer.style.zIndex = 4;
-            this.arrowContainer.style.position = 'absolute';
-            this.arrowContainer.style.top = 0;
-            this.arrowContainer.style.left = 0;
-            this.arrowContainer.style.display = 'flex';
-            this.arrowContainer.style.width = '100%';
-            this.arrowContainer.style.height = '100%';
-            this.arrowContainer.style.justifyContent = 'space-between';
-            this.container.appendChild(this.arrowContainer);
-            // create left arrow
-            this.leftArrow = document.createElement('SPAN');
-            this.leftArrow.id = this.containerId + '-arrow-left';
-            this.leftArrow.classList.add('russunit-slider-arrow');
-            this.leftArrow.classList.add('russunit-slider-arrow-left');
-            this.leftArrow.style.zIndex = 10;
-            this.leftArrow.style.color = '#fff';
-            this.leftArrow.style.fontSize = '2em';
-            this.leftArrow.style.margin = 'auto 10px';
-            this.leftArrow.style.cursor = 'pointer';
-            this.leftArrow.innerHTML = '&lt;';
-            this.arrowContainer.appendChild(this.leftArrow);
             // create right arrow
             this.rightArrow = document.createElement('SPAN');
             this.rightArrow.id = this.containerId + '-arrow-right';
             this.rightArrow.classList.add('russunit-slider-arrow');
             this.rightArrow.classList.add('russunit-slider-arrow-right');
-            this.rightArrow.style.zIndex = 10;
+            this.rightArrow.style.zIndex = 6;
             this.rightArrow.style.color = '#fff';
             this.rightArrow.style.fontSize = '2em';
-            this.rightArrow.style.margin = 'auto 10px';
+            this.rightArrow.style.margin = 'auto 10px auto auto';
             this.rightArrow.style.cursor = 'pointer';
             this.rightArrow.innerHTML = '&gt;';
-            this.arrowContainer.appendChild(this.rightArrow);
+            this.container.appendChild(this.rightArrow);
+        }
+
+        if(this.arrows) {
             // hide arrows
             if(this.arrowsHide) {
-                this.arrowContainer.style.visibility = 'hidden';
-                this.arrowContainer.style.opacity = 0;
-                this.arrowContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+                this.leftArrow.style.visibility = 'hidden';
+                this.leftArrow.style.opacity = 0;
+                this.leftArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
+                this.rightArrow.style.visibility = 'hidden';
+                this.rightArrow.style.opacity = 0;
+                this.rightArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
                 this.container.addEventListener('mouseenter', () => {
-                    this.arrowContainer.style.visibility = 'visible';
-                    this.arrowContainer.style.opacity = 1;
+                    this.leftArrow.style.visibility = 'visible';
+                    this.leftArrow.style.opacity = 1;
+                    this.rightArrow.style.visibility = 'visible';
+                    this.rightArrow.style.opacity = 1;
                 });
                 this.container.addEventListener('mouseleave', () => {
-                    this.arrowContainer.style.visibility = 'hidden';
-                    this.arrowContainer.style.opacity = 0;
+                    this.leftArrow.style.visibility = 'hidden';
+                    this.leftArrow.style.opacity = 0;
+                    this.rightArrow.style.visibility = 'hidden';
+                    this.rightArrow.style.opacity = 0;
                 });
             }
         }
@@ -252,10 +254,39 @@ class Slider {
             this.goToSlide(this.getPrevIndex(), callback);
         };
 
+        /**
+         * clear the link div for the slide, and if the next slide has a link, create the link div
+         */
         this.setSlideLink = (index) => {
-            //TODO: if images[index].link, create an overlay (like arrowContainer) with z-index 8 which has a click listener to go  to the link.
-            // ... if not, remove that overlay (overlay must have same id and be a member of slider object)
-        }
+            if(this.linkOverlay) {
+                this.container.removeChild(this.linkOverlay);
+                this.linkOverlay = null;
+            }
+            if(this.images[index].linkUrl) {
+                this.linkOverlay = document.createElement('DIV');
+                this.linkOverlay.id = this.containerId + '-link-overlay';
+                this.linkOverlay.classList.add('russunit-slider-link-overlay');
+                this.linkOverlay.style.zIndex = 5;
+                this.linkOverlay.style.position = 'absolute';
+                this.linkOverlay.style.top = 0;
+                this.linkOverlay.style.left = 0;
+                this.linkOverlay.style.width = '100%';
+                this.linkOverlay.style.height = '100%';
+                this.linkOverlay.style.cursor = 'pointer';
+                this.linkOverlay.addEventListener('click', (event) => {
+                    window.location.href = this.images[index].linkUrl;
+                    // event.stopPropagation();
+                });
+                // if(this.bullets) {
+                //     this.container.insertBefore(this.linkOverlay, this.bulletContainer);
+                // } else if(this.arrow) {
+                //     this.container.insertBefore(this.linkOverlay, this.arrowContainer);
+                // } else {
+                //     this.container.appendChild(this.linkOverlay);
+                // }
+                this.container.appendChild(this.linkOverlay);
+            }
+        };
 
         /**
          * transition from one slide to another
@@ -339,6 +370,8 @@ class Slider {
                 event.stopPropagation();
             });
         }
+
+        this.setSlideLink(this.currentIndex);
 
 
     }
