@@ -14,15 +14,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Slider =
 /**
  * 
- * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
+ * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.containerId: id of element which shall be the container for the slider;
  * options.containerPosition: position style property for the container - 'relative', etc;
  * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
- * options.transitionStyle: style of transition - 'default' or 'overlay';
  * options.transitionTime: time in ms until transition is finished;
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
  * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
  * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
+ * options.bullets: whether to show bullets
+ * options.bulletColor: color for active bullet
+ * options.bulletsHide: whether to hide bullets on mouse out
+ * options.arrows: whether to show arrows
+ * options.arrowsHide: whether to hide arrows on mouse out
  * options.swipe: whether to allow swipe support
  */
 function Slider(options) {
@@ -30,12 +34,9 @@ function Slider(options) {
 
   _classCallCheck(this, Slider);
 
-  this.transitionStyles = ['default', 'overlay']; // available transition styles
-
   this.containerId = options.containerId;
   this.containerPosition = options.containerPosition;
   this.images = options.images;
-  this.transitionStyle = options.transitionStyle;
   this.transitionTime = options.transitionTime;
   this.transitionDirectionX = options.transitionDirectionX;
   this.transitionDirectionY = options.transitionDirectionY;
@@ -53,7 +54,6 @@ function Slider(options) {
   this.imageElements = []; // image elements
   // adjusting values
 
-  this.transitionStyle = this.transitionStyles.includes(this.transitionStyle) ? this.transitionStyle : 'default';
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
@@ -326,33 +326,26 @@ function Slider(options) {
    */
 
 
-  this.transitionSlide = {
-    'default': function _default(newIndex, callback) {
-      slideFadeReplace(_this.imageElements[_this.currentIndex], _this.imageElements[newIndex], callback, {
-        toggleVisibility: true,
-        fadeTime: _this.transitionTime / 2
-      });
-    },
-    'overlay': function overlay(newIndex, callback) {
-      _this.imageElements[newIndex].style.zIndex = 1;
-      _this.imageElements[newIndex].style.opacity = 1;
-      _this.imageElements[newIndex].style.visibility = 'visible';
-      slideFadeOut(_this.imageElements[_this.currentIndex], function () {
-        _this.imageElements[_this.currentIndex].style.zIndex = 0;
-        _this.imageElements[newIndex].style.zIndex = 2;
-        callback();
-      }, {
-        toggleVisibility: true,
-        fadeTime: _this.transitionTime,
-        directionX: _this.transitionDirectionX,
-        directionY: _this.transitionDirectionY,
-        zoom: _this.transitionZoom
-      });
-    }
+  this.transitionSlide = function (newIndex, callback) {
+    _this.imageElements[newIndex].style.zIndex = 1;
+    _this.imageElements[newIndex].style.opacity = 1;
+    _this.imageElements[newIndex].style.visibility = 'visible';
+    slideFadeOut(_this.imageElements[_this.currentIndex], function () {
+      _this.imageElements[_this.currentIndex].style.zIndex = 0;
+      _this.imageElements[newIndex].style.zIndex = 2;
+      callback();
+    }, {
+      toggleVisibility: true,
+      fadeTime: _this.transitionTime,
+      directionX: _this.transitionDirectionX,
+      directionY: _this.transitionDirectionY,
+      zoom: _this.transitionZoom
+    });
   };
   /**
    * go to the slide at index (if possible), then execute the callback
    */
+
 
   this.goToSlide = function (newIndex) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -389,7 +382,7 @@ function Slider(options) {
 
       _this.sliderLock = true;
 
-      _this.transitionSlide[_this.transitionStyle](newIndex, finishSlide);
+      _this.transitionSlide(newIndex, finishSlide);
     } else {
       console.log('Slider error: slider is locked.');
     }
@@ -423,7 +416,7 @@ function Slider(options) {
   if (this.swipe) {
     var swiper = new Swipe(this.container);
     swiper.onLeft(function () {
-      var originalDirections = {
+      var transition = {
         x: _this.transitionDirectionX,
         y: _this.transitionDirectionY,
         z: _this.transitionZoom
@@ -433,13 +426,13 @@ function Slider(options) {
       _this.transitionZoom = false;
 
       _this.nextSlide(function () {
-        _this.transitionDirectionX = originalDirections.x;
-        _this.transitionDirectionY = originalDirections.y;
-        _this.transitionZoom = originalDirections.z;
+        _this.transitionDirectionX = transition.x;
+        _this.transitionDirectionY = transition.y;
+        _this.transitionZoom = transition.z;
       });
     });
     swiper.onRight(function () {
-      var originalDirections = {
+      var transition = {
         x: _this.transitionDirectionX,
         y: _this.transitionDirectionY,
         z: _this.transitionZoom
@@ -449,9 +442,9 @@ function Slider(options) {
       _this.transitionZoom = false;
 
       _this.prevSlide(function () {
-        _this.transitionDirectionX = originalDirections.x;
-        _this.transitionDirectionY = originalDirections.y;
-        _this.transitionZoom = originalDirections.z;
+        _this.transitionDirectionX = transition.x;
+        _this.transitionDirectionY = transition.y;
+        _this.transitionZoom = transition.z;
       });
     });
     swiper.run();
