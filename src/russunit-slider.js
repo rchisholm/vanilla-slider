@@ -10,7 +10,7 @@ class Slider {
      * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
      * options.containerId: id of element which shall be the container for the slider;
      * options.containerPosition: position style property for the container - 'relative', etc;
-     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
+     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -281,13 +281,6 @@ class Slider {
                     window.location.href = this.images[index].linkUrl;
                     // event.stopPropagation();
                 });
-                // if(this.bullets) {
-                //     this.container.insertBefore(this.linkOverlay, this.bulletContainer);
-                // } else if(this.arrow) {
-                //     this.container.insertBefore(this.linkOverlay, this.arrowContainer);
-                // } else {
-                //     this.container.appendChild(this.linkOverlay);
-                // }
                 this.container.appendChild(this.linkOverlay);
             }
         };
