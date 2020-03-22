@@ -65,7 +65,7 @@ class Slider {
         }
 
         if (!Array.isArray(this.images)) {
-            throw ("Slider error: images must be an array");
+            this.images = null;
         }
         if (!document.getElementById(this.containerId)) {
             throw ("Slider error: conatinerId must be a valid element's id");
@@ -73,8 +73,37 @@ class Slider {
 
         // place images in cointainer
         var imageElement;
-        var imageLink;
+        var imageAnchor;
+        var imagesIndex = 0;
         this.container = document.getElementById(this.containerId);
+        if(!this.images) {
+            this.images = [];
+            var containerChildren = this.container.children;
+            console.log('containerChildren:');
+            console.log(containerChildren);
+
+            [].forEach.call(containerChildren, (containerChild) => {
+                console.log(containerChild);
+                imageAnchor = null;
+                if(containerChild.tagName === 'A') {
+                    imageAnchor = containerChild;
+                    containerChild = containerChild.firstElementChild;
+                }
+                if(containerChild.tagName === 'IMG') {
+                    this.images[imagesIndex] = {};
+                    this.images[imagesIndex].imageUrl = containerChild.src;
+                    if(imageAnchor) {
+                        this.images[imagesIndex].linkUrl = imageAnchor.href;
+                        this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
+                    }
+                    imagesIndex ++;
+                } else {
+                    console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
+                }
+            });
+            this.container.innerHTML = '';
+        }
+
         this.images.forEach((image, index) => {
             if (typeof image === 'string') {
                 image = {
@@ -110,6 +139,9 @@ class Slider {
             }
             this.imageElements[index] = imageElement;
         });
+        if(this.images.length < 1) {
+            throw('Slider error: no images found for slides.');
+        }
         // style container
         this.container.classList.add('russunit-slider-container');
         this.container.style.marginLeft = 'auto';

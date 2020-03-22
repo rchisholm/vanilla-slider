@@ -75,7 +75,7 @@ function Slider(options) {
   }
 
   if (!Array.isArray(this.images)) {
-    throw "Slider error: images must be an array";
+    this.images = null;
   }
 
   if (!document.getElementById(this.containerId)) {
@@ -84,8 +84,41 @@ function Slider(options) {
 
 
   var imageElement;
-  var imageLink;
+  var imageAnchor;
+  var imagesIndex = 0;
   this.container = document.getElementById(this.containerId);
+
+  if (!this.images) {
+    this.images = [];
+    var containerChildren = this.container.children;
+    console.log('containerChildren:');
+    console.log(containerChildren);
+    [].forEach.call(containerChildren, function (containerChild) {
+      console.log(containerChild);
+      imageAnchor = null;
+
+      if (containerChild.tagName === 'A') {
+        imageAnchor = containerChild;
+        containerChild = containerChild.firstElementChild;
+      }
+
+      if (containerChild.tagName === 'IMG') {
+        _this.images[imagesIndex] = {};
+        _this.images[imagesIndex].imageUrl = containerChild.src;
+
+        if (imageAnchor) {
+          _this.images[imagesIndex].linkUrl = imageAnchor.href;
+          _this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
+        }
+
+        imagesIndex++;
+      } else {
+        console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
+      }
+    });
+    this.container.innerHTML = '';
+  }
+
   this.images.forEach(function (image, index) {
     if (typeof image === 'string') {
       image = {
@@ -124,7 +157,12 @@ function Slider(options) {
     }
 
     _this.imageElements[index] = imageElement;
-  }); // style container
+  });
+
+  if (this.images.length < 1) {
+    throw 'Slider error: no images found for slides.';
+  } // style container
+
 
   this.container.classList.add('russunit-slider-container');
   this.container.style.marginLeft = 'auto';
