@@ -7,7 +7,7 @@ class Slider {
 
     /**
      * 
-     * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string}} options options object for slider:
+     * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
      * options.containerId: id of element which shall be the container for the slider;
      * options.containerPosition: position style property for the container - 'relative', etc;
      * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
@@ -16,6 +16,7 @@ class Slider {
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
      * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
+     * options.swipe: whether to allow swipe support
      */
     constructor(options) {
 
@@ -34,6 +35,7 @@ class Slider {
         this.bulletsHide = options.bulletsHide;
         this.arrows = options.arrows;
         this.arrowsHide = options.arrowsHide;
+        this.swipe = options.swipe;
 
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
@@ -47,6 +49,7 @@ class Slider {
         this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
         this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
         this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false;
+        this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false;
 
 
         // check color
@@ -373,38 +376,41 @@ class Slider {
 
         this.setSlideLink(this.currentIndex);
 
-        var swiper = new Swipe(this.container);
-        swiper.onLeft(() => {
-            var originalDirections = {
-                x: this.transitionDirectionX,
-                y: this.transitionDirectionY,
-                z: this.transitionZoom
-            };
-            this.transitionDirectionX = 'left';
-            this.transitionDirectionY = false;
-            this.transitionZoom = false;
-            this.nextSlide(() => {
-                this.transitionDirectionX = originalDirections.x;
-                this.transitionDirectionY = originalDirections.y;
-                this.transitionZoom = originalDirections.z;
+
+        if(this.swipe) {
+            var swiper = new Swipe(this.container);
+            swiper.onLeft(() => {
+                var originalDirections = {
+                    x: this.transitionDirectionX,
+                    y: this.transitionDirectionY,
+                    z: this.transitionZoom
+                };
+                this.transitionDirectionX = 'left';
+                this.transitionDirectionY = false;
+                this.transitionZoom = false;
+                this.nextSlide(() => {
+                    this.transitionDirectionX = originalDirections.x;
+                    this.transitionDirectionY = originalDirections.y;
+                    this.transitionZoom = originalDirections.z;
+                });
             });
-        });
-        swiper.onRight(() => {
-            var originalDirections = {
-                x: this.transitionDirectionX,
-                y: this.transitionDirectionY,
-                z: this.transitionZoom
-            };
-            this.transitionDirectionX = 'right';
-            this.transitionDirectionY = false;
-            this.transitionZoom = false;
-            this.prevSlide(() => {
-                this.transitionDirectionX = originalDirections.x;
-                this.transitionDirectionY = originalDirections.y;
-                this.transitionZoom = originalDirections.z;
+            swiper.onRight(() => {
+                var originalDirections = {
+                    x: this.transitionDirectionX,
+                    y: this.transitionDirectionY,
+                    z: this.transitionZoom
+                };
+                this.transitionDirectionX = 'right';
+                this.transitionDirectionY = false;
+                this.transitionZoom = false;
+                this.prevSlide(() => {
+                    this.transitionDirectionX = originalDirections.x;
+                    this.transitionDirectionY = originalDirections.y;
+                    this.transitionZoom = originalDirections.z;
+                });
             });
-        });
-        swiper.run();
+            swiper.run();
+        }
 
     }
 }

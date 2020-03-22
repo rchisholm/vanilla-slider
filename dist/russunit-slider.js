@@ -14,7 +14,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Slider =
 /**
  * 
- * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string}} options options object for slider:
+ * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionStyle: string, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.containerId: id of element which shall be the container for the slider;
  * options.containerPosition: position style property for the container - 'relative', etc;
  * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
@@ -23,6 +23,7 @@ var Slider =
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
  * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
  * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
+ * options.swipe: whether to allow swipe support
  */
 function Slider(options) {
   var _this = this;
@@ -44,6 +45,7 @@ function Slider(options) {
   this.bulletsHide = options.bulletsHide;
   this.arrows = options.arrows;
   this.arrowsHide = options.arrowsHide;
+  this.swipe = options.swipe;
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -57,7 +59,8 @@ function Slider(options) {
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
   this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
   this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
-  this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false; // check color
+  this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false;
+  this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false; // check color
 
   if (this.bulletColor) {
     var isColor = function isColor(strColor) {
@@ -416,40 +419,43 @@ function Slider(options) {
   }
 
   this.setSlideLink(this.currentIndex);
-  var swiper = new Swipe(this.container);
-  swiper.onLeft(function () {
-    var originalDirections = {
-      x: _this.transitionDirectionX,
-      y: _this.transitionDirectionY,
-      z: _this.transitionZoom
-    };
-    _this.transitionDirectionX = 'left';
-    _this.transitionDirectionY = false;
-    _this.transitionZoom = false;
 
-    _this.nextSlide(function () {
-      _this.transitionDirectionX = originalDirections.x;
-      _this.transitionDirectionY = originalDirections.y;
-      _this.transitionZoom = originalDirections.z;
-    });
-  });
-  swiper.onRight(function () {
-    var originalDirections = {
-      x: _this.transitionDirectionX,
-      y: _this.transitionDirectionY,
-      z: _this.transitionZoom
-    };
-    _this.transitionDirectionX = 'right';
-    _this.transitionDirectionY = false;
-    _this.transitionZoom = false;
+  if (this.swipe) {
+    var swiper = new Swipe(this.container);
+    swiper.onLeft(function () {
+      var originalDirections = {
+        x: _this.transitionDirectionX,
+        y: _this.transitionDirectionY,
+        z: _this.transitionZoom
+      };
+      _this.transitionDirectionX = 'left';
+      _this.transitionDirectionY = false;
+      _this.transitionZoom = false;
 
-    _this.prevSlide(function () {
-      _this.transitionDirectionX = originalDirections.x;
-      _this.transitionDirectionY = originalDirections.y;
-      _this.transitionZoom = originalDirections.z;
+      _this.nextSlide(function () {
+        _this.transitionDirectionX = originalDirections.x;
+        _this.transitionDirectionY = originalDirections.y;
+        _this.transitionZoom = originalDirections.z;
+      });
     });
-  });
-  swiper.run();
+    swiper.onRight(function () {
+      var originalDirections = {
+        x: _this.transitionDirectionX,
+        y: _this.transitionDirectionY,
+        z: _this.transitionZoom
+      };
+      _this.transitionDirectionX = 'right';
+      _this.transitionDirectionY = false;
+      _this.transitionZoom = false;
+
+      _this.prevSlide(function () {
+        _this.transitionDirectionX = originalDirections.x;
+        _this.transitionDirectionY = originalDirections.y;
+        _this.transitionZoom = originalDirections.z;
+      });
+    });
+    swiper.run();
+  }
 }; // 
 
 
