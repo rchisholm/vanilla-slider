@@ -17,7 +17,7 @@ var Slider =
  * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.containerId: id of element which shall be the container for the slider;
  * options.containerPosition: position style property for the container - 'relative', etc;
- * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl
+ * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
  * options.transitionTime: time in ms until transition is finished;
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
  * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -90,7 +90,8 @@ function Slider(options) {
     if (typeof image === 'string') {
       image = {
         imageUrl: image,
-        linkUrl: null
+        linkUrl: null,
+        linkNewTab: null
       };
     }
 
@@ -307,16 +308,15 @@ function Slider(options) {
       _this.linkOverlay.style.height = '100%';
       _this.linkOverlay.style.cursor = 'pointer';
 
-      _this.linkOverlay.addEventListener('click', function (event) {
-        window.location.href = _this.images[index].linkUrl; // event.stopPropagation();
-      }); // if(this.bullets) {
-      //     this.container.insertBefore(this.linkOverlay, this.bulletContainer);
-      // } else if(this.arrow) {
-      //     this.container.insertBefore(this.linkOverlay, this.arrowContainer);
-      // } else {
-      //     this.container.appendChild(this.linkOverlay);
-      // }
-
+      if (_this.images[index].linkNewTab) {
+        _this.linkOverlay.addEventListener('click', function () {
+          window.open(_this.images[index].linkUrl, '_blank');
+        });
+      } else {
+        _this.linkOverlay.addEventListener('click', function () {
+          window.location.href = _this.images[index].linkUrl;
+        });
+      }
 
       _this.container.appendChild(_this.linkOverlay);
     }
@@ -449,7 +449,7 @@ function Slider(options) {
     });
     swiper.run();
   }
-}; // 
+}; // https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
 
 
 var Swipe = /*#__PURE__*/function () {

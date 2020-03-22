@@ -277,10 +277,15 @@ class Slider {
                 this.linkOverlay.style.width = '100%';
                 this.linkOverlay.style.height = '100%';
                 this.linkOverlay.style.cursor = 'pointer';
-                this.linkOverlay.addEventListener('click', (event) => {
-                    window.location.href = this.images[index].linkUrl;
-                    // event.stopPropagation();
-                });
+                if(this.images[index].linkNewTab) {
+                    this.linkOverlay.addEventListener('click', () => {
+                        window.open(this.images[index].linkUrl, '_blank');
+                    });
+                } else {
+                    this.linkOverlay.addEventListener('click', () => {
+                        window.location.href = this.images[index].linkUrl;
+                    });
+                }
                 this.container.appendChild(this.linkOverlay);
             }
         };
@@ -401,7 +406,7 @@ class Slider {
     }
 }
 
-// 
+// https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
 class Swipe {
     constructor(element) {
         this.xDown = null;
