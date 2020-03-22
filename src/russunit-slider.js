@@ -29,7 +29,7 @@ class Slider {
         this.images = options.images;
         this.transitionTime = options.transitionTime;
         this.transitionDirectionX = options.transitionDirectionX;
-        this.transitionDirectionY = options.transitionDirectionY; 
+        this.transitionDirectionY = options.transitionDirectionY;
         this.transitionZoom = options.transitionZoom;
         this.bullets = options.bullets;
         this.bulletColor = options.bulletColor;
@@ -53,7 +53,7 @@ class Slider {
 
 
         // check color
-        if(this.bulletColor) {
+        if (this.bulletColor) {
             var isColor = (strColor) => {
                 var s = new Option().style;
                 s.color = strColor;
@@ -76,10 +76,11 @@ class Slider {
         var imageLink;
         this.container = document.getElementById(this.containerId);
         this.images.forEach((image, index) => {
-            if(typeof image === 'string') {
+            if (typeof image === 'string') {
                 image = {
                     imageUrl: image,
-                    linkUrl: null
+                    linkUrl: null,
+                    linkNewTab: null
                 };
             }
             imageElement = document.createElement('IMG');
@@ -99,7 +100,7 @@ class Slider {
                 imageElement.style.zIndex = 2;
             }
             this.container.appendChild(imageElement);
-            if(index === this.images.length - 1) {
+            if (index === this.images.length - 1) {
                 imageElement.onload = () => {
                     this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
                     this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
@@ -118,7 +119,7 @@ class Slider {
         this.container.style.overflow = 'hidden';
         this.container.style.position = 'relative';
 
-        if(this.arrows) {
+        if (this.arrows) {
             // create left arrow
             this.leftArrow = document.createElement('SPAN');
             this.leftArrow.id = this.containerId + '-arrow-left';
@@ -133,7 +134,7 @@ class Slider {
             this.container.appendChild(this.leftArrow);
         }
 
-        if(this.bullets) {
+        if (this.bullets) {
             // create bullet container
             this.bulletContainer = document.createElement('DIV');
             this.bulletContainer.id = this.containerId + '-bullet-container';
@@ -156,14 +157,14 @@ class Slider {
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
                 bullet.innerHTML = '&bull;';
-                if(index === 0) {
+                if (index === 0) {
                     bullet.style.color = this.bulletColor;
                 }
                 this.bullets[index] = bullet;
                 this.bulletContainer.appendChild(bullet);
             });
             // hide bullets
-            if(this.bulletsHide) {
+            if (this.bulletsHide) {
                 this.bulletContainer.style.visibility = 'hidden';
                 this.bulletContainer.style.opacity = 0;
                 this.bulletContainer.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
@@ -178,7 +179,7 @@ class Slider {
             }
         }
 
-        if(this.arrows) {
+        if (this.arrows) {
             // create right arrow
             this.rightArrow = document.createElement('SPAN');
             this.rightArrow.id = this.containerId + '-arrow-right';
@@ -193,9 +194,9 @@ class Slider {
             this.container.appendChild(this.rightArrow);
         }
 
-        if(this.arrows) {
+        if (this.arrows) {
             // hide arrows
-            if(this.arrowsHide) {
+            if (this.arrowsHide) {
                 this.leftArrow.style.visibility = 'hidden';
                 this.leftArrow.style.opacity = 0;
                 this.leftArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
@@ -261,11 +262,11 @@ class Slider {
          * clear the link div for the slide, and if the next slide has a link, create the link div
          */
         this.setSlideLink = (index) => {
-            if(this.linkOverlay) {
+            if (this.linkOverlay) {
                 this.container.removeChild(this.linkOverlay);
                 this.linkOverlay = null;
             }
-            if(this.images[index].linkUrl) {
+            if (this.images[index].linkUrl) {
                 this.linkOverlay = document.createElement('DIV');
                 this.linkOverlay.id = this.containerId + '-link-overlay';
                 this.linkOverlay.classList.add('russunit-slider-link-overlay');
@@ -327,7 +328,7 @@ class Slider {
                     callback();
                 }
             } else if (!this.sliderLock) {
-                if(this.bullets) {
+                if (this.bullets) {
                     this.bullets[this.currentIndex].style.color = '#fff';
                     this.bullets[newIndex].style.color = this.bulletColor;
                 }
@@ -346,7 +347,7 @@ class Slider {
             }
         };
 
-        if(this.bullets) {
+        if (this.bullets) {
             this.imageElements.forEach((element, index) => {
                 this.bullets[index].addEventListener('click', (event) => {
                     this.goToSlide(index);
@@ -355,7 +356,7 @@ class Slider {
             });
         }
 
-        if(this.arrows) {
+        if (this.arrows) {
             this.leftArrow.addEventListener('click', (event) => {
                 this.prevSlide();
                 event.stopPropagation();
@@ -369,7 +370,7 @@ class Slider {
         this.setSlideLink(this.currentIndex);
 
 
-        if(this.swipe) {
+        if (this.swipe) {
             var swiper = new Swipe(this.container);
             swiper.onLeft(() => {
                 var transition = {
@@ -412,7 +413,7 @@ class Swipe {
     constructor(element) {
         this.xDown = null;
         this.yDown = null;
-        this.element = typeof(element) === 'string' ? document.querySelector(element) : element;
+        this.element = typeof (element) === 'string' ? document.querySelector(element) : element;
 
         this.element.addEventListener('touchstart', (evt) => {
             this.xDown = evt.touches[0].clientX;
@@ -446,7 +447,7 @@ class Swipe {
     }
 
     handleTouchMove(evt) {
-        if ( ! this.xDown || ! this.yDown ) {
+        if (!this.xDown || !this.yDown) {
             return;
         }
 
@@ -456,14 +457,14 @@ class Swipe {
         this.xDiff = this.xDown - xUp;
         this.yDiff = this.yDown - yUp;
 
-        if ( Math.abs( this.xDiff ) > Math.abs( this.yDiff ) ) { // Most significant.
-            if ( this.xDiff > 0 ) {
+        if (Math.abs(this.xDiff) > Math.abs(this.yDiff)) { // Most significant.
+            if (this.xDiff > 0) {
                 this.onLeft();
             } else {
                 this.onRight();
             }
         } else {
-            if ( this.yDiff > 0 ) {
+            if (this.yDiff > 0) {
                 this.onUp();
             } else {
                 this.onDown();
@@ -553,9 +554,9 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     options.waitTime = options.waitTime ? options.waitTime : false;
     options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
     options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
-    options.directionX = options.directionX ? options.directionX : null; 
-    options.directionY = options.directionY ? options.directionY : null; 
-    options.zoom = options.zoom ? options.zoom : null; 
+    options.directionX = options.directionX ? options.directionX : null;
+    options.directionY = options.directionY ? options.directionY : null;
+    options.zoom = options.zoom ? options.zoom : null;
 
 
     var isVisible = options.toggleVisibility ? function (element) {
@@ -572,13 +573,13 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
     if (fadeOutTarget) {
         if (isVisible(fadeOutTarget)) {
             // set zoom/direction
-            if(options.directionX) {
+            if (options.directionX) {
                 options.directionX = xDirections.includes(options.directionX) ? options.directionX : null;
-                if(options.directionX === 'random') {
+                if (options.directionX === 'random') {
                     options.directionX = ['right', 'left', null][Math.floor(Math.random() * 3)];
                 }
                 var xDirectionInterval;
-                switch(options.directionX) {
+                switch (options.directionX) {
                     case 'right':
                         xDirectionInterval = 1;
                         break;
@@ -587,13 +588,13 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         break;
                 }
             }
-            if(options.directionY) {
+            if (options.directionY) {
                 options.directionY = yDirections.includes(options.directionY) ? options.directionY : null;
-                if(options.directionY === 'random') {
+                if (options.directionY === 'random') {
                     options.directionY = ['up', 'down', null][Math.floor(Math.random() * 3)];
                 }
                 var yDirectionInterval;
-                switch(options.directionY) {
+                switch (options.directionY) {
                     case 'up':
                         yDirectionInterval = -1;
                         break;
@@ -602,13 +603,13 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         break;
                 }
             }
-            if(options.zoom) {
+            if (options.zoom) {
                 options.zoom = zooms.includes(options.zoom) ? options.zoom : null;
-                if(options.zoom === 'random') {
+                if (options.zoom === 'random') {
                     options.zoom = ['in', 'out', null][Math.floor(Math.random() * 3)];
                 }
                 var zoomInterval;
-                switch(options.zoom) {
+                switch (options.zoom) {
                     case 'in':
                         zoomInterval = 0.005;
                         break;
@@ -633,15 +634,15 @@ function slideFadeOut(fadeOutTarget, callback = function () {}, options = []) {
                         // fade out a little bit
                         fadeOutTarget.style.opacity -= opacityInterval;
                         // move a little bit in directions
-                        if(options.directionX) {
+                        if (options.directionX) {
                             fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + "px";
                         }
-                        if(options.directionY) {
+                        if (options.directionY) {
                             fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + "px";
                         }
                         // zoom a little bit
-                        if(options.zoom) {
-                            if(!fadeOutTarget.style.transform) {
+                        if (options.zoom) {
+                            if (!fadeOutTarget.style.transform) {
                                 fadeOutTarget.style.transform = 'scale(1)';
                             }
                             fadeOutTarget.style.transform = 'scale(' + (parseFloat(fadeOutTarget.style.transform.replace('scale(', '').replace(')', '')) + zoomInterval) + ')';
