@@ -16,6 +16,11 @@ class Slider {
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
      * options.transitionZoom: direction for zooming the fading out element - 'in', 'out', or 'random'
+     * options.bullets: whether to show bullets
+     * options.bulletColor: color for active bullet
+     * options.bulletsHide: whether to hide bullets on mouse out
+     * options.arrows: whether to show arrows
+     * options.arrowsHide: whether to hide arrows on mouse out
      * options.swipe: whether to allow swipe support
      */
     constructor(options) {
