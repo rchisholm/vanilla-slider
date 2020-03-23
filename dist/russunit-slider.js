@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Slider =
 /**
  * @param {string} containerId id of element which shall be the container for the slider;
- * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
+ * @param {{containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.containerPosition: position style property for the container - 'relative', etc;
  * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
  * options.transitionTime: time in ms until transition is finished;
