@@ -212,6 +212,7 @@ function VanillaSlider(containerId) {
       bullet.style.fontSize = '2em';
       bullet.style.margin = '0 5px';
       bullet.style.cursor = 'pointer';
+      bullet.style.transition = 'all 0.3s ease-in-out';
       bullet.innerHTML = '&bull;';
 
       if (index === 0) {
