@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body style='margin:0'>
+        <h1 style='text-align:center'>Slider 1:</h1>
+        <div style='width: 1200px; max-width: 100%; margin: auto'>
+            <div id='slider-1'></div>
+        </div>
+        
+        <script type='text/javascript' src='https://github.com/rchisholm/vanilla-slider/raw/master/dist/vanilla-slider.js'></script>
+        <script>
+            var sliderId = 'slider-1';
+            var sliderOptions = {
+                transitionTime: 1000,
+                transitionDirectionX: 'random',
+                transitionDirectionY: 'random',
+                transitionZoom: 'in',
+                bullets: true,
+                bulletColor: 'blue',
+                bulletsHide: true,
+                arrows: true,
+                arrowsHide: true,
+                swipe: true,
+                auto: true,
+                autoTime: 5000,
+                images: [
+                    'img/1.png',
+                    {
+                        imageUrl: 'img/2.png',
+                        linkUrl: 'https://www.sekirothegame.com/'
+                    },
+                    'img/3.png',
+                    {
+                        imageUrl: 'img/4.jpg',
+                        linkUrl: 'https://elderscrolls.bethesda.net/en/skyrim',
+                        linkNewTab: true
+                    },
+                    'img/5.jpg',
+                    {
+                        imageUrl: 'img/6.jpg'
+                    },
+                    'img/7.jpg',
+                    'img/8.jpg',
+                    'img/9.jpg',
+                    'img/10.jpg',
+                    'img/11.jpg',
+                    'img/12.jpg'
+                ]
+            };
+            slider = createSlider(sliderId, sliderOptions);
+        </script>
+    </body>
+</html>
