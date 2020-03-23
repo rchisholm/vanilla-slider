@@ -34,10 +34,10 @@ Then, define the slider container's id and the `options` object, and call `creat
 
 ## Live Examples
 
-[Slider using all custom options](https://rchisholm.github.io/vanilla-slider/docs/all-options.html)
-[Slider using only default options](https://rchisholm.github.io/vanilla-slider/docs/no-options.html)
-[Slider using the full browser width](https://rchisholm.github.io/vanilla-slider/docs/full-width.html)
-[Slider inside a div with a max width](https://rchisholm.github.io/vanilla-slider/docs/max-width.html)
+- [Slider using all custom options](https://rchisholm.github.io/vanilla-slider/docs/all-options.html)
+- [Slider using only default options](https://rchisholm.github.io/vanilla-slider/docs/no-options.html)
+- [Slider using the full browser width](https://rchisholm.github.io/vanilla-slider/docs/full-width.html)
+- [Slider inside a div with a max width](https://rchisholm.github.io/vanilla-slider/docs/max-width.html)
 
 ## Parameters
 
