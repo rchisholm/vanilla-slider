@@ -552,101 +552,75 @@ class Slider {
 
 
         if (this.swipe) {
-            var swiper = new Swipe(this.container);
-            swiper.onLeft(() => {
-                var transition = {
-                    x: this.transitionDirectionX,
-                    y: this.transitionDirectionY,
-                    z: this.transitionZoom
-                };
-                this.transitionDirectionX = 'left';
-                this.transitionDirectionY = false;
-                this.transitionZoom = false;
-                this.nextSlide(() => {
-                    this.transitionDirectionX = transition.x;
-                    this.transitionDirectionY = transition.y;
-                    this.transitionZoom = transition.z;
-                });
-            });
-            swiper.onRight(() => {
-                var transition = {
-                    x: this.transitionDirectionX,
-                    y: this.transitionDirectionY,
-                    z: this.transitionZoom
-                };
-                this.transitionDirectionX = 'right';
-                this.transitionDirectionY = false;
-                this.transitionZoom = false;
-                this.prevSlide(() => {
-                    this.transitionDirectionX = transition.x;
-                    this.transitionDirectionY = transition.y;
-                    this.transitionZoom = transition.z;
-                });
-            });
-            swiper.run();
+
+            this.swiper = {};
+            
+            this.swiper.xDown = null;
+            this.swiper.yDown = null;
+
+            this.container.addEventListener('touchstart', (evt) => {
+                this.swiper.xDown = evt.touches[0].clientX;
+                this.swiper.yDown = evt.touches[0].clientY;
+            }, false);
+
+            var handleTouchMove = (evt) => {
+                if (!this.swiper.xDown || !this.swiper.yDown) {
+                    return;
+                }
+        
+                var xUp = evt.touches[0].clientX;
+                var yUp = evt.touches[0].clientY;
+        
+                this.swiper.xDiff = this.swiper.xDown - xUp;
+                this.swiper.yDiff = this.swiper.yDown - yUp;
+        
+                if (Math.abs(this.swiper.xDiff) > Math.abs(this.swiper.yDiff)) { // Most significant.
+                    var transition = {};
+                    if (this.swiper.xDiff > 0) {
+                        transition = {
+                            x: this.transitionDirectionX,
+                            y: this.transitionDirectionY,
+                            z: this.transitionZoom
+                        };
+                        this.transitionDirectionX = 'left';
+                        this.transitionDirectionY = false;
+                        this.transitionZoom = false;
+                        this.nextSlide(() => {
+                            this.transitionDirectionX = transition.x;
+                            this.transitionDirectionY = transition.y;
+                            this.transitionZoom = transition.z;
+                        });
+                    } else {
+                        transition = {
+                            x: this.transitionDirectionX,
+                            y: this.transitionDirectionY,
+                            z: this.transitionZoom
+                        };
+                        this.transitionDirectionX = 'right';
+                        this.transitionDirectionY = false;
+                        this.transitionZoom = false;
+                        this.prevSlide(() => {
+                            this.transitionDirectionX = transition.x;
+                            this.transitionDirectionY = transition.y;
+                            this.transitionZoom = transition.z;
+                        });
+                    }
+                }
+        
+                // Reset values.
+                this.swiper.xDown = null;
+                this.swiper.yDown = null;
+            };
+
+            this.container.addEventListener('touchmove', (evt) => {
+                handleTouchMove(evt);
+            }, false);
         }
+        
 
         if(this.auto) {
             setInterval(this.nextSlide, this.autoTime);
         }
 
-    }
-}
-
-
-// https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
-class Swipe {
-    constructor(element) {
-        this.xDown = null;
-        this.yDown = null;
-        this.element = typeof (element) === 'string' ? document.querySelector(element) : element;
-
-        this.element.addEventListener('touchstart', (evt) => {
-            this.xDown = evt.touches[0].clientX;
-            this.yDown = evt.touches[0].clientY;
-        }, false);
-
-    }
-
-    onLeft(callback) {
-        this.onLeft = callback;
-
-        return this;
-    }
-
-    onRight(callback) {
-        this.onRight = callback;
-
-        return this;
-    }
-
-    handleTouchMove(evt) {
-        if (!this.xDown || !this.yDown) {
-            return;
-        }
-
-        var xUp = evt.touches[0].clientX;
-        var yUp = evt.touches[0].clientY;
-
-        this.xDiff = this.xDown - xUp;
-        this.yDiff = this.yDown - yUp;
-
-        if (Math.abs(this.xDiff) > Math.abs(this.yDiff)) { // Most significant.
-            if (this.xDiff > 0) {
-                this.onLeft();
-            } else {
-                this.onRight();
-            }
-        }
-
-        // Reset values.
-        this.xDown = null;
-        this.yDown = null;
-    }
-
-    run() {
-        this.element.addEventListener('touchmove', (evt) => {
-            this.handleTouchMove(evt);
-        }, false);
     }
 }

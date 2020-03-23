@@ -1,9 +1,5 @@
 "use strict";
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* jshint esversion:6 */
@@ -621,128 +617,72 @@ function Slider(options) {
   this.setSlideLink(this.currentIndex);
 
   if (this.swipe) {
-    var swiper = new Swipe(this.container);
-    swiper.onLeft(function () {
-      var transition = {
-        x: _this.transitionDirectionX,
-        y: _this.transitionDirectionY,
-        z: _this.transitionZoom
-      };
-      _this.transitionDirectionX = 'left';
-      _this.transitionDirectionY = false;
-      _this.transitionZoom = false;
-
-      _this.nextSlide(function () {
-        _this.transitionDirectionX = transition.x;
-        _this.transitionDirectionY = transition.y;
-        _this.transitionZoom = transition.z;
-      });
-    });
-    swiper.onRight(function () {
-      var transition = {
-        x: _this.transitionDirectionX,
-        y: _this.transitionDirectionY,
-        z: _this.transitionZoom
-      };
-      _this.transitionDirectionX = 'right';
-      _this.transitionDirectionY = false;
-      _this.transitionZoom = false;
-
-      _this.prevSlide(function () {
-        _this.transitionDirectionX = transition.x;
-        _this.transitionDirectionY = transition.y;
-        _this.transitionZoom = transition.z;
-      });
-    });
-    swiper.run();
-  }
-
-  if (this.auto) {
-    setInterval(this.nextSlide, this.autoTime);
-  }
-}; // https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
-
-
-var Swipe = /*#__PURE__*/function () {
-  function Swipe(element) {
-    var _this2 = this;
-
-    _classCallCheck(this, Swipe);
-
-    this.xDown = null;
-    this.yDown = null;
-    this.element = typeof element === 'string' ? document.querySelector(element) : element;
-    this.element.addEventListener('touchstart', function (evt) {
-      _this2.xDown = evt.touches[0].clientX;
-      _this2.yDown = evt.touches[0].clientY;
+    this.swiper = {};
+    this.swiper.xDown = null;
+    this.swiper.yDown = null;
+    this.container.addEventListener('touchstart', function (evt) {
+      _this.swiper.xDown = evt.touches[0].clientX;
+      _this.swiper.yDown = evt.touches[0].clientY;
     }, false);
-  }
 
-  _createClass(Swipe, [{
-    key: "onLeft",
-    value: function onLeft(callback) {
-      this.onLeft = callback;
-      return this;
-    }
-  }, {
-    key: "onRight",
-    value: function onRight(callback) {
-      this.onRight = callback;
-      return this;
-    }
-  }, {
-    key: "onUp",
-    value: function onUp(callback) {
-      this.onUp = callback;
-      return this;
-    }
-  }, {
-    key: "onDown",
-    value: function onDown(callback) {
-      this.onDown = callback;
-      return this;
-    }
-  }, {
-    key: "handleTouchMove",
-    value: function handleTouchMove(evt) {
-      if (!this.xDown || !this.yDown) {
+    var handleTouchMove = function handleTouchMove(evt) {
+      if (!_this.swiper.xDown || !_this.swiper.yDown) {
         return;
       }
 
       var xUp = evt.touches[0].clientX;
       var yUp = evt.touches[0].clientY;
-      this.xDiff = this.xDown - xUp;
-      this.yDiff = this.yDown - yUp;
+      _this.swiper.xDiff = _this.swiper.xDown - xUp;
+      _this.swiper.yDiff = _this.swiper.yDown - yUp;
 
-      if (Math.abs(this.xDiff) > Math.abs(this.yDiff)) {
+      if (Math.abs(_this.swiper.xDiff) > Math.abs(_this.swiper.yDiff)) {
         // Most significant.
-        if (this.xDiff > 0) {
-          this.onLeft();
+        var transition = {};
+
+        if (_this.swiper.xDiff > 0) {
+          transition = {
+            x: _this.transitionDirectionX,
+            y: _this.transitionDirectionY,
+            z: _this.transitionZoom
+          };
+          _this.transitionDirectionX = 'left';
+          _this.transitionDirectionY = false;
+          _this.transitionZoom = false;
+
+          _this.nextSlide(function () {
+            _this.transitionDirectionX = transition.x;
+            _this.transitionDirectionY = transition.y;
+            _this.transitionZoom = transition.z;
+          });
         } else {
-          this.onRight();
-        }
-      } else {
-        if (this.yDiff > 0) {
-          this.onUp();
-        } else {
-          this.onDown();
+          transition = {
+            x: _this.transitionDirectionX,
+            y: _this.transitionDirectionY,
+            z: _this.transitionZoom
+          };
+          _this.transitionDirectionX = 'right';
+          _this.transitionDirectionY = false;
+          _this.transitionZoom = false;
+
+          _this.prevSlide(function () {
+            _this.transitionDirectionX = transition.x;
+            _this.transitionDirectionY = transition.y;
+            _this.transitionZoom = transition.z;
+          });
         }
       } // Reset values.
 
 
-      this.xDown = null;
-      this.yDown = null;
-    }
-  }, {
-    key: "run",
-    value: function run() {
-      var _this3 = this;
+      _this.swiper.xDown = null;
+      _this.swiper.yDown = null;
+    };
 
-      this.element.addEventListener('touchmove', function (evt) {
-        _this3.handleTouchMove(evt);
-      }, false);
-    }
-  }]);
+    this.container.addEventListener('touchmove', function (evt) {
+      handleTouchMove(evt);
+    }, false);
+  }
 
-  return Swipe;
-}();
+  if (this.auto) {
+    setInterval(this.nextSlide, this.autoTime);
+  }
+};
