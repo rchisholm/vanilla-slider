@@ -188,6 +188,11 @@ function VanillaSlider(containerId) {
     this.leftArrow.style.cursor = 'pointer';
     this.leftArrow.style.transition = 'all 0.3s linear';
     this.leftArrow.innerHTML = '&lt;';
+    this.leftArrow.addEventListener('click', function (event) {
+      _this.prevSlide();
+
+      event.stopPropagation();
+    });
     this.container.appendChild(this.leftArrow);
   }
 
@@ -215,6 +220,11 @@ function VanillaSlider(containerId) {
       bullet.style.cursor = 'pointer';
       bullet.style.transition = 'all 0.3s ease-in-out';
       bullet.innerHTML = '&bull;';
+      bullet.addEventListener('click', function (event) {
+        _this.goToSlide(index);
+
+        event.stopPropagation();
+      });
 
       if (index === 0) {
         bullet.style.color = _this.bulletColor;
@@ -253,6 +263,11 @@ function VanillaSlider(containerId) {
     this.rightArrow.style.cursor = 'pointer';
     this.rightArrow.style.transition = 'all 0.3s linear';
     this.rightArrow.innerHTML = '&gt;';
+    this.rightArrow.addEventListener('click', function (event) {
+      _this.nextSlide();
+
+      event.stopPropagation();
+    });
     this.container.appendChild(this.rightArrow);
   }
 
@@ -630,32 +645,10 @@ function VanillaSlider(containerId) {
       directionY: _this.transitionDirectionY,
       zoom: _this.transitionZoom
     });
-  };
+  }; // set link of 1st slide
 
-  if (this.bullets) {
-    this.imageElements.forEach(function (element, index) {
-      _this.bullets[index].addEventListener('click', function (event) {
-        _this.goToSlide(index);
 
-        event.stopPropagation();
-      });
-    });
-  }
-
-  if (this.arrows) {
-    this.leftArrow.addEventListener('click', function (event) {
-      _this.prevSlide();
-
-      event.stopPropagation();
-    });
-    this.rightArrow.addEventListener('click', function (event) {
-      _this.nextSlide();
-
-      event.stopPropagation();
-    });
-  }
-
-  this.setSlideLink(this.currentIndex);
+  this.setSlideLink(this.currentIndex); // set swipe listener
 
   if (this.swipe) {
     this.swiper = {};
@@ -721,12 +714,19 @@ function VanillaSlider(containerId) {
     this.container.addEventListener('touchmove', function (evt) {
       handleTouchMove(evt);
     }, false);
-  }
+  } // start automatic slide movement
+
 
   if (this.auto) {
     this.startAuto();
   }
 };
+/**
+ * Returns a VanillaSlider created from containerId and options
+ * @param {string|Node} containerId element or id of element to be the slider container
+ * @param {object} options slider options object for slider configuration
+ */
+
 
 function createSlider(containerId, options) {
   return new VanillaSlider(containerId, options);

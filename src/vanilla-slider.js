@@ -171,6 +171,10 @@ class VanillaSlider {
             this.leftArrow.style.cursor = 'pointer';
             this.leftArrow.style.transition = 'all 0.3s linear';
             this.leftArrow.innerHTML = '&lt;';
+            this.leftArrow.addEventListener('click', (event) => {
+                this.prevSlide();
+                event.stopPropagation();
+            });
             this.container.appendChild(this.leftArrow);
         }
 
@@ -198,6 +202,10 @@ class VanillaSlider {
                 bullet.style.cursor = 'pointer';
                 bullet.style.transition = 'all 0.3s ease-in-out';
                 bullet.innerHTML = '&bull;';
+                bullet.addEventListener('click', (event) => {
+                    this.goToSlide(index);
+                    event.stopPropagation();
+                });
                 if (index === 0) {
                     bullet.style.color = this.bulletColor;
                 }
@@ -233,6 +241,10 @@ class VanillaSlider {
             this.rightArrow.style.cursor = 'pointer';
             this.rightArrow.style.transition = 'all 0.3s linear';
             this.rightArrow.innerHTML = '&gt;';
+            this.rightArrow.addEventListener('click', (event) => {
+                this.nextSlide();
+                event.stopPropagation();
+            });
             this.container.appendChild(this.rightArrow);
         }
 
@@ -561,29 +573,11 @@ class VanillaSlider {
             });
         };
 
-        if (this.bullets) {
-            this.imageElements.forEach((element, index) => {
-                this.bullets[index].addEventListener('click', (event) => {
-                    this.goToSlide(index);
-                    event.stopPropagation();
-                });
-            });
-        }
-
-        if (this.arrows) {
-            this.leftArrow.addEventListener('click', (event) => {
-                this.prevSlide();
-                event.stopPropagation();
-            });
-            this.rightArrow.addEventListener('click', (event) => {
-                this.nextSlide();
-                event.stopPropagation();
-            });
-        }
-
+        // set link of 1st slide
         this.setSlideLink(this.currentIndex);
 
 
+        // set swipe listener
         if (this.swipe) {
 
             this.swiper = {};
@@ -650,7 +644,7 @@ class VanillaSlider {
             }, false);
         }
 
-
+        // start automatic slide movement
         if (this.auto) {
             this.startAuto();
         }
@@ -658,6 +652,11 @@ class VanillaSlider {
     }
 }
 
+/**
+ * Returns a VanillaSlider created from containerId and options
+ * @param {string|Node} containerId element or id of element to be the slider container
+ * @param {object} options slider options object for slider configuration
+ */
 function createSlider(containerId, options) {
     return new VanillaSlider(containerId, options);
 }
