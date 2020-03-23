@@ -79,24 +79,24 @@ class Slider {
         var imageAnchor;
         var imagesIndex = 0;
         this.container = document.getElementById(this.containerId);
-        if(!this.images) {
+        if (!this.images) {
             this.images = [];
             var containerChildren = this.container.children;
 
             [].forEach.call(containerChildren, (containerChild) => {
                 imageAnchor = null;
-                if(containerChild.tagName === 'A') {
+                if (containerChild.tagName === 'A') {
                     imageAnchor = containerChild;
                     containerChild = containerChild.firstElementChild;
                 }
-                if(containerChild.tagName === 'IMG') {
+                if (containerChild.tagName === 'IMG') {
                     this.images[imagesIndex] = {};
                     this.images[imagesIndex].imageUrl = containerChild.src;
-                    if(imageAnchor) {
+                    if (imageAnchor) {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
                     }
-                    imagesIndex ++;
+                    imagesIndex++;
                 } else {
                     console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
                 }
@@ -140,8 +140,8 @@ class Slider {
             }
             this.imageElements[index] = imageElement;
         });
-        if(this.images.length < 1) {
-            throw('Slider error: no images found for slides.');
+        if (this.images.length < 1) {
+            throw ('Slider error: no images found for slides.');
         }
         // style container
         this.container.classList.add('russunit-slider-container');
@@ -459,7 +459,7 @@ class Slider {
                 this.linkOverlay.style.width = '100%';
                 this.linkOverlay.style.height = '100%';
                 this.linkOverlay.style.cursor = 'pointer';
-                if(this.images[index].linkNewTab) {
+                if (this.images[index].linkNewTab) {
                     this.linkOverlay.addEventListener('click', () => {
                         window.open(this.images[index].linkUrl, '_blank');
                     });
@@ -508,7 +508,7 @@ class Slider {
                     callback();
                 }
             } else if (!this.sliderLock) {
-                if(this.auto) {
+                if (this.auto) {
                     clearInterval(this.autoInterval);
                 }
                 if (this.bullets) {
@@ -522,7 +522,7 @@ class Slider {
                     if (typeof callback === 'function') {
                         callback();
                     }
-                    if(this.auto) {
+                    if (this.auto) {
                         this.autoInterval = setInterval(this.nextSlide, this.autoTime);
                     }
                 };
@@ -559,7 +559,7 @@ class Slider {
         if (this.swipe) {
 
             this.swiper = {};
-            
+
             this.swiper.xDown = null;
             this.swiper.yDown = null;
 
@@ -572,13 +572,13 @@ class Slider {
                 if (!this.swiper.xDown || !this.swiper.yDown) {
                     return;
                 }
-        
+
                 var xUp = evt.touches[0].clientX;
                 var yUp = evt.touches[0].clientY;
-        
+
                 this.swiper.xDiff = this.swiper.xDown - xUp;
                 this.swiper.yDiff = this.swiper.yDown - yUp;
-        
+
                 if (Math.abs(this.swiper.xDiff) > Math.abs(this.swiper.yDiff)) { // Most significant.
                     var transition = {};
                     if (this.swiper.xDiff > 0) {
@@ -611,7 +611,7 @@ class Slider {
                         });
                     }
                 }
-        
+
                 // Reset values.
                 this.swiper.xDown = null;
                 this.swiper.yDown = null;
@@ -621,9 +621,9 @@ class Slider {
                 handleTouchMove(evt);
             }, false);
         }
-        
 
-        if(this.auto) {
+
+        if (this.auto) {
             this.autoInterval = setInterval(this.nextSlide, this.autoTime);
         }
 
