@@ -10,8 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var VanillaSlider =
 /**
  * @param {any} containerId element or id of element which shall be the container for the slider;
- * @param {{containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
- * options.containerPosition: position style property for the container - 'relative', etc;
+ * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
  * options.transitionTime: time in ms until transition is finished;
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
@@ -32,7 +31,6 @@ function VanillaSlider(containerId) {
   _classCallCheck(this, VanillaSlider);
 
   this.containerId = containerId;
-  this.containerPosition = options.containerPosition;
   this.images = options.images;
   this.transitionTime = options.transitionTime;
   this.transitionDirectionX = options.transitionDirectionX;
@@ -54,12 +52,11 @@ function VanillaSlider(containerId) {
   // adjusting values
 
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
-  this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
   this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
   this.arrows = typeof this.arrows === 'boolean' ? this.arrows : true;
   this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : true;
-  this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false;
+  this.swipe = typeof this.swipe === 'boolean' ? this.swipe : true;
   this.auto = typeof this.auto === 'boolean' ? this.auto : false;
   this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000; // check color
 
