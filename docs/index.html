@@ -4,8 +4,27 @@
     </head>
     <body style='margin:0'>
         <h1 style='text-align:center'>Slider 1:</h1>
+        <h4>This slider is made with all options available in the <i>options</i> parameter.<br>Slides 2 and 4 have links.</h4>
         <div style='width: 1200px; max-width: 100%; margin: auto'>
             <div id='slider-1'></div>
+        </div>
+        <h1 style='text-align:center'>Slider s:</h1>
+        <h4>This slider is made no <i>options</i> parameter, using all default options.<br>No slides have links.</h4>
+        <div style='width: 1200px; max-width: 100%; margin: auto'>
+            <div id='slider-2'>
+                <img src='img/1.png'>
+                <img src='img/2.png'>
+                <img src='img/3.png'>
+                <img src='img/4.jpg'>
+                <img src='img/5.jpg'>
+                <img src='img/6.jpg'>
+                <img src='img/7.jpg'>
+                <img src='img/8.jpg'>
+                <img src='img/9.jpg'>
+                <img src='img/10.jpg'>
+                <img src='img/11.jpg'>
+                <img src='img/12.jpg'>
+            </div>
         </div>
         
         <script type='text/javascript' src='vanilla-slider.js'></script>
@@ -15,9 +34,9 @@
                 transitionTime: 1000,
                 transitionDirectionX: 'random',
                 transitionDirectionY: 'random',
-                transitionZoom: 'in',
+                transitionZoom: 'random',
                 bullets: true,
-                bulletColor: 'orange',
+                bulletColor: 'green',
                 bulletsHide: true,
                 arrows: true,
                 arrowsHide: true,
@@ -48,7 +67,8 @@
                     'img/12.jpg'
                 ]
             };
-            slider = createSlider(sliderId, sliderOptions);
+            slider1 = createSlider(sliderId, sliderOptions);
+            slider2 = createSlider('slider-2');
         </script>
     </body>
 </html>
