@@ -1,7 +1,7 @@
 {
-  "name": "russunit-slider",
+  "name": "vanilla-slider",
   "version": "1.0.0",
-  "description": "lightweight vanilla js carousel",
+  "description": "simple, lightweight vanilla js slider",
   "main": "index.js",
   "scripts": {
     "compile:js": "babel ./src -d ./dist",
