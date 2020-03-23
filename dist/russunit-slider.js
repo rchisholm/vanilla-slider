@@ -47,6 +47,8 @@ function Slider(options) {
   this.arrows = options.arrows;
   this.arrowsHide = options.arrowsHide;
   this.swipe = options.swipe;
+  this.auto = options.auto;
+  this.autoTime = options.autoTime;
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -60,7 +62,9 @@ function Slider(options) {
   this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
   this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
   this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false;
-  this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false; // check color
+  this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false;
+  this.auto = typeof this.auto === 'boolean' ? this.auto : false;
+  this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000; // check color
 
   if (this.bulletColor) {
     var isColor = function isColor(strColor) {
@@ -483,6 +487,10 @@ function Slider(options) {
       });
     });
     swiper.run();
+  }
+
+  if (this.auto) {
+    setInterval(this.nextSlide, this.autoTime);
   }
 }; // https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
 
