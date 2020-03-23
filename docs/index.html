@@ -2,14 +2,14 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body style='margin:0'>
-        <h1 style='text-align:center'>Slider 1:</h1>
-        <h4>This slider is made with all options available in the <i>options</i> parameter.<br>Slides 2 and 4 have links.</h4>
+    <body style='margin:0; text-align: center;'>
+        <h1>Slider 1:</h1>
         <div style='width: 1200px; max-width: 100%; margin: auto'>
             <div id='slider-1'></div>
         </div>
-        <h1 style='text-align:center'>Slider s:</h1>
-        <h4>This slider is made no <i>options</i> parameter, using all default options.<br>No slides have links.</h4>
+        <h4>This slider is made with all options available in the <i>options</i> parameter.<br>Slides 2 and 4 have links.</h4>
+        <hr>
+        <h1>Slider 2:</h1>
         <div style='width: 1200px; max-width: 100%; margin: auto'>
             <div id='slider-2'>
                 <img src='img/1.png'>
@@ -18,14 +18,11 @@
                 <img src='img/4.jpg'>
                 <img src='img/5.jpg'>
                 <img src='img/6.jpg'>
-                <img src='img/7.jpg'>
-                <img src='img/8.jpg'>
-                <img src='img/9.jpg'>
-                <img src='img/10.jpg'>
-                <img src='img/11.jpg'>
-                <img src='img/12.jpg'>
             </div>
         </div>
+        <h4>This slider is made with no <i>options</i> parameter, using all default options.<br>No slides have links.</h4>
+        <br>
+        <br>
         
         <script type='text/javascript' src='vanilla-slider.js'></script>
         <script>
@@ -44,27 +41,21 @@
                 auto: true,
                 autoTime: 5000,
                 images: [
-                    'img/1.png',
+                    'img/7.png',
                     {
-                        imageUrl: 'img/2.png',
+                        imageUrl: 'img/8.png',
                         linkUrl: 'https://www.sekirothegame.com/'
                     },
-                    'img/3.png',
+                    'img/9.png',
                     {
-                        imageUrl: 'img/4.jpg',
+                        imageUrl: 'img/10.jpg',
                         linkUrl: 'https://elderscrolls.bethesda.net/en/skyrim',
                         linkNewTab: true
                     },
-                    'img/5.jpg',
-                    {
-                        imageUrl: 'img/6.jpg'
-                    },
-                    'img/7.jpg',
-                    'img/8.jpg',
-                    'img/9.jpg',
-                    'img/10.jpg',
                     'img/11.jpg',
-                    'img/12.jpg'
+                    {
+                        imageUrl: 'img/12.jpg'
+                    }
                 ]
             };
             slider1 = createSlider(sliderId, sliderOptions);
