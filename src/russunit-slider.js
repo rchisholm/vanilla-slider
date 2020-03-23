@@ -101,8 +101,9 @@ class Slider {
                     console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
                 }
             });
-            this.container.innerHTML = '';
         }
+
+        this.container.innerHTML = '';
 
         this.images.forEach((image, index) => {
             if (typeof image === 'string') {
