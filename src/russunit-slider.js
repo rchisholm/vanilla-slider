@@ -79,11 +79,8 @@ class Slider {
         if(!this.images) {
             this.images = [];
             var containerChildren = this.container.children;
-            console.log('containerChildren:');
-            console.log(containerChildren);
 
             [].forEach.call(containerChildren, (containerChild) => {
-                console.log(containerChild);
                 imageAnchor = null;
                 if(containerChild.tagName === 'A') {
                     imageAnchor = containerChild;

@@ -91,10 +91,7 @@ function Slider(options) {
   if (!this.images) {
     this.images = [];
     var containerChildren = this.container.children;
-    console.log('containerChildren:');
-    console.log(containerChildren);
     [].forEach.call(containerChildren, function (containerChild) {
-      console.log(containerChild);
       imageAnchor = null;
 
       if (containerChild.tagName === 'A') {
@@ -116,9 +113,9 @@ function Slider(options) {
         console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
       }
     });
-    this.container.innerHTML = '';
   }
 
+  this.container.innerHTML = '';
   this.images.forEach(function (image, index) {
     if (typeof image === 'string') {
       image = {
