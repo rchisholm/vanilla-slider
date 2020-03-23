@@ -6,9 +6,8 @@
 class Slider {
 
     /**
-     * 
+     * @param {string} containerId id of element which shall be the container for the slider;
      * @param {{containerId: string, containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
-     * options.containerId: id of element which shall be the container for the slider;
      * options.containerPosition: position style property for the container - 'relative', etc;
      * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
      * options.transitionTime: time in ms until transition is finished;
@@ -22,9 +21,9 @@ class Slider {
      * options.arrowsHide: whether to hide arrows on mouse out
      * options.swipe: whether to allow swipe support
      */
-    constructor(options) {
+    constructor(containerId, options) {
 
-        this.containerId = options.containerId;
+        this.containerId = containerId;
         this.containerPosition = options.containerPosition;
         this.images = options.images;
         this.transitionTime = options.transitionTime;
