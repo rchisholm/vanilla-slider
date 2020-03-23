@@ -6,7 +6,7 @@
   "scripts": {
     "compile:js": "babel ./src -d ./dist",
     "minify:js": "node-minify --compressor uglify-js --input ./dist/vanilla-slider.js --output ./dist/vanilla-slider.min.js",
-    "copy:js": "cpy ./dist/vanilla-slider.js ./docs",
+    "copy:js": "cpy ./dist/vanilla-slider.js ./sample",
     "build": "npm run compile:js && npm run minify:js && npm run copy:js"
   },
   "repository": {
