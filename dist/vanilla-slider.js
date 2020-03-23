@@ -9,7 +9,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 var VanillaSlider =
 /**
- * @param {string} containerId id of element which shall be the container for the slider;
+ * @param {any} containerId element or id of element which shall be the container for the slider;
  * @param {{containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
  * options.containerPosition: position style property for the container - 'relative', etc;
  * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
@@ -24,8 +24,10 @@ var VanillaSlider =
  * options.arrowsHide: whether to hide arrows on mouse out
  * options.swipe: whether to allow swipe support
  */
-function VanillaSlider(containerId, options) {
+function VanillaSlider(containerId) {
   var _this = this;
+
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   _classCallCheck(this, VanillaSlider);
 
@@ -55,8 +57,8 @@ function VanillaSlider(containerId, options) {
   this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
   this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
-  this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
-  this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false;
+  this.arrows = typeof this.arrows === 'boolean' ? this.arrows : true;
+  this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : true;
   this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false;
   this.auto = typeof this.auto === 'boolean' ? this.auto : false;
   this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000; // check color
@@ -77,8 +79,14 @@ function VanillaSlider(containerId, options) {
     this.images = null;
   }
 
+  if (typeof this.containerId !== 'string') {
+    if (this.containerId.id) {
+      this.containerId = this.containerId.id;
+    }
+  }
+
   if (!document.getElementById(this.containerId)) {
-    throw "Slider error: conatinerId must be a valid element's id";
+    throw "Slider error: conatinerId must be a valid element or id";
   } // place images in cointainer
 
 

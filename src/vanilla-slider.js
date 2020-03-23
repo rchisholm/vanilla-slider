@@ -6,7 +6,7 @@
 class VanillaSlider {
 
     /**
-     * @param {string} containerId id of element which shall be the container for the slider;
+     * @param {any} containerId element or id of element which shall be the container for the slider;
      * @param {{containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
      * options.containerPosition: position style property for the container - 'relative', etc;
      * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
@@ -21,7 +21,7 @@ class VanillaSlider {
      * options.arrowsHide: whether to hide arrows on mouse out
      * options.swipe: whether to allow swipe support
      */
-    constructor(containerId, options) {
+    constructor(containerId, options = {}) {
 
         this.containerId = containerId;
         this.containerPosition = options.containerPosition;
@@ -48,8 +48,8 @@ class VanillaSlider {
         this.containerPosition = typeof this.containerPosition === 'string' ? this.containerPosition : null;
         this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
         this.bulletsHide = typeof this.bulletsHide === 'boolean' && this.bullets ? this.bulletsHide : false;
-        this.arrows = typeof this.arrows === 'boolean' ? this.arrows : false;
-        this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : false;
+        this.arrows = typeof this.arrows === 'boolean' ? this.arrows : true;
+        this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : true;
         this.swipe = typeof this.swipe === 'boolean' ? this.swipe : false;
         this.auto = typeof this.auto === 'boolean' ? this.auto : false;
         this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000;
@@ -70,8 +70,15 @@ class VanillaSlider {
         if (!Array.isArray(this.images)) {
             this.images = null;
         }
+
+        if(typeof this.containerId !== 'string') {
+            if(this.containerId.id) {
+                this.containerId = this.containerId.id;
+            }
+        }
+
         if (!document.getElementById(this.containerId)) {
-            throw ("Slider error: conatinerId must be a valid element's id");
+            throw ("Slider error: conatinerId must be a valid element or id");
         }
 
         // place images in cointainer
