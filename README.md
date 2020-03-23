@@ -1,6 +1,6 @@
 # VanillaSlider
 
-VanillaSlider is a simple, lightweight, adaptive slider using vanilla JavaScript, requiring no third-party libraries.
+VanillaSlider is a simple, lightweight, responsive slider using vanilla JavaScript, requiring no third-party libraries.
 
 ## Usage
 
