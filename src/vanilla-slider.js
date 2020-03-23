@@ -7,7 +7,7 @@ class VanillaSlider {
 
     /**
      * @param {any} containerId element or id of element which shall be the container for the slider;
-     * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
+     * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean, auto: boolean, autoTime: number}} options options object for slider:
      * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
@@ -19,6 +19,8 @@ class VanillaSlider {
      * options.arrows: whether to show arrows
      * options.arrowsHide: whether to hide arrows on mouse out
      * options.swipe: whether to allow swipe support
+     * options.auto: whether to automatically move slides
+     * options.autoTime: time in ms for slides to automatically move
      */
     constructor(containerId, options = {}) {
 
@@ -436,12 +438,51 @@ class VanillaSlider {
             this.goToSlide(this.getNextIndex(), callback);
         };
 
-
         /**
          * go to the previous slide, then execute the callback
          */
         this.prevSlide = (callback = null) => {
             this.goToSlide(this.getPrevIndex(), callback);
+        };
+
+        /**
+         * go to the slide at index (if possible), then execute the callback
+         */
+        this.goToSlide = (newIndex, callback = null) => {
+            if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.imageElements.length) {
+                console.log('Slider error: invalid index in goToSlide: ' + newIndex);
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else if (newIndex === this.currentIndex) {
+                console.log('Slider error: current index in goToSlide: ' + newIndex);
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else if (!this.sliderLock) {
+                if (this.auto) {
+                    clearInterval(this.autoInterval);
+                }
+                if (this.bullets) {
+                    this.bullets[this.currentIndex].style.color = '#fff';
+                    this.bullets[newIndex].style.color = this.bulletColor;
+                }
+                var finishSlide = () => {
+                    this.currentIndex = newIndex;
+                    this.setSlideLink(newIndex);
+                    this.sliderLock = false;
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                    if (this.auto) {
+                        this.autoInterval = setInterval(this.nextSlide, this.autoTime);
+                    }
+                };
+                this.sliderLock = true;
+                this.transitionSlide(newIndex, finishSlide);
+            } else {
+                console.log('Slider error: slider is locked.');
+            }
         };
 
         /**
@@ -494,47 +535,6 @@ class VanillaSlider {
                 directionY: this.transitionDirectionY,
                 zoom: this.transitionZoom
             });
-        };
-
-
-        /**
-         * go to the slide at index (if possible), then execute the callback
-         */
-        this.goToSlide = (newIndex, callback = null) => {
-            if (typeof newIndex !== 'number' || newIndex < 0 || newIndex + 1 > this.imageElements.length) {
-                console.log('Slider error: invalid index in goToSlide: ' + newIndex);
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            } else if (newIndex === this.currentIndex) {
-                console.log('Slider error: current index in goToSlide: ' + newIndex);
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            } else if (!this.sliderLock) {
-                if (this.auto) {
-                    clearInterval(this.autoInterval);
-                }
-                if (this.bullets) {
-                    this.bullets[this.currentIndex].style.color = '#fff';
-                    this.bullets[newIndex].style.color = this.bulletColor;
-                }
-                var finishSlide = () => {
-                    this.currentIndex = newIndex;
-                    this.setSlideLink(newIndex);
-                    this.sliderLock = false;
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-                    if (this.auto) {
-                        this.autoInterval = setInterval(this.nextSlide, this.autoTime);
-                    }
-                };
-                this.sliderLock = true;
-                this.transitionSlide(newIndex, finishSlide);
-            } else {
-                console.log('Slider error: slider is locked.');
-            }
         };
 
         if (this.bullets) {
