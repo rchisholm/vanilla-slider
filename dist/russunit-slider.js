@@ -492,92 +492,7 @@ function Slider(options) {
   if (this.auto) {
     setInterval(this.nextSlide, this.autoTime);
   }
-}; // https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
-
-
-var Swipe = /*#__PURE__*/function () {
-  function Swipe(element) {
-    var _this2 = this;
-
-    _classCallCheck(this, Swipe);
-
-    this.xDown = null;
-    this.yDown = null;
-    this.element = typeof element === 'string' ? document.querySelector(element) : element;
-    this.element.addEventListener('touchstart', function (evt) {
-      _this2.xDown = evt.touches[0].clientX;
-      _this2.yDown = evt.touches[0].clientY;
-    }, false);
-  }
-
-  _createClass(Swipe, [{
-    key: "onLeft",
-    value: function onLeft(callback) {
-      this.onLeft = callback;
-      return this;
-    }
-  }, {
-    key: "onRight",
-    value: function onRight(callback) {
-      this.onRight = callback;
-      return this;
-    }
-  }, {
-    key: "onUp",
-    value: function onUp(callback) {
-      this.onUp = callback;
-      return this;
-    }
-  }, {
-    key: "onDown",
-    value: function onDown(callback) {
-      this.onDown = callback;
-      return this;
-    }
-  }, {
-    key: "handleTouchMove",
-    value: function handleTouchMove(evt) {
-      if (!this.xDown || !this.yDown) {
-        return;
-      }
-
-      var xUp = evt.touches[0].clientX;
-      var yUp = evt.touches[0].clientY;
-      this.xDiff = this.xDown - xUp;
-      this.yDiff = this.yDown - yUp;
-
-      if (Math.abs(this.xDiff) > Math.abs(this.yDiff)) {
-        // Most significant.
-        if (this.xDiff > 0) {
-          this.onLeft();
-        } else {
-          this.onRight();
-        }
-      } else {
-        if (this.yDiff > 0) {
-          this.onUp();
-        } else {
-          this.onDown();
-        }
-      } // Reset values.
-
-
-      this.xDown = null;
-      this.yDown = null;
-    }
-  }, {
-    key: "run",
-    value: function run() {
-      var _this3 = this;
-
-      this.element.addEventListener('touchmove', function (evt) {
-        _this3.handleTouchMove(evt);
-      }, false);
-    }
-  }]);
-
-  return Swipe;
-}();
+};
 /**
  * fades the first target out, then fades the second target in.
  * @param {any} fadeOutTarget element to fade out, or its id
@@ -861,4 +776,89 @@ function slideFadeIn(fadeInTarget) {
   } else {
     console.log('fadeIn error: no such element exists: ');
   }
-}
+} // https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
+
+
+var Swipe = /*#__PURE__*/function () {
+  function Swipe(element) {
+    var _this2 = this;
+
+    _classCallCheck(this, Swipe);
+
+    this.xDown = null;
+    this.yDown = null;
+    this.element = typeof element === 'string' ? document.querySelector(element) : element;
+    this.element.addEventListener('touchstart', function (evt) {
+      _this2.xDown = evt.touches[0].clientX;
+      _this2.yDown = evt.touches[0].clientY;
+    }, false);
+  }
+
+  _createClass(Swipe, [{
+    key: "onLeft",
+    value: function onLeft(callback) {
+      this.onLeft = callback;
+      return this;
+    }
+  }, {
+    key: "onRight",
+    value: function onRight(callback) {
+      this.onRight = callback;
+      return this;
+    }
+  }, {
+    key: "onUp",
+    value: function onUp(callback) {
+      this.onUp = callback;
+      return this;
+    }
+  }, {
+    key: "onDown",
+    value: function onDown(callback) {
+      this.onDown = callback;
+      return this;
+    }
+  }, {
+    key: "handleTouchMove",
+    value: function handleTouchMove(evt) {
+      if (!this.xDown || !this.yDown) {
+        return;
+      }
+
+      var xUp = evt.touches[0].clientX;
+      var yUp = evt.touches[0].clientY;
+      this.xDiff = this.xDown - xUp;
+      this.yDiff = this.yDown - yUp;
+
+      if (Math.abs(this.xDiff) > Math.abs(this.yDiff)) {
+        // Most significant.
+        if (this.xDiff > 0) {
+          this.onLeft();
+        } else {
+          this.onRight();
+        }
+      } else {
+        if (this.yDiff > 0) {
+          this.onUp();
+        } else {
+          this.onDown();
+        }
+      } // Reset values.
+
+
+      this.xDown = null;
+      this.yDown = null;
+    }
+  }, {
+    key: "run",
+    value: function run() {
+      var _this3 = this;
+
+      this.element.addEventListener('touchmove', function (evt) {
+        _this3.handleTouchMove(evt);
+      }, false);
+    }
+  }]);
+
+  return Swipe;
+}();
