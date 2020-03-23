@@ -169,6 +169,7 @@ class VanillaSlider {
             this.leftArrow.style.fontSize = '2em';
             this.leftArrow.style.margin = 'auto auto auto 10px';
             this.leftArrow.style.cursor = 'pointer';
+            this.leftArrow.style.transition = 'all 0.3s linear';
             this.leftArrow.innerHTML = '&lt;';
             this.container.appendChild(this.leftArrow);
         }
@@ -230,6 +231,7 @@ class VanillaSlider {
             this.rightArrow.style.fontSize = '2em';
             this.rightArrow.style.margin = 'auto 10px auto auto';
             this.rightArrow.style.cursor = 'pointer';
+            this.rightArrow.style.transition = 'all 0.3s linear';
             this.rightArrow.innerHTML = '&gt;';
             this.container.appendChild(this.rightArrow);
         }
@@ -239,10 +241,8 @@ class VanillaSlider {
             if (this.arrowsHide) {
                 this.leftArrow.style.visibility = 'hidden';
                 this.leftArrow.style.opacity = 0;
-                this.leftArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
                 this.rightArrow.style.visibility = 'hidden';
                 this.rightArrow.style.opacity = 0;
-                this.rightArrow.style.transition = 'visibility 0.3s linear,opacity 0.3s linear';
                 this.container.addEventListener('mouseenter', () => {
                     this.leftArrow.style.visibility = 'visible';
                     this.leftArrow.style.opacity = 1;
