@@ -566,6 +566,10 @@ function Slider(options) {
         callback();
       }
     } else if (!_this.sliderLock) {
+      if (_this.auto) {
+        clearInterval(_this.autoInterval);
+      }
+
       if (_this.bullets) {
         _this.bullets[_this.currentIndex].style.color = '#fff';
         _this.bullets[newIndex].style.color = _this.bulletColor;
@@ -580,6 +584,10 @@ function Slider(options) {
 
         if (typeof callback === 'function') {
           callback();
+        }
+
+        if (_this.auto) {
+          _this.autoInterval = setInterval(_this.nextSlide, _this.autoTime);
         }
       };
 
@@ -683,6 +691,6 @@ function Slider(options) {
   }
 
   if (this.auto) {
-    setInterval(this.nextSlide, this.autoTime);
+    this.autoInterval = setInterval(this.nextSlide, this.autoTime);
   }
 };

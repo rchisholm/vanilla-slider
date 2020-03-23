@@ -509,6 +509,9 @@ class Slider {
                     callback();
                 }
             } else if (!this.sliderLock) {
+                if(this.auto) {
+                    clearInterval(this.autoInterval);
+                }
                 if (this.bullets) {
                     this.bullets[this.currentIndex].style.color = '#fff';
                     this.bullets[newIndex].style.color = this.bulletColor;
@@ -519,6 +522,9 @@ class Slider {
                     this.sliderLock = false;
                     if (typeof callback === 'function') {
                         callback();
+                    }
+                    if(this.auto) {
+                        this.autoInterval = setInterval(this.nextSlide, this.autoTime);
                     }
                 };
                 this.sliderLock = true;
@@ -619,7 +625,7 @@ class Slider {
         
 
         if(this.auto) {
-            setInterval(this.nextSlide, this.autoTime);
+            this.autoInterval = setInterval(this.nextSlide, this.autoTime);
         }
 
     }
