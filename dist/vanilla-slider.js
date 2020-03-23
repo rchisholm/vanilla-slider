@@ -134,7 +134,7 @@ function VanillaSlider(containerId) {
     imageElement = document.createElement('IMG');
     imageElement.id = _this.containerId + "-slide-" + index;
     imageElement.src = image.imageUrl;
-    imageElement.classList.add('russunit-slider-image');
+    imageElement.classList.add('vanilla-slider-image');
     imageElement.style.margin = 'auto';
     imageElement.style.maxWidth = '100%';
     imageElement.style.position = 'absolute';
@@ -167,7 +167,7 @@ function VanillaSlider(containerId) {
   } // style container
 
 
-  this.container.classList.add('russunit-slider-container');
+  this.container.classList.add('vanilla-slider-container');
   this.container.style.marginLeft = 'auto';
   this.container.style.marginRight = 'auto';
   this.container.style.maxWidth = '100%';
@@ -179,8 +179,8 @@ function VanillaSlider(containerId) {
     // create left arrow
     this.leftArrow = document.createElement('SPAN');
     this.leftArrow.id = this.containerId + '-arrow-left';
-    this.leftArrow.classList.add('russunit-slider-arrow');
-    this.leftArrow.classList.add('russunit-slider-arrow-left');
+    this.leftArrow.classList.add('vanilla-slider-arrow');
+    this.leftArrow.classList.add('vanilla-slider-arrow-left');
     this.leftArrow.style.zIndex = 6;
     this.leftArrow.style.color = '#fff';
     this.leftArrow.style.fontSize = '2em';
@@ -206,7 +206,7 @@ function VanillaSlider(containerId) {
     // create bullet container
     this.bulletContainer = document.createElement('DIV');
     this.bulletContainer.id = this.containerId + '-bullet-container';
-    this.bulletContainer.classList.add('russunit-slider-bullet-container');
+    this.bulletContainer.classList.add('vanilla-slider-bullet-container');
     this.bulletContainer.style.zIndex = 6;
     this.bulletContainer.style.position = 'relative';
     this.bulletContainer.style.margin = 'auto auto 0';
@@ -218,7 +218,7 @@ function VanillaSlider(containerId) {
     this.imageElements.forEach(function (element, index) {
       bullet = document.createElement('SPAN');
       bullet.id = _this.containerId + '-bullet-' + index;
-      bullet.classList.add('russunit-slider-bullet');
+      bullet.classList.add('vanilla-slider-bullet');
       bullet.style.color = '#fff';
       bullet.style.zIndex = 10;
       bullet.style.fontSize = '2em';
@@ -260,8 +260,8 @@ function VanillaSlider(containerId) {
     // create right arrow
     this.rightArrow = document.createElement('SPAN');
     this.rightArrow.id = this.containerId + '-arrow-right';
-    this.rightArrow.classList.add('russunit-slider-arrow');
-    this.rightArrow.classList.add('russunit-slider-arrow-right');
+    this.rightArrow.classList.add('vanilla-slider-arrow');
+    this.rightArrow.classList.add('vanilla-slider-arrow-right');
     this.rightArrow.style.zIndex = 6;
     this.rightArrow.style.color = '#fff';
     this.rightArrow.style.fontSize = '2em';
@@ -613,7 +613,7 @@ function VanillaSlider(containerId) {
       _this.linkOverlay = document.createElement('DIV');
       _this.linkOverlay.id = _this.containerId + '-link-overlay';
 
-      _this.linkOverlay.classList.add('russunit-slider-link-overlay');
+      _this.linkOverlay.classList.add('vanilla-slider-link-overlay');
 
       _this.linkOverlay.style.zIndex = 5;
       _this.linkOverlay.style.position = 'absolute';
