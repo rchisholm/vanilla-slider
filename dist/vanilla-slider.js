@@ -7,7 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * slider class
  */
-var Slider =
+var VanillaSlider =
 /**
  * @param {string} containerId id of element which shall be the container for the slider;
  * @param {{containerPosition: string, images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean}} options options object for slider:
@@ -24,10 +24,10 @@ var Slider =
  * options.arrowsHide: whether to hide arrows on mouse out
  * options.swipe: whether to allow swipe support
  */
-function Slider(containerId, options) {
+function VanillaSlider(containerId, options) {
   var _this = this;
 
-  _classCallCheck(this, Slider);
+  _classCallCheck(this, VanillaSlider);
 
   this.containerId = containerId;
   this.containerPosition = options.containerPosition;
@@ -693,3 +693,7 @@ function Slider(containerId, options) {
     this.autoInterval = setInterval(this.nextSlide, this.autoTime);
   }
 };
+
+function createSlider(options) {
+  return new VanillaSlider(options);
+}

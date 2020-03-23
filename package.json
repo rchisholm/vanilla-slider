@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile:js": "babel ./src -d ./dist",
-    "minify:js": "node-minify --compressor uglify-js --input ./dist/russunit-slider.js --output ./dist/russunit-slider.min.js",
+    "minify:js": "node-minify --compressor uglify-js --input ./dist/vanilla-slider.js --output ./dist/vanilla-slider.min.js",
     "build": "npm run compile:js && npm run minify:js"
   },
   "repository": {

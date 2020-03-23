@@ -3,7 +3,7 @@
 /**
  * slider class
  */
-class Slider {
+class VanillaSlider {
 
     /**
      * @param {string} containerId id of element which shall be the container for the slider;
@@ -628,4 +628,8 @@ class Slider {
         }
 
     }
+}
+
+function createSlider(options) {
+    return new VanillaSlider(options);
 }
