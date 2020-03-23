@@ -6,7 +6,8 @@
   "scripts": {
     "compile:js": "babel ./src -d ./dist",
     "minify:js": "node-minify --compressor uglify-js --input ./dist/vanilla-slider.js --output ./dist/vanilla-slider.min.js",
-    "build": "npm run compile:js && npm run minify:js"
+    "copy:js": "cpy ./dist/vanilla-slider.js ./docs",
+    "build": "npm run compile:js && npm run minify:js && npm run copy:js"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,8 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@node-minify/cli": "^5.3.0",
-    "@node-minify/uglify-js": "^5.3.0"
+    "@node-minify/uglify-js": "^5.3.0",
+    "cpy-cli": "^3.1.0"
   },
   "dependencies": {}
 }
