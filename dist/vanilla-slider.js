@@ -512,7 +512,7 @@ function VanillaSlider(containerId) {
       }
     } else if (!_this.sliderLock) {
       if (_this.auto) {
-        clearInterval(_this.autoInterval);
+        _this.pauseAuto();
       }
 
       if (_this.bullets) {
@@ -542,6 +542,32 @@ function VanillaSlider(containerId) {
     } else {
       console.log('Slider error: slider is locked.');
     }
+  };
+  /**
+   * start automatic slide movement
+   */
+
+
+  this.startAuto = function () {
+    _this.auto = true;
+    _this.autoInterval = setInterval(_this.nextSlide, _this.autoTime);
+  };
+  /**
+   * pause automatic slide movement until slides move
+   */
+
+
+  this.pauseAuto = function () {
+    clearInterval(_this.autoInterval);
+  };
+  /**
+   * stop automatic slide movement
+   */
+
+
+  this.stopAuto = function () {
+    clearInterval(_this.autoInterval);
+    _this.auto = false;
   };
   /**
    * clear the link div for the slide, and if the next slide has a link, create the link div
@@ -697,10 +723,10 @@ function VanillaSlider(containerId) {
   }
 
   if (this.auto) {
-    this.autoInterval = setInterval(this.nextSlide, this.autoTime);
+    this.startAuto();
   }
 };
 
-function createSlider(options) {
-  return new VanillaSlider(options);
+function createSlider(containerId, options) {
+  return new VanillaSlider(containerId, options);
 }

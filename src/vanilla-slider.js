@@ -461,7 +461,7 @@ class VanillaSlider {
                 }
             } else if (!this.sliderLock) {
                 if (this.auto) {
-                    clearInterval(this.autoInterval);
+                    this.pauseAuto();
                 }
                 if (this.bullets) {
                     this.bullets[this.currentIndex].style.color = '#fff';
@@ -483,6 +483,29 @@ class VanillaSlider {
             } else {
                 console.log('Slider error: slider is locked.');
             }
+        };
+
+        /**
+         * start automatic slide movement
+         */
+        this.startAuto = () => {
+            this.auto = true;
+            this.autoInterval = setInterval(this.nextSlide, this.autoTime);
+        };
+
+        /**
+         * pause automatic slide movement until slides move
+         */
+        this.pauseAuto = () => {
+            clearInterval(this.autoInterval);
+        };
+
+        /**
+         * stop automatic slide movement
+         */
+        this.stopAuto = () => {
+            clearInterval(this.autoInterval);
+            this.auto = false;
         };
 
         /**
@@ -628,12 +651,12 @@ class VanillaSlider {
 
 
         if (this.auto) {
-            this.autoInterval = setInterval(this.nextSlide, this.autoTime);
+            this.startAuto();
         }
 
     }
 }
 
-function createSlider(options) {
-    return new VanillaSlider(options);
+function createSlider(containerId, options) {
+    return new VanillaSlider(containerId, options);
 }
