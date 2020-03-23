@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body style='margin:0; text-align: center;'>
+        <h1>Slider 1:</h1>
+        <div style='width: 800px; max-width: 100%; margin: auto'>
+            <div id='slider-1'></div>
+        </div>
+        <h4>This slider is within a div with a max width of 800px.</h4>
+        <br>
+        <br>
+        
+        <script type='text/javascript' src='vanilla-slider.js'></script>
+        <script>
+            var sliderId = 'slider-1';
+            var sliderOptions = {
+                transitionTime: 1000,
+                transitionDirectionX: 'none',
+                transitionDirectionY: 'none',
+                transitionZoom: 'out',
+                bullets: false,
+                bulletColor: 'green',
+                bulletsHide: true,
+                arrows: true,
+                arrowsHide: false,
+                swipe: true,
+                auto: true,
+                autoTime: 5000,
+                images: [
+                    'img/5.jpg',
+                    'img/6.jpg',
+                    'img/7.jpg',
+                    'img/8.jpg',
+                    'img/9.jpg',
+                    'img/10.jpg'
+                ]
+            };
+            slider = createSlider(sliderId, sliderOptions);
+        </script>
+    </body>
+</html>

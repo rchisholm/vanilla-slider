@@ -8,19 +8,6 @@
             <div id='slider-1'></div>
         </div>
         <h4>This slider is made with all options available in the <i>options</i> parameter.<br>Slides 2 and 4 have links.</h4>
-        <hr>
-        <h1>Slider 2:</h1>
-        <div style='width: 1200px; max-width: 100%; margin: auto'>
-            <div id='slider-2'>
-                <img src='img/1.png'>
-                <img src='img/2.png'>
-                <img src='img/3.png'>
-                <img src='img/4.jpg'>
-                <img src='img/5.jpg'>
-                <img src='img/6.jpg'>
-            </div>
-        </div>
-        <h4>This slider is made with no <i>options</i> parameter, using all default options.<br>No slides have links.</h4>
         <br>
         <br>
         
@@ -33,7 +20,7 @@
                 transitionDirectionY: 'random',
                 transitionZoom: 'random',
                 bullets: true,
-                bulletColor: 'green',
+                bulletColor: 'blue',
                 bulletsHide: true,
                 arrows: true,
                 arrowsHide: true,
@@ -58,8 +45,7 @@
                     }
                 ]
             };
-            slider1 = createSlider(sliderId, sliderOptions);
-            slider2 = createSlider('slider-2');
+            slider = createSlider(sliderId, sliderOptions);
         </script>
     </body>
 </html>
