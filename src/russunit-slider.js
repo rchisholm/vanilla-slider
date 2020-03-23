@@ -620,18 +620,6 @@ class Swipe {
         return this;
     }
 
-    onUp(callback) {
-        this.onUp = callback;
-
-        return this;
-    }
-
-    onDown(callback) {
-        this.onDown = callback;
-
-        return this;
-    }
-
     handleTouchMove(evt) {
         if (!this.xDown || !this.yDown) {
             return;
@@ -648,12 +636,6 @@ class Swipe {
                 this.onLeft();
             } else {
                 this.onRight();
-            }
-        } else {
-            if (this.yDiff > 0) {
-                this.onUp();
-            } else {
-                this.onDown();
             }
         }
 
