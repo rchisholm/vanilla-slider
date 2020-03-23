@@ -195,7 +195,7 @@ slider.pauseAuto();
 Stop automatic slide movement.
 ```javascript
 slider.stopAuto();
-// stops suto slide movement
+// stops auto slide movement
 ```
 
 ## Properties
