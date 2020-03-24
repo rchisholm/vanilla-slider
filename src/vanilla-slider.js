@@ -102,6 +102,12 @@ class VanillaSlider {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
                     }
+                    if(containerChild.title) {
+                        this.images[imagesIndex].textTitle = containerChild.title;
+                        if(containerChild.alt) {
+                            this.images[imagesIndex].textBody = containerChild.alt;
+                        }
+                    }
                     imagesIndex++;
                 } else {
                     console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
@@ -569,16 +575,12 @@ class VanillaSlider {
         this.replaceSlideText = (index) => {
             if(this.textOverlay) {
                 this.slideFadeOut(this.textOverlay, () => {
-                    this.imageElements[this.currentIndex].style.zIndex = 0;
-                    this.imageElements[newIndex].style.zIndex = 2;
                     this.container.removeChild(this.textOverlay);
+                    this.textOverlay = null;
                     this.setSlideText(index);
                 }, {
                     toggleVisibility: true,
-                    fadeTime: this.transitionTime,
-                    directionX: this.transitionDirectionX,
-                    directionY: this.transitionDirectionY,
-                    zoom: this.transitionZoom
+                    fadeTime: this.transitionTime
                 });
             }
         };
@@ -590,7 +592,7 @@ class VanillaSlider {
                 this.textOverlay.classList.add('vanilla-slider-link-overlay');
                 this.textOverlay.style.zIndex = 6;
                 this.textOverlay.style.position = 'absolute';
-                this.textOverlay.style.top = 20;
+                this.textOverlay.style.bottom = 20;
                 this.textOverlay.style.left = 20;
                 this.textOverlay.style.padding = "0 20px";
                 this.textOverlay.style.textAlign = 'left';
@@ -598,13 +600,14 @@ class VanillaSlider {
                 this.textOverlay.style.textShadow = '0 0 20px black';
                 this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
                 this.textOverlay.style.opacity = 0;
-                this.textOverlay.style.transition = 'all ' + (this.transitionTime / 1000) + 's linear';
+                this.textOverlay.style.transition = 'all 0.5s linear';
                 var textOverlayContent = '<h1>' + this.images[index].textTitle + '</h1>';
-                if(this.iamges[index].textBody) {
+                if(this.images[index].textBody) {
                     textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
                 }
                 this.textOverlay.innerHTML = textOverlayContent;
                 if(this.images[index].linkUrl) {
+                    this.textOverlay.style.cursor = 'pointer';
                     if (this.images[index].linkNewTab) {
                         this.textOverlay.addEventListener('click', () => {
                             window.open(this.images[index].linkUrl, '_blank');
@@ -616,10 +619,18 @@ class VanillaSlider {
                     }
                 }
                 this.container.appendChild(this.textOverlay);
-                this.textOverlay.opacity = 1;
-
             }
+        };
 
+        this.revealSlideText = (index) => {
+            if(this.images[index].textTitle && this.textOverlay) {
+                var revealEffect = setInterval(() => {
+                    this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
+                    if(this.textOverlay.style.opacity >= 1) {
+                        clearInterval(revealEffect);
+                    }
+                }, 5);
+            }
         };
 
         /**
@@ -629,10 +640,12 @@ class VanillaSlider {
             this.imageElements[newIndex].style.zIndex = 1;
             this.imageElements[newIndex].style.opacity = 1;
             this.imageElements[newIndex].style.visibility = 'visible';
+            this.replaceSlideText(newIndex);
             this.slideFadeOut(this.imageElements[this.currentIndex], () => {
                 this.imageElements[this.currentIndex].style.zIndex = 0;
                 this.imageElements[newIndex].style.zIndex = 2;
                 callback();
+                this.revealSlideText(newIndex);
             }, {
                 toggleVisibility: true,
                 fadeTime: this.transitionTime,

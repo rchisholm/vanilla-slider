@@ -114,6 +114,14 @@ function VanillaSlider(containerId) {
           _this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
         }
 
+        if (containerChild.title) {
+          _this.images[imagesIndex].textTitle = containerChild.title;
+
+          if (containerChild.alt) {
+            _this.images[imagesIndex].textBody = containerChild.alt;
+          }
+        }
+
         imagesIndex++;
       } else {
         console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
@@ -642,18 +650,14 @@ function VanillaSlider(containerId) {
   this.replaceSlideText = function (index) {
     if (_this.textOverlay) {
       _this.slideFadeOut(_this.textOverlay, function () {
-        _this.imageElements[_this.currentIndex].style.zIndex = 0;
-        _this.imageElements[newIndex].style.zIndex = 2;
-
         _this.container.removeChild(_this.textOverlay);
+
+        _this.textOverlay = null;
 
         _this.setSlideText(index);
       }, {
         toggleVisibility: true,
-        fadeTime: _this.transitionTime,
-        directionX: _this.transitionDirectionX,
-        directionY: _this.transitionDirectionY,
-        zoom: _this.transitionZoom
+        fadeTime: _this.transitionTime
       });
     }
   };
@@ -667,7 +671,7 @@ function VanillaSlider(containerId) {
 
       _this.textOverlay.style.zIndex = 6;
       _this.textOverlay.style.position = 'absolute';
-      _this.textOverlay.style.top = 20;
+      _this.textOverlay.style.bottom = 20;
       _this.textOverlay.style.left = 20;
       _this.textOverlay.style.padding = "0 20px";
       _this.textOverlay.style.textAlign = 'left';
@@ -675,16 +679,18 @@ function VanillaSlider(containerId) {
       _this.textOverlay.style.textShadow = '0 0 20px black';
       _this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
       _this.textOverlay.style.opacity = 0;
-      _this.textOverlay.style.transition = 'all ' + _this.transitionTime / 1000 + 's linear';
+      _this.textOverlay.style.transition = 'all 0.5s linear';
       var textOverlayContent = '<h1>' + _this.images[index].textTitle + '</h1>';
 
-      if (_this.iamges[index].textBody) {
+      if (_this.images[index].textBody) {
         textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
       }
 
       _this.textOverlay.innerHTML = textOverlayContent;
 
       if (_this.images[index].linkUrl) {
+        _this.textOverlay.style.cursor = 'pointer';
+
         if (_this.images[index].linkNewTab) {
           _this.textOverlay.addEventListener('click', function () {
             window.open(_this.images[index].linkUrl, '_blank');
@@ -697,8 +703,18 @@ function VanillaSlider(containerId) {
       }
 
       _this.container.appendChild(_this.textOverlay);
+    }
+  };
 
-      _this.textOverlay.opacity = 1;
+  this.revealSlideText = function (index) {
+    if (_this.images[index].textTitle && _this.textOverlay) {
+      var revealEffect = setInterval(function () {
+        _this.textOverlay.style.opacity = parseFloat(_this.textOverlay.style.opacity) + parseFloat(0.1);
+
+        if (_this.textOverlay.style.opacity >= 1) {
+          clearInterval(revealEffect);
+        }
+      }, 5);
     }
   };
   /**
@@ -711,10 +727,14 @@ function VanillaSlider(containerId) {
     _this.imageElements[newIndex].style.opacity = 1;
     _this.imageElements[newIndex].style.visibility = 'visible';
 
+    _this.replaceSlideText(newIndex);
+
     _this.slideFadeOut(_this.imageElements[_this.currentIndex], function () {
       _this.imageElements[_this.currentIndex].style.zIndex = 0;
       _this.imageElements[newIndex].style.zIndex = 2;
       callback();
+
+      _this.revealSlideText(newIndex);
     }, {
       toggleVisibility: true,
       fadeTime: _this.transitionTime,
