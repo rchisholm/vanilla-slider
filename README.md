@@ -154,6 +154,7 @@ images: [
 Get the index of the next slide.
 ```javascript
 console.log(slider.getNextIndex());
+// output:
 // 1
 ```
 
@@ -161,6 +162,7 @@ console.log(slider.getNextIndex());
 Get the index of the previous slide.
 ```javascript
 console.log(slider.getPrevSlide());
+// output:
 // 3
 ```
 
@@ -168,6 +170,7 @@ console.log(slider.getPrevSlide());
 Go to the next slide, then call an optional callback.
 ```javascript
 slider.nextSlide(() => { console.log('moved to next slide'); });
+// output:
 // moved to next slide
 ```
 
@@ -175,6 +178,7 @@ slider.nextSlide(() => { console.log('moved to next slide'); });
 Go to the previous slide, then call an optional callback.
 ```javascript
 slider.prevSlide(() => { console.log('moved to previous slide'); });
+// output: 
 // moved to previous slide
 ```
 
@@ -182,6 +186,7 @@ slider.prevSlide(() => { console.log('moved to previous slide'); });
 Go to the slide at the indicated index, then call an optional callback.
 ```javascript
 slider.goToSlide(2, () => { console.log('moved to slide at index 2'); });
+// output:
 // moved to slide at index 2
 ```
 
