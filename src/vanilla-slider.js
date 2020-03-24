@@ -297,10 +297,9 @@ class VanillaSlider {
          * fades the target out
          * @param {element||string} fadeOutTarget element to fade out, or its id
          * @param {function} callback function executed when fade is finished
-         * @param {{waitTime: any, fadeTime: number, toggleVisibility: boolean, direction: string, zoom: string}} options options object for fade:
+         * @param {{waitTime: any, fadeTime: number, direction: string, zoom: string}} options options object for fade:
          * options.waitTime: wait before executing - true for 2 sec, false for 0 sec, num for other (ms);
          * options.fadeTime: time for the fadeIn/fadeOut effects, defaults to 250;
-         * options.toggleVisibility: true if using visibility:hidden instead of display:none for fadeOut;
          * options.direction: direction for the fading out element to fly away if position:aboslute (left, right, up, down) - null to stay still;
          * options.zoom: direction for the fading element to zoom if position:absolute (in, out) - null to stay same size
          */
@@ -327,21 +326,16 @@ class VanillaSlider {
             // default options
             options.waitTime = options.waitTime ? options.waitTime : false;
             options.fadeTime = options.fadeTime ? options.fadeTime : defaultFadeTime;
-            options.toggleVisibility = options.toggleVisibility ? options.toggleVisibility : false;
             options.directionX = options.directionX ? options.directionX : null;
             options.directionY = options.directionY ? options.directionY : null;
             options.zoom = options.zoom ? options.zoom : null;
 
 
-            var isVisible = options.toggleVisibility ? (element) => {
+            var isVisible = (element) => {
                 return element.style.visibility !== "hidden";
-            } : (element) => {
-                return element.style.display !== "none";
             };
-            var makeInvisible = options.toggleVisibility ? (element) => {
+            var makeInvisible = (element) => {
                 element.style.visibility = "hidden";
-            } : (element) => {
-                element.style.display = "none";
             };
 
             if (fadeOutTarget) {
@@ -577,7 +571,6 @@ class VanillaSlider {
                 this.imageElements[newIndex].style.zIndex = 2;
                 callback();
             }, {
-                toggleVisibility: true,
                 fadeTime: this.transitionTime,
                 directionX: this.transitionDirectionX,
                 directionY: this.transitionDirectionY,
