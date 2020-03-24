@@ -553,6 +553,8 @@ function VanillaSlider(containerId) {
 
         _this.setSlideLink(newIndex);
 
+        _this.setSlideText(newIndex);
+
         _this.sliderLock = false;
 
         if (typeof callback === 'function') {
@@ -634,6 +636,69 @@ function VanillaSlider(containerId) {
       }
 
       _this.container.appendChild(_this.linkOverlay);
+    }
+  };
+
+  this.replaceSlideText = function (index) {
+    if (_this.textOverlay) {
+      _this.slideFadeOut(_this.textOverlay, function () {
+        _this.imageElements[_this.currentIndex].style.zIndex = 0;
+        _this.imageElements[newIndex].style.zIndex = 2;
+
+        _this.container.removeChild(_this.textOverlay);
+
+        _this.setSlideText(index);
+      }, {
+        toggleVisibility: true,
+        fadeTime: _this.transitionTime,
+        directionX: _this.transitionDirectionX,
+        directionY: _this.transitionDirectionY,
+        zoom: _this.transitionZoom
+      });
+    }
+  };
+
+  this.setSlideText = function (index) {
+    if (_this.images[index].textTitle) {
+      _this.textOverlay = document.createElement('DIV');
+      _this.textOverlay.id = _this.containerId + '-text-overlay';
+
+      _this.textOverlay.classList.add('vanilla-slider-link-overlay');
+
+      _this.textOverlay.style.zIndex = 6;
+      _this.textOverlay.style.position = 'absolute';
+      _this.textOverlay.style.top = 20;
+      _this.textOverlay.style.left = 20;
+      _this.textOverlay.style.padding = "0 20px";
+      _this.textOverlay.style.textAlign = 'left';
+      _this.textOverlay.style.color = '#fff';
+      _this.textOverlay.style.textShadow = '0 0 20px black';
+      _this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+      _this.textOverlay.style.opacity = 0;
+      _this.textOverlay.style.transition = 'all ' + _this.transitionTime / 1000 + 's linear';
+      var textOverlayContent = '<h1>' + _this.images[index].textTitle + '</h1>';
+
+      if (_this.iamges[index].textBody) {
+        textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
+      }
+
+      _this.textOverlay.innerHTML = textOverlayContent;
+
+      if (_this.images[index].linkUrl) {
+        if (_this.images[index].linkNewTab) {
+          _this.textOverlay.addEventListener('click', function () {
+            window.open(_this.images[index].linkUrl, '_blank');
+          });
+        } else {
+          _this.textOverlay.addEventListener('click', function () {
+            window.location.href = _this.images[index].linkUrl;
+          });
+        }
+      }
+
+      _this.container.appendChild(_this.textOverlay);
+
+      _this.textOverlay.opacity = 1;
     }
   };
   /**

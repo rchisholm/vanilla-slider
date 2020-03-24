@@ -495,6 +495,7 @@ class VanillaSlider {
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
                     this.setSlideLink(newIndex);
+                    this.setSlideText(newIndex);
                     this.sliderLock = false;
                     if (typeof callback === 'function') {
                         callback();
@@ -563,6 +564,62 @@ class VanillaSlider {
                 }
                 this.container.appendChild(this.linkOverlay);
             }
+        };
+
+        this.replaceSlideText = (index) => {
+            if(this.textOverlay) {
+                this.slideFadeOut(this.textOverlay, () => {
+                    this.imageElements[this.currentIndex].style.zIndex = 0;
+                    this.imageElements[newIndex].style.zIndex = 2;
+                    this.container.removeChild(this.textOverlay);
+                    this.setSlideText(index);
+                }, {
+                    toggleVisibility: true,
+                    fadeTime: this.transitionTime,
+                    directionX: this.transitionDirectionX,
+                    directionY: this.transitionDirectionY,
+                    zoom: this.transitionZoom
+                });
+            }
+        };
+
+        this.setSlideText = (index) => {
+            if(this.images[index].textTitle) {
+                this.textOverlay = document.createElement('DIV');
+                this.textOverlay.id = this.containerId + '-text-overlay';
+                this.textOverlay.classList.add('vanilla-slider-link-overlay');
+                this.textOverlay.style.zIndex = 6;
+                this.textOverlay.style.position = 'absolute';
+                this.textOverlay.style.top = 20;
+                this.textOverlay.style.left = 20;
+                this.textOverlay.style.padding = "0 20px";
+                this.textOverlay.style.textAlign = 'left';
+                this.textOverlay.style.color = '#fff';
+                this.textOverlay.style.textShadow = '0 0 20px black';
+                this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                this.textOverlay.style.opacity = 0;
+                this.textOverlay.style.transition = 'all ' + (this.transitionTime / 1000) + 's linear';
+                var textOverlayContent = '<h1>' + this.images[index].textTitle + '</h1>';
+                if(this.iamges[index].textBody) {
+                    textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
+                }
+                this.textOverlay.innerHTML = textOverlayContent;
+                if(this.images[index].linkUrl) {
+                    if (this.images[index].linkNewTab) {
+                        this.textOverlay.addEventListener('click', () => {
+                            window.open(this.images[index].linkUrl, '_blank');
+                        });
+                    } else {
+                        this.textOverlay.addEventListener('click', () => {
+                            window.location.href = this.images[index].linkUrl;
+                        });
+                    }
+                }
+                this.container.appendChild(this.textOverlay);
+                this.textOverlay.opacity = 1;
+
+            }
+
         };
 
         /**
