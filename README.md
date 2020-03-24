@@ -165,24 +165,24 @@ console.log(slider.getPrevSlide());
 ```
 
 #### nextSlide
-Go to the next slide.
+Go to the next slide, then call an optional callback.
 ```javascript
-slider.nextSlide();
-// moves to the next slide
+slider.nextSlide(() => { console.log('moved to next slide'); });
+// moved to next slide
 ```
 
 #### prevSlide
-Go to the previous slide.
+Go to the previous slide, then call an optional callback.
 ```javascript
-slider.prevSlide();
-// moves to the previous slide
+slider.prevSlide(() => { console.log('moved to previous slide'); });
+// moved to previous slide
 ```
 
 #### goToSlide
-Go to the slide at the indicated index.
+Go to the slide at the indicated index, then call an optional callback.
 ```javascript
-slider.goToSlide(2);
-// moves to the slide at index 2
+slider.goToSlide(2, () => { console.log('moved to slide at index 2'); });
+// moved to slide at index 2
 ```
 
 #### startAuto
