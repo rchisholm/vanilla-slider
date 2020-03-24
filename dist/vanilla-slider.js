@@ -652,7 +652,6 @@ function VanillaSlider(containerId) {
 
         _this.setSlideText(index);
       }, {
-        toggleVisibility: true,
         fadeTime: _this.transitionTime
       });
     }

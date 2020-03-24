@@ -573,7 +573,6 @@ class VanillaSlider {
                     this.textOverlay = null;
                     this.setSlideText(index);
                 }, {
-                    toggleVisibility: true,
                     fadeTime: this.transitionTime
                 });
             }
