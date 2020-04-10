@@ -44,10 +44,10 @@ Then, define the slider container's id and the `options` object, and call `creat
 ### containerId
 `containerId` is a required parameter. It can either be the element to be used as the container for the slider, or the element's id:
 ```javascript
-var containerId = document.getElementById('slider=1');
+var containerId = document.getElementById('slider-1');
 ```
 ```javascript
-var containerId = 'slider=1';
+var containerId = 'slider-1';
 ```
 
 ### options
