@@ -662,8 +662,8 @@ function VanillaSlider(containerId) {
 
       _this.textOverlay.style.zIndex = 6;
       _this.textOverlay.style.position = 'absolute';
-      _this.textOverlay.style.bottom = 20;
-      _this.textOverlay.style.left = 20;
+      _this.textOverlay.style.bottom = '20px';
+      _this.textOverlay.style.left = '20px';
       _this.textOverlay.style.padding = "0 20px";
       _this.textOverlay.style.textAlign = 'left';
       _this.textOverlay.style.color = '#fff';

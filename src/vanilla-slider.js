@@ -581,8 +581,8 @@ class VanillaSlider {
                 this.textOverlay.classList.add('vanilla-slider-text-overlay');
                 this.textOverlay.style.zIndex = 6;
                 this.textOverlay.style.position = 'absolute';
-                this.textOverlay.style.bottom = 20;
-                this.textOverlay.style.left = 20;
+                this.textOverlay.style.bottom = '20px';
+                this.textOverlay.style.left = '20px';
                 this.textOverlay.style.padding = "0 20px";
                 this.textOverlay.style.textAlign = 'left';
                 this.textOverlay.style.color = '#fff';
