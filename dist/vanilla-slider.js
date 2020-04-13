@@ -86,7 +86,7 @@ function VanillaSlider(containerId) {
 
   if (!document.getElementById(this.containerId)) {
     throw "Slider error: conatinerId must be a valid element or id";
-  } // place images in cointainer
+  } // place images in container
 
 
   var imageElement;
@@ -648,6 +648,7 @@ function VanillaSlider(containerId) {
       _this.slideFadeOut(_this.textOverlay, function () {
         _this.container.removeChild(_this.textOverlay);
 
+        _this.textOverlay.outerHTML = '';
         _this.textOverlay = null;
 
         _this.setSlideText(index);
@@ -662,7 +663,7 @@ function VanillaSlider(containerId) {
       _this.textOverlay = document.createElement('DIV');
       _this.textOverlay.id = _this.containerId + '-text-overlay';
 
-      _this.textOverlay.classList.add('vanilla-slider-link-overlay');
+      _this.textOverlay.classList.add('vanilla-slider-text-overlay');
 
       _this.textOverlay.style.zIndex = 6;
       _this.textOverlay.style.position = 'absolute';
@@ -739,7 +740,10 @@ function VanillaSlider(containerId) {
   }; // set link of 1st slide
 
 
-  this.setSlideLink(this.currentIndex); // set swipe listener
+  this.setSlideLink(this.currentIndex); // set text of 1st slide
+
+  this.setSlideText(this.currentIndex);
+  this.revealSlideText(this.currentIndex); // set swipe listener
 
   if (this.swipe) {
     this.swiper = {};

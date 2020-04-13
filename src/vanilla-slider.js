@@ -80,7 +80,7 @@ class VanillaSlider {
             throw ("Slider error: conatinerId must be a valid element or id");
         }
 
-        // place images in cointainer
+        // place images in container
         var imageElement;
         var imageAnchor;
         var imagesIndex = 0;
@@ -570,6 +570,7 @@ class VanillaSlider {
             if(this.textOverlay) {
                 this.slideFadeOut(this.textOverlay, () => {
                     this.container.removeChild(this.textOverlay);
+                    this.textOverlay.outerHTML = '';
                     this.textOverlay = null;
                     this.setSlideText(index);
                 }, {
@@ -582,7 +583,7 @@ class VanillaSlider {
             if(this.images[index].textTitle) {
                 this.textOverlay = document.createElement('DIV');
                 this.textOverlay.id = this.containerId + '-text-overlay';
-                this.textOverlay.classList.add('vanilla-slider-link-overlay');
+                this.textOverlay.classList.add('vanilla-slider-text-overlay');
                 this.textOverlay.style.zIndex = 6;
                 this.textOverlay.style.position = 'absolute';
                 this.textOverlay.style.bottom = 20;
@@ -649,6 +650,10 @@ class VanillaSlider {
 
         // set link of 1st slide
         this.setSlideLink(this.currentIndex);
+
+        // set text of 1st slide
+        this.setSlideText(this.currentIndex);
+        this.revealSlideText(this.currentIndex);
 
 
         // set swipe listener
