@@ -144,10 +144,10 @@ class VanillaSlider {
             this.container.appendChild(imageElement);
             if (index === this.images.length - 1) {
                 imageElement.onload = () => {
-                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
-                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
-                    this.container.style.width = imageElement.clientWidth;
-                    this.container.style.height = imageElement.clientHeight;
+                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth) + 'px';
+                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight) + 'px';
+                    this.container.style.width = imageElement.clientWidth + 'px';
+                    this.container.style.height = imageElement.clientHeight + 'px';
                 };
             }
             this.imageElements[index] = imageElement;
@@ -292,9 +292,9 @@ class VanillaSlider {
          * resize container, called on resizing browser window
          */
         this.resizeContainer = () => {
-            this.container.style.width = this.container.parentNode.clientWidth;
+            this.container.style.width = this.container.parentNode.clientWidth + 'px';
             var imageXYRatio = this.imageElements[0].naturalWidth / this.imageElements[0].naturalHeight;
-            this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio;
+            this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio + 'px';
         };
 
         window.addEventListener('resize', this.resizeContainer);
@@ -409,10 +409,10 @@ class VanillaSlider {
                                 fadeOutTarget.style.opacity -= opacityInterval;
                                 // move a little bit in directions
                                 if (options.directionX) {
-                                    fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + "px";
+                                    fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + 'px';
                                 }
                                 if (options.directionY) {
-                                    fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + "px";
+                                    fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + 'px';
                                 }
                                 // zoom a little bit
                                 if (options.zoom) {
