@@ -566,21 +566,16 @@ class VanillaSlider {
             }
         };
 
-        this.replaceSlideText = (index) => {
-            if(this.textOverlay) {
-                this.slideFadeOut(this.textOverlay, () => {
-                    this.container.removeChild(this.textOverlay);
-                    this.textOverlay.outerHTML = '';
-                    this.textOverlay = null;
-                    this.setSlideText(index);
-                }, {
-                    fadeTime: this.transitionTime
-                });
-            }
-        };
 
+        /**
+         * clear the link div for the slide, and if the next slide has a link, create the link div
+         */
         this.setSlideText = (index) => {
-            if(this.images[index].textTitle) {
+            if (this.textOverlay) {
+                this.container.removeChild(this.textOverlay);
+                this.textOverlay = null;
+            }
+            if (this.images[index].textTitle) {
                 this.textOverlay = document.createElement('DIV');
                 this.textOverlay.id = this.containerId + '-text-overlay';
                 this.textOverlay.classList.add('vanilla-slider-text-overlay');
@@ -634,7 +629,7 @@ class VanillaSlider {
             this.imageElements[newIndex].style.zIndex = 1;
             this.imageElements[newIndex].style.opacity = 1;
             this.imageElements[newIndex].style.visibility = 'visible';
-            this.replaceSlideText(newIndex);
+            this.setSlideText(newIndex);
             this.slideFadeOut(this.imageElements[this.currentIndex], () => {
                 this.imageElements[this.currentIndex].style.zIndex = 0;
                 this.imageElements[newIndex].style.zIndex = 2;

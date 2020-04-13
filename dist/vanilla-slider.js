@@ -642,23 +642,18 @@ function VanillaSlider(containerId) {
       _this.container.appendChild(_this.linkOverlay);
     }
   };
+  /**
+   * clear the link div for the slide, and if the next slide has a link, create the link div
+   */
 
-  this.replaceSlideText = function (index) {
-    if (_this.textOverlay) {
-      _this.slideFadeOut(_this.textOverlay, function () {
-        _this.container.removeChild(_this.textOverlay);
-
-        _this.textOverlay.outerHTML = '';
-        _this.textOverlay = null;
-
-        _this.setSlideText(index);
-      }, {
-        fadeTime: _this.transitionTime
-      });
-    }
-  };
 
   this.setSlideText = function (index) {
+    if (_this.textOverlay) {
+      _this.container.removeChild(_this.textOverlay);
+
+      _this.textOverlay = null;
+    }
+
     if (_this.images[index].textTitle) {
       _this.textOverlay = document.createElement('DIV');
       _this.textOverlay.id = _this.containerId + '-text-overlay';
@@ -723,7 +718,7 @@ function VanillaSlider(containerId) {
     _this.imageElements[newIndex].style.opacity = 1;
     _this.imageElements[newIndex].style.visibility = 'visible';
 
-    _this.replaceSlideText(newIndex);
+    _this.setSlideText(newIndex);
 
     _this.slideFadeOut(_this.imageElements[_this.currentIndex], function () {
       _this.imageElements[_this.currentIndex].style.zIndex = 0;
