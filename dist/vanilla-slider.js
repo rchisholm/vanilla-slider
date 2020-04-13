@@ -654,7 +654,7 @@ function VanillaSlider(containerId) {
       _this.textOverlay = null;
     }
 
-    if (_this.images[index].textTitle) {
+    if (_this.images[index].textTitle || _this.images[index].textBody) {
       _this.textOverlay = document.createElement('DIV');
       _this.textOverlay.id = _this.containerId + '-text-overlay';
 
@@ -671,7 +671,11 @@ function VanillaSlider(containerId) {
       _this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
       _this.textOverlay.style.opacity = 0;
       _this.textOverlay.style.transition = 'all 0.5s linear';
-      var textOverlayContent = '<h1>' + _this.images[index].textTitle + '</h1>';
+      var textOverlayContent = '';
+
+      if (_this.images[index].textTitle) {
+        textOverlayContent += '<h1>' + _this.images[index].textTitle + '</h1>';
+      }
 
       if (_this.images[index].textBody) {
         textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
@@ -698,7 +702,7 @@ function VanillaSlider(containerId) {
   };
 
   this.revealSlideText = function (index) {
-    if (_this.images[index].textTitle && _this.textOverlay) {
+    if ((_this.images[index].textTitle || _this.images[index].textBody) && _this.textOverlay) {
       var revealEffect = setInterval(function () {
         _this.textOverlay.style.opacity = parseFloat(_this.textOverlay.style.opacity) + parseFloat(0.1);
 

@@ -575,7 +575,7 @@ class VanillaSlider {
                 this.container.removeChild(this.textOverlay);
                 this.textOverlay = null;
             }
-            if (this.images[index].textTitle) {
+            if (this.images[index].textTitle || this.images[index].textBody) {
                 this.textOverlay = document.createElement('DIV');
                 this.textOverlay.id = this.containerId + '-text-overlay';
                 this.textOverlay.classList.add('vanilla-slider-text-overlay');
@@ -590,7 +590,10 @@ class VanillaSlider {
                 this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
                 this.textOverlay.style.opacity = 0;
                 this.textOverlay.style.transition = 'all 0.5s linear';
-                var textOverlayContent = '<h1>' + this.images[index].textTitle + '</h1>';
+                var textOverlayContent = '';
+                if(this.images[index].textTitle) {
+                    textOverlayContent += '<h1>' + this.images[index].textTitle + '</h1>';
+                }
                 if(this.images[index].textBody) {
                     textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
                 }
@@ -612,7 +615,7 @@ class VanillaSlider {
         };
 
         this.revealSlideText = (index) => {
-            if(this.images[index].textTitle && this.textOverlay) {
+            if((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
                 var revealEffect = setInterval(() => {
                     this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
                     if(this.textOverlay.style.opacity >= 1) {
