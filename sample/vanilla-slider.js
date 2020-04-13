@@ -66,7 +66,7 @@ function VanillaSlider(containerId) {
     var isColor = function isColor(strColor) {
       var s = new Option().style;
       s.color = strColor;
-      return s.color == strColor;
+      return s.color !== '';
     };
 
     this.bulletColor = isColor(this.bulletColor) ? this.bulletColor : 'red';

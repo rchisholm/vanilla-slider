@@ -56,10 +56,10 @@ class VanillaSlider {
 
         // check color
         if (this.bulletColor) {
-            var isColor = (strColor) => {
-                var s = new Option().style;
+            const isColor = (strColor) => {
+                const s = new Option().style;
                 s.color = strColor;
-                return s.color == strColor;
+                return s.color !== '';
             };
             this.bulletColor = isColor(this.bulletColor) ? this.bulletColor : 'red';
         } else {
