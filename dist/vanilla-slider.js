@@ -11,7 +11,7 @@ var VanillaSlider =
 /**
  * @param {any} containerId element or id of element which shall be the container for the slider;
  * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean, auto: boolean, autoTime: number}} options options object for slider:
- * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
+ * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab, textTitle, textBody, textPosition
  * options.transitionTime: time in ms until transition is finished;
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
  * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -661,9 +661,9 @@ function VanillaSlider(containerId) {
       _this.textOverlay.classList.add('vanilla-slider-text-overlay');
 
       _this.textOverlay.style.zIndex = 6;
-      _this.textOverlay.style.position = 'absolute';
-      _this.textOverlay.style.bottom = '20px';
-      _this.textOverlay.style.left = '20px';
+      _this.textOverlay.style.position = 'absolute'; // this.textOverlay.style.bottom = '20px';
+      // this.textOverlay.style.left = '20px';
+
       _this.textOverlay.style.padding = "0 20px";
       _this.textOverlay.style.textAlign = 'left';
       _this.textOverlay.style.color = '#fff';
@@ -679,6 +679,32 @@ function VanillaSlider(containerId) {
 
       if (_this.images[index].textBody) {
         textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
+      }
+
+      _this.images[index].textPosition = typeof _this.images[index].textPosition === 'string' ? _this.images[index].textPosition : 'SW';
+      _this.images[index].textPosition = ['NW', 'NE', 'SE', 'SW'].includes(_this.images[index].textPosition) ? _this.images[index].textPosition : 'SW';
+
+      switch (_this.images[index].textPosition) {
+        case 'NW':
+          _this.textOverlay.style.top = '20px';
+          _this.textOverlay.style.left = '20px';
+          break;
+
+        case 'NE':
+          _this.textOverlay.style.top = '20px';
+          _this.textOverlay.style.right = '20px';
+          break;
+
+        case 'SE':
+          _this.textOverlay.style.bottom = '20px';
+          _this.textOverlay.style.right = '20px';
+          break;
+
+        default:
+          // SW
+          _this.textOverlay.style.bottom = '20px';
+          _this.textOverlay.style.left = '20px';
+          break;
       }
 
       _this.textOverlay.innerHTML = textOverlayContent;

@@ -8,7 +8,7 @@ class VanillaSlider {
     /**
      * @param {any} containerId element or id of element which shall be the container for the slider;
      * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean, auto: boolean, autoTime: number}} options options object for slider:
-     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
+     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab, textTitle, textBody, textPosition
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -581,8 +581,8 @@ class VanillaSlider {
                 this.textOverlay.classList.add('vanilla-slider-text-overlay');
                 this.textOverlay.style.zIndex = 6;
                 this.textOverlay.style.position = 'absolute';
-                this.textOverlay.style.bottom = '20px';
-                this.textOverlay.style.left = '20px';
+                // this.textOverlay.style.bottom = '20px';
+                // this.textOverlay.style.left = '20px';
                 this.textOverlay.style.padding = "0 20px";
                 this.textOverlay.style.textAlign = 'left';
                 this.textOverlay.style.color = '#fff';
@@ -597,6 +597,26 @@ class VanillaSlider {
                 if(this.images[index].textBody) {
                     textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
                 }
+                this.images[index].textPosition = typeof this.images[index].textPosition === 'string' ? this.images[index].textPosition : 'SW';
+                switch(this.images[index].textPosition) {
+                    case 'NW':
+                        this.textOverlay.style.top = '20px';
+                        this.textOverlay.style.left = '20px';
+                        break;
+                    case 'NE':
+                        this.textOverlay.style.top = '20px';
+                        this.textOverlay.style.right = '20px';
+                        break;
+                    case 'SE':
+                        this.textOverlay.style.bottom = '20px';
+                        this.textOverlay.style.right = '20px';
+                        break;
+                    default: // SW
+                        this.textOverlay.style.bottom = '20px';
+                        this.textOverlay.style.left = '20px';
+                        break;
+                }
+
                 this.textOverlay.innerHTML = textOverlayContent;
                 if(this.images[index].linkUrl) {
                     this.textOverlay.style.cursor = 'pointer';
