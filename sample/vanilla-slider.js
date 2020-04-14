@@ -661,9 +661,7 @@ function VanillaSlider(containerId) {
       _this.textOverlay.classList.add('vanilla-slider-text-overlay');
 
       _this.textOverlay.style.zIndex = 6;
-      _this.textOverlay.style.position = 'absolute'; // this.textOverlay.style.bottom = '20px';
-      // this.textOverlay.style.left = '20px';
-
+      _this.textOverlay.style.position = 'absolute';
       _this.textOverlay.style.padding = "0 20px";
       _this.textOverlay.style.textAlign = 'left';
       _this.textOverlay.style.color = '#fff';
@@ -682,7 +680,6 @@ function VanillaSlider(containerId) {
       }
 
       _this.images[index].textPosition = typeof _this.images[index].textPosition === 'string' ? _this.images[index].textPosition : 'SW';
-      _this.images[index].textPosition = ['NW', 'NE', 'SE', 'SW'].includes(_this.images[index].textPosition) ? _this.images[index].textPosition : 'SW';
 
       switch (_this.images[index].textPosition) {
         case 'NW':
