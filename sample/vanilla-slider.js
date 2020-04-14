@@ -24,6 +24,7 @@ var VanillaSlider =
  * options.swipe: whether to allow swipe support
  * options.auto: whether to automatically move slides
  * options.autoTime: time in ms for slides to automatically move
+ * options.autoPauseOnHover: whether to pause auto on mouse hover
  */
 function VanillaSlider(containerId) {
   var _this = this;
@@ -46,6 +47,7 @@ function VanillaSlider(containerId) {
   this.swipe = options.swipe;
   this.auto = options.auto;
   this.autoTime = options.autoTime;
+  this.autoPauseOnHover = options.autoPauseOnHover;
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -60,7 +62,8 @@ function VanillaSlider(containerId) {
   this.arrowsHide = typeof this.arrowsHide === 'boolean' && this.arrows ? this.arrowsHide : true;
   this.swipe = typeof this.swipe === 'boolean' ? this.swipe : true;
   this.auto = typeof this.auto === 'boolean' ? this.auto : false;
-  this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000; // check color
+  this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000;
+  this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true; // check color
 
   if (this.bulletColor) {
     var isColor = function isColor(strColor) {
@@ -566,7 +569,7 @@ function VanillaSlider(containerId) {
         }
 
         if (_this.auto) {
-          _this.autoInterval = setInterval(_this.nextSlide, _this.autoTime);
+          _this.startAuto();
         }
       };
 
@@ -835,7 +838,16 @@ function VanillaSlider(containerId) {
 
 
   if (this.auto) {
-    this.startAuto();
+    this.startAuto(); // place mouse listeners for auto pause/resume
+
+    if (this.autoPauseOnHover) {
+      this.container.addEventListener('mouseenter', function () {
+        _this.pauseAuto();
+      });
+      this.container.addEventListener('mouseleave', function () {
+        _this.startAuto();
+      });
+    }
   }
 };
 /**
