@@ -44,6 +44,7 @@ class VanillaSlider {
         this.currentIndex = 0; // index of currently shown image 
         this.sliderLock = false; // slider is locked and can't transition
         this.imageElements = []; // image elements
+        this.hover = false; // true on mouse in, false on mouse out
 
         // adjusting values
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
@@ -503,7 +504,7 @@ class VanillaSlider {
                     if (typeof callback === 'function') {
                         callback();
                     }
-                    if (this.auto) {
+                    if (this.auto && (!this.autoPauseOnHover || !this.hover)) {
                         this.startAuto();
                     }
                 };
@@ -756,6 +757,14 @@ class VanillaSlider {
                 });
             }
         }
+
+        // set listeners for hover property
+        this.container.addEventListener('mouseenter', () => {
+            this.hover = true;
+        });
+        this.container.addEventListener('mouseleave', () => {
+            this.hover = false;
+        });
 
         // resize again to be safe
         this.resizeContainer();

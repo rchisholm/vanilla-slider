@@ -53,6 +53,8 @@ function VanillaSlider(containerId) {
   this.sliderLock = false; // slider is locked and can't transition
 
   this.imageElements = []; // image elements
+
+  this.hover = false; // true on mouse in, false on mouse out
   // adjusting values
 
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
@@ -568,7 +570,7 @@ function VanillaSlider(containerId) {
           callback();
         }
 
-        if (_this.auto) {
+        if (_this.auto && (!_this.autoPauseOnHover || !_this.hover)) {
           _this.startAuto();
         }
       };
@@ -848,8 +850,15 @@ function VanillaSlider(containerId) {
         _this.startAuto();
       });
     }
-  } // resize again to be safe
+  } // set listeners for hover property
 
+
+  this.container.addEventListener('mouseenter', function () {
+    _this.hover = true;
+  });
+  this.container.addEventListener('mouseleave', function () {
+    _this.hover = false;
+  }); // resize again to be safe
 
   this.resizeContainer();
 };
