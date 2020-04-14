@@ -11,7 +11,7 @@ var VanillaSlider =
 /**
  * @param {any} containerId element or id of element which shall be the container for the slider;
  * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean, auto: boolean, autoTime: number}} options options object for slider:
- * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
+ * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab, textTitle, textBody, textPosition
  * options.transitionTime: time in ms until transition is finished;
  * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
  * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -66,7 +66,7 @@ function VanillaSlider(containerId) {
     var isColor = function isColor(strColor) {
       var s = new Option().style;
       s.color = strColor;
-      return s.color == strColor;
+      return s.color !== '';
     };
 
     this.bulletColor = isColor(this.bulletColor) ? this.bulletColor : 'red';
@@ -86,7 +86,7 @@ function VanillaSlider(containerId) {
 
   if (!document.getElementById(this.containerId)) {
     throw "Slider error: conatinerId must be a valid element or id";
-  } // place images in cointainer
+  } // place images in container
 
 
   var imageElement;
@@ -112,6 +112,14 @@ function VanillaSlider(containerId) {
         if (imageAnchor) {
           _this.images[imagesIndex].linkUrl = imageAnchor.href;
           _this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
+        }
+
+        if (containerChild.title) {
+          _this.images[imagesIndex].textTitle = containerChild.title;
+
+          if (containerChild.alt) {
+            _this.images[imagesIndex].textBody = containerChild.alt;
+          }
         }
 
         imagesIndex++;
@@ -152,10 +160,10 @@ function VanillaSlider(containerId) {
 
     if (index === _this.images.length - 1) {
       imageElement.onload = function () {
-        _this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
-        _this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
-        _this.container.style.width = imageElement.clientWidth;
-        _this.container.style.height = imageElement.clientHeight;
+        _this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth) + 'px';
+        _this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight) + 'px';
+        _this.container.style.width = imageElement.clientWidth + 'px';
+        _this.container.style.height = imageElement.clientHeight + 'px';
       };
     }
 
@@ -310,9 +318,9 @@ function VanillaSlider(containerId) {
 
 
   this.resizeContainer = function () {
-    _this.container.style.width = _this.container.parentNode.clientWidth;
+    _this.container.style.width = _this.container.parentNode.clientWidth + 'px';
     var imageXYRatio = _this.imageElements[0].naturalWidth / _this.imageElements[0].naturalHeight;
-    _this.container.style.height = parseFloat(_this.container.style.width.replace('px', '')) / imageXYRatio;
+    _this.container.style.height = parseFloat(_this.container.style.width.replace('px', '')) / imageXYRatio + 'px';
   };
 
   window.addEventListener('resize', this.resizeContainer);
@@ -444,11 +452,11 @@ function VanillaSlider(containerId) {
               fadeOutTarget.style.opacity -= opacityInterval; // move a little bit in directions
 
               if (options.directionX) {
-                fadeOutTarget.style.left = parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval + "px";
+                fadeOutTarget.style.left = parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval + 'px';
               }
 
               if (options.directionY) {
-                fadeOutTarget.style.top = parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval + "px";
+                fadeOutTarget.style.top = parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval + 'px';
               } // zoom a little bit
 
 
@@ -549,6 +557,8 @@ function VanillaSlider(containerId) {
 
         _this.setSlideLink(newIndex);
 
+        _this.setSlideText(newIndex);
+
         _this.sliderLock = false;
 
         if (typeof callback === 'function') {
@@ -633,6 +643,99 @@ function VanillaSlider(containerId) {
     }
   };
   /**
+   * clear the link div for the slide, and if the next slide has a link, create the link div
+   */
+
+
+  this.setSlideText = function (index) {
+    if (_this.textOverlay) {
+      _this.container.removeChild(_this.textOverlay);
+
+      _this.textOverlay = null;
+    }
+
+    if (_this.images[index].textTitle || _this.images[index].textBody) {
+      _this.textOverlay = document.createElement('DIV');
+      _this.textOverlay.id = _this.containerId + '-text-overlay';
+
+      _this.textOverlay.classList.add('vanilla-slider-text-overlay');
+
+      _this.textOverlay.style.zIndex = 6;
+      _this.textOverlay.style.position = 'absolute';
+      _this.textOverlay.style.padding = "0 20px";
+      _this.textOverlay.style.textAlign = 'left';
+      _this.textOverlay.style.color = '#fff';
+      _this.textOverlay.style.textShadow = '0 0 20px black';
+      _this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+      _this.textOverlay.style.opacity = 0;
+      _this.textOverlay.style.transition = 'all 0.5s linear';
+      var textOverlayContent = '';
+
+      if (_this.images[index].textTitle) {
+        textOverlayContent += '<h1>' + _this.images[index].textTitle + '</h1>';
+      }
+
+      if (_this.images[index].textBody) {
+        textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
+      }
+
+      _this.images[index].textPosition = typeof _this.images[index].textPosition === 'string' ? _this.images[index].textPosition : 'SW';
+
+      switch (_this.images[index].textPosition) {
+        case 'NW':
+          _this.textOverlay.style.top = '20px';
+          _this.textOverlay.style.left = '20px';
+          break;
+
+        case 'NE':
+          _this.textOverlay.style.top = '20px';
+          _this.textOverlay.style.right = '20px';
+          break;
+
+        case 'SE':
+          _this.textOverlay.style.bottom = '20px';
+          _this.textOverlay.style.right = '20px';
+          break;
+
+        default:
+          // SW
+          _this.textOverlay.style.bottom = '20px';
+          _this.textOverlay.style.left = '20px';
+          break;
+      }
+
+      _this.textOverlay.innerHTML = textOverlayContent;
+
+      if (_this.images[index].linkUrl) {
+        _this.textOverlay.style.cursor = 'pointer';
+
+        if (_this.images[index].linkNewTab) {
+          _this.textOverlay.addEventListener('click', function () {
+            window.open(_this.images[index].linkUrl, '_blank');
+          });
+        } else {
+          _this.textOverlay.addEventListener('click', function () {
+            window.location.href = _this.images[index].linkUrl;
+          });
+        }
+      }
+
+      _this.container.appendChild(_this.textOverlay);
+    }
+  };
+
+  this.revealSlideText = function (index) {
+    if ((_this.images[index].textTitle || _this.images[index].textBody) && _this.textOverlay) {
+      var revealEffect = setInterval(function () {
+        _this.textOverlay.style.opacity = parseFloat(_this.textOverlay.style.opacity) + parseFloat(0.1);
+
+        if (_this.textOverlay.style.opacity >= 1) {
+          clearInterval(revealEffect);
+        }
+      }, 5);
+    }
+  };
+  /**
    * transition from one slide to another
    */
 
@@ -642,10 +745,14 @@ function VanillaSlider(containerId) {
     _this.imageElements[newIndex].style.opacity = 1;
     _this.imageElements[newIndex].style.visibility = 'visible';
 
+    _this.setSlideText(newIndex);
+
     _this.slideFadeOut(_this.imageElements[_this.currentIndex], function () {
       _this.imageElements[_this.currentIndex].style.zIndex = 0;
       _this.imageElements[newIndex].style.zIndex = 2;
       callback();
+
+      _this.revealSlideText(newIndex);
     }, {
       fadeTime: _this.transitionTime,
       directionX: _this.transitionDirectionX,
@@ -655,7 +762,10 @@ function VanillaSlider(containerId) {
   }; // set link of 1st slide
 
 
-  this.setSlideLink(this.currentIndex); // set swipe listener
+  this.setSlideLink(this.currentIndex); // set text of 1st slide
+
+  this.setSlideText(this.currentIndex);
+  this.revealSlideText(this.currentIndex); // set swipe listener
 
   if (this.swipe) {
     this.swiper = {};

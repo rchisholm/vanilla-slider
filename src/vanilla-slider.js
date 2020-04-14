@@ -8,7 +8,7 @@ class VanillaSlider {
     /**
      * @param {any} containerId element or id of element which shall be the container for the slider;
      * @param {{images: Array<any>, transitionTime: number, transitionDirectionX: string, transitionDirectionY: string, transitionZoom: string, swipe: boolean, auto: boolean, autoTime: number}} options options object for slider:
-     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab
+     * options.images: array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab, textTitle, textBody, textPosition
      * options.transitionTime: time in ms until transition is finished;
      * options.transitionDirectionX: x direction for fading out element to move - 'left', 'right', or 'random'
      * options.transitionDirectionY: y direction for fading out element to move - 'up', 'down', or 'random'
@@ -56,10 +56,10 @@ class VanillaSlider {
 
         // check color
         if (this.bulletColor) {
-            var isColor = (strColor) => {
-                var s = new Option().style;
+            const isColor = (strColor) => {
+                const s = new Option().style;
                 s.color = strColor;
-                return s.color == strColor;
+                return s.color !== '';
             };
             this.bulletColor = isColor(this.bulletColor) ? this.bulletColor : 'red';
         } else {
@@ -80,7 +80,7 @@ class VanillaSlider {
             throw ("Slider error: conatinerId must be a valid element or id");
         }
 
-        // place images in cointainer
+        // place images in container
         var imageElement;
         var imageAnchor;
         var imagesIndex = 0;
@@ -101,6 +101,12 @@ class VanillaSlider {
                     if (imageAnchor) {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
+                    }
+                    if(containerChild.title) {
+                        this.images[imagesIndex].textTitle = containerChild.title;
+                        if(containerChild.alt) {
+                            this.images[imagesIndex].textBody = containerChild.alt;
+                        }
                     }
                     imagesIndex++;
                 } else {
@@ -138,10 +144,10 @@ class VanillaSlider {
             this.container.appendChild(imageElement);
             if (index === this.images.length - 1) {
                 imageElement.onload = () => {
-                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth);
-                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight);
-                    this.container.style.width = imageElement.clientWidth;
-                    this.container.style.height = imageElement.clientHeight;
+                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth) + 'px';
+                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight) + 'px';
+                    this.container.style.width = imageElement.clientWidth + 'px';
+                    this.container.style.height = imageElement.clientHeight + 'px';
                 };
             }
             this.imageElements[index] = imageElement;
@@ -286,9 +292,9 @@ class VanillaSlider {
          * resize container, called on resizing browser window
          */
         this.resizeContainer = () => {
-            this.container.style.width = this.container.parentNode.clientWidth;
+            this.container.style.width = this.container.parentNode.clientWidth + 'px';
             var imageXYRatio = this.imageElements[0].naturalWidth / this.imageElements[0].naturalHeight;
-            this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio;
+            this.container.style.height = parseFloat(this.container.style.width.replace('px', '')) / imageXYRatio + 'px';
         };
 
         window.addEventListener('resize', this.resizeContainer);
@@ -403,10 +409,10 @@ class VanillaSlider {
                                 fadeOutTarget.style.opacity -= opacityInterval;
                                 // move a little bit in directions
                                 if (options.directionX) {
-                                    fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + "px";
+                                    fadeOutTarget.style.left = (parseFloat(fadeOutTarget.style.left.replace('px', '')) + xDirectionInterval) + 'px';
                                 }
                                 if (options.directionY) {
-                                    fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + "px";
+                                    fadeOutTarget.style.top = (parseFloat(fadeOutTarget.style.top.replace('px', '')) + yDirectionInterval) + 'px';
                                 }
                                 // zoom a little bit
                                 if (options.zoom) {
@@ -489,6 +495,7 @@ class VanillaSlider {
                 var finishSlide = () => {
                     this.currentIndex = newIndex;
                     this.setSlideLink(newIndex);
+                    this.setSlideText(newIndex);
                     this.sliderLock = false;
                     if (typeof callback === 'function') {
                         callback();
@@ -559,6 +566,83 @@ class VanillaSlider {
             }
         };
 
+
+        /**
+         * clear the link div for the slide, and if the next slide has a link, create the link div
+         */
+        this.setSlideText = (index) => {
+            if (this.textOverlay) {
+                this.container.removeChild(this.textOverlay);
+                this.textOverlay = null;
+            }
+            if (this.images[index].textTitle || this.images[index].textBody) {
+                this.textOverlay = document.createElement('DIV');
+                this.textOverlay.id = this.containerId + '-text-overlay';
+                this.textOverlay.classList.add('vanilla-slider-text-overlay');
+                this.textOverlay.style.zIndex = 6;
+                this.textOverlay.style.position = 'absolute';
+                this.textOverlay.style.padding = "0 20px";
+                this.textOverlay.style.textAlign = 'left';
+                this.textOverlay.style.color = '#fff';
+                this.textOverlay.style.textShadow = '0 0 20px black';
+                this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                this.textOverlay.style.opacity = 0;
+                this.textOverlay.style.transition = 'all 0.5s linear';
+                var textOverlayContent = '';
+                if(this.images[index].textTitle) {
+                    textOverlayContent += '<h1>' + this.images[index].textTitle + '</h1>';
+                }
+                if(this.images[index].textBody) {
+                    textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
+                }
+                this.images[index].textPosition = typeof this.images[index].textPosition === 'string' ? this.images[index].textPosition : 'SW';
+                switch(this.images[index].textPosition) {
+                    case 'NW':
+                        this.textOverlay.style.top = '20px';
+                        this.textOverlay.style.left = '20px';
+                        break;
+                    case 'NE':
+                        this.textOverlay.style.top = '20px';
+                        this.textOverlay.style.right = '20px';
+                        break;
+                    case 'SE':
+                        this.textOverlay.style.bottom = '20px';
+                        this.textOverlay.style.right = '20px';
+                        break;
+                    default: // SW
+                        this.textOverlay.style.bottom = '20px';
+                        this.textOverlay.style.left = '20px';
+                        break;
+                }
+
+                this.textOverlay.innerHTML = textOverlayContent;
+                if(this.images[index].linkUrl) {
+                    this.textOverlay.style.cursor = 'pointer';
+                    if (this.images[index].linkNewTab) {
+                        this.textOverlay.addEventListener('click', () => {
+                            window.open(this.images[index].linkUrl, '_blank');
+                        });
+                    } else {
+                        this.textOverlay.addEventListener('click', () => {
+                            window.location.href = this.images[index].linkUrl;
+                        });
+                    }
+                }
+                this.container.appendChild(this.textOverlay);
+            }
+        };
+
+        this.revealSlideText = (index) => {
+            if((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
+                var revealEffect = setInterval(() => {
+                    this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
+                    if(this.textOverlay.style.opacity >= 1) {
+                        clearInterval(revealEffect);
+                    }
+                }, 5);
+            }
+        };
+
         /**
          * transition from one slide to another
          */
@@ -566,10 +650,12 @@ class VanillaSlider {
             this.imageElements[newIndex].style.zIndex = 1;
             this.imageElements[newIndex].style.opacity = 1;
             this.imageElements[newIndex].style.visibility = 'visible';
+            this.setSlideText(newIndex);
             this.slideFadeOut(this.imageElements[this.currentIndex], () => {
                 this.imageElements[this.currentIndex].style.zIndex = 0;
                 this.imageElements[newIndex].style.zIndex = 2;
                 callback();
+                this.revealSlideText(newIndex);
             }, {
                 fadeTime: this.transitionTime,
                 directionX: this.transitionDirectionX,
@@ -580,6 +666,10 @@ class VanillaSlider {
 
         // set link of 1st slide
         this.setSlideLink(this.currentIndex);
+
+        // set text of 1st slide
+        this.setSlideText(this.currentIndex);
+        this.revealSlideText(this.currentIndex);
 
 
         // set swipe listener
