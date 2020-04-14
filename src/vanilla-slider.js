@@ -757,6 +757,9 @@ class VanillaSlider {
             }
         }
 
+        // resize again to be safe
+        this.resizeContainer();
+
     }
 }
 

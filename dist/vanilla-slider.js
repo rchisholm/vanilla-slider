@@ -848,7 +848,10 @@ function VanillaSlider(containerId) {
         _this.startAuto();
       });
     }
-  }
+  } // resize again to be safe
+
+
+  this.resizeContainer();
 };
 /**
  * Returns a VanillaSlider created from containerId and options
