@@ -55,7 +55,8 @@ function VanillaSlider(containerId) {
   this.imageElements = []; // image elements
 
   this.hover = false; // true on mouse in, false on mouse out
-  // adjusting values
+
+  this.autoPaused = false; // adjusting values
 
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
@@ -548,9 +549,7 @@ function VanillaSlider(containerId) {
         callback();
       }
     } else if (!_this.sliderLock) {
-      if (_this.auto) {
-        _this.pauseAuto();
-      }
+      _this.pauseAuto();
 
       if (_this.bullets) {
         _this.bullets[_this.currentIndex].style.color = '#fff';
@@ -570,8 +569,8 @@ function VanillaSlider(containerId) {
           callback();
         }
 
-        if (_this.auto && (!_this.autoPauseOnHover || !_this.hover)) {
-          _this.startAuto();
+        if (!_this.autoPauseOnHover || !_this.hover) {
+          _this.resumeAuto();
         }
       };
 
@@ -597,7 +596,21 @@ function VanillaSlider(containerId) {
 
 
   this.pauseAuto = function () {
-    clearInterval(_this.autoInterval);
+    if (_this.auto && !_this.autoPaused) {
+      clearInterval(_this.autoInterval);
+      _this.autoPaused = true;
+    }
+  };
+  /**
+   * pause automatic slide movement until slides move
+   */
+
+
+  this.resumeAuto = function () {
+    if (_this.auto && _this.autoPaused) {
+      _this.autoInterval = setInterval(_this.nextSlide, _this.autoTime);
+      _this.autoPaused = false;
+    }
   };
   /**
    * stop automatic slide movement
@@ -847,7 +860,7 @@ function VanillaSlider(containerId) {
         _this.pauseAuto();
       });
       this.container.addEventListener('mouseleave', function () {
-        _this.startAuto();
+        _this.resumeAuto();
       });
     }
   } // set listeners for hover property
