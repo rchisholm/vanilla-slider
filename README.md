@@ -37,6 +37,7 @@ Then, define the slider container's id and the `options` object, and call `creat
 - <a href="https://rchisholm.github.io/vanilla-slider/sample/no-options.html" target="_blank">Slider using only default options</a>
 - <a href="https://rchisholm.github.io/vanilla-slider/sample/full-width.html" target="_blank">Slider using the full browser width</a>
 - <a href="https://rchisholm.github.io/vanilla-slider/sample/max-width.html" target="_blank">Slider inside a div with a max width</a>
+- <a href="https://rchisholm.github.io/vanilla-slider/sample/text.html" target="_blank">Slider with text overlays</a>
 
 ## Parameters
 

@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body style='margin:0; text-align: center;'>
+        <h1>Slider using all options:</h1>
+        <div style='width: 1200px; max-width: 100%; margin: auto'>
+            <div id='slider-1'></div>
+        </div>
+        <h4>This slider is made with all options available in the <i>options</i> parameter.<br>Slides 2 and 4 have links.</h4>
+        <br>
+        <br>
+        
+        <script type='text/javascript' src='vanilla-slider.js'></script>
+        <script>
+            var sliderId = 'slider-1';
+            var sliderOptions = {
+                transitionTime: 1000,
+                bullets: true,
+                bulletColor: 'purple',
+                bulletsHide: true,
+                arrows: true,
+                arrowsHide: true,
+                swipe: true,
+                auto: true,
+                autoTime: 5000,
+                images: [
+                    {
+                        imageUrl: 'img/2.jpg',
+                        textTitle: 'Title for Slide 1',
+                        textBody: 'This is the body for slide 1.'
+                    },
+                    {
+                        imageUrl: 'img/4.jpg',
+                        textTitle: 'Title for Slide 2 (no body)',
+                        textPosition: 'NE'
+                    },
+                    {
+                        imageUrl: 'img/6.jpg',
+                        textBody: 'This is the body for slide 3 (no title).',
+                        textPosition: 'NW'
+                    },
+                    {
+                        imageUrl: 'img/8.jpg',
+                        textTitle: 'Title for Slide 4',
+                        textBody: 'This is the body for slide 4.',
+                        textPosition: 'SE'
+                    },
+                    {
+                        imageUrl: 'img/10.jpg',
+                        textTitle: 'Title for Slide 5',
+                        textBody: 'This is the body for slide 5 (there is a link - click me!).',
+                        textPosition: 'SW',
+                        linkUrl: 'https://www.google.com',
+                        linkNewTab: true
+                    }
+                ]
+            };
+            slider = createSlider(sliderId, sliderOptions);
+        </script>
+    </body>
+</html>
