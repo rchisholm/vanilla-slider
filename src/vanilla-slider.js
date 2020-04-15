@@ -45,6 +45,7 @@ class VanillaSlider {
         this.sliderLock = false; // slider is locked and can't transition
         this.imageElements = []; // image elements
         this.hover = false; // true on mouse in, false on mouse out
+        this.autoPaused = false;
 
         // adjusting values
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
@@ -489,9 +490,7 @@ class VanillaSlider {
                     callback();
                 }
             } else if (!this.sliderLock) {
-                if (this.auto) {
-                    this.pauseAuto();
-                }
+                this.pauseAuto();
                 if (this.bullets) {
                     this.bullets[this.currentIndex].style.color = '#fff';
                     this.bullets[newIndex].style.color = this.bulletColor;
@@ -504,8 +503,8 @@ class VanillaSlider {
                     if (typeof callback === 'function') {
                         callback();
                     }
-                    if (this.auto && (!this.autoPauseOnHover || !this.hover)) {
-                        this.startAuto();
+                    if (!this.autoPauseOnHover || !this.hover) {
+                        this.resumeAuto();
                     }
                 };
                 this.sliderLock = true;
@@ -527,7 +526,20 @@ class VanillaSlider {
          * pause automatic slide movement until slides move
          */
         this.pauseAuto = () => {
-            clearInterval(this.autoInterval);
+            if(this.auto && !this.autoPaused) {
+                clearInterval(this.autoInterval);
+                this.autoPaused = true;
+            }
+        };
+
+        /**
+         * pause automatic slide movement until slides move
+         */
+        this.resumeAuto = () => {
+            if(this.auto && this.autoPaused) {
+                this.autoInterval = setInterval(this.nextSlide, this.autoTime);
+                this.autoPaused = false;
+            }
         };
 
         /**
@@ -753,7 +765,7 @@ class VanillaSlider {
                     this.pauseAuto();
                 });
                 this.container.addEventListener('mouseleave', () => {
-                    this.startAuto();
+                    this.resumeAuto();
                 });
             }
         }
