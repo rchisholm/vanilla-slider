@@ -68,6 +68,17 @@ var containerId = 'slider-1';
 | auto | boolean | whether to automatically move slides | false |
 | autoTime | number | time in ms for slides to automatically move | 10000 | 
 
+### options.images
+`options.images` is a property of the `options` parameter. It is an array of strings or objects, and can be used to determine the images used for the slider. Each element in the images array can either be a string (used for imageUrl) or an object with the following properties:
+| Property | Type | Description | Default |
+| --- | --- | --- | --- |
+| imageUrl | string | URL of the image to be used in the slide | _(required)_ |
+| linkUrl | string | URL of the link to be placed on the slide | _no default - if omitted, no link is used_ |
+| linkNewTab | boolean | determines whether this slide's link will open in a new tab | false |
+| textTitle | string | title for the text overlay placed on the slide | _no default - if omitted, title is not shown_ |
+| textBody | string | title for the text overlay placed on the slide | _no default - if omitted, body is not shown_ |
+| textPosition | string | position for text overlay; 'SW', 'NW', 'NE', or 'SE' | 'SW' |
+
 #### Sample of all options
 ```javascript
 var options = {
