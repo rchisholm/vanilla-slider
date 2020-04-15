@@ -67,6 +67,7 @@ var containerId = 'slider-1';
 | swipe | boolean | whether to allow swipe support | true |
 | auto | boolean | whether to automatically move slides | false |
 | autoTime | number | time in ms for slides to automatically move | 10000 | 
+| autoPauseOnHover | boolean | whether to pause auto when hovering | true |  
 
 ### options.images
 `options.images` is a property of the `options` parameter. It is an array of strings or objects, and can be used to determine the images used for the slider. Each element in the images array can either be a string (used for imageUrl) or an object with the following properties:
@@ -94,6 +95,7 @@ var options = {
     swipe: true,
     auto: true,
     autoTime: 5000,
+    autoPauseOnHover: true,
     images: [
         'img/1.png',
         {
