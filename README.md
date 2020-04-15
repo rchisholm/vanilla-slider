@@ -54,7 +54,7 @@ var containerId = 'slider-1';
 `options` is an optional parameter. If omitted, default values are used.
 | Option | Type | Description | Default |
 | --- | --- | --- | --- |
-| images | Array<string\|object> | array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab | null |
+| images | Array<string\|object> | array of images, either strings (URLs) or objects with imageUrl, linkUrl, linkNewTab, textTitle, textBody, textPosition | null |
 | transitionTime | number | time in ms until transition is finished; | 250 |
 | transitionDirectionX | string | x direction for fading out element to move - 'left', 'right', or 'random' | null |
 | transitionDirectionY | string | y direction for fading out element to move - 'up', 'down', or 'random' | null |
@@ -97,7 +97,10 @@ var options = {
         },
         'img/5.jpg',
         {
-            imageUrl: 'img/6.jpg'
+            imageUrl: 'img/6.jpg',
+            textTitle: 'Hello World!',
+            textBody: 'This is some body text for the slide.',
+            textPosition: 'NW'
         }
     ]
 };
@@ -146,6 +149,24 @@ images: [
         <img src='img/3.jpg'>
     </a>
 </div>
+```
+
+## Image Text
+Images can have a text overlay that appears when the slide is active.. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array:
+```javascript
+images: [
+    'img/1.jpg',
+    {
+        imageUrl: 'img/2.jpg',
+        textTitle: 'Title1',
+        textPosition: 'NE'
+    },
+    {
+        imageUrl: 'img/2.jpg',
+        textTitle: 'Title2',
+        textBody: 'This is the text for slide 2.'
+    }
+]
 ```
 
 ## Methods
