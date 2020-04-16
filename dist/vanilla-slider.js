@@ -189,20 +189,25 @@ function VanillaSlider(containerId) {
   this.container.style.overflow = 'hidden';
   this.container.style.position = 'relative';
 
+  var addArrowStyles = function addArrowStyles(arrow) {
+    arrow.style.zIndex = 6;
+    arrow.style.color = '#fff';
+    arrow.style.fontSize = '2.5em';
+    arrow.style.fontWeight = 'bold';
+    arrow.style.cursor = 'pointer';
+    arrow.style.transition = 'all 0.3s linear';
+    arrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
+    return arrow;
+  };
+
   if (this.arrows) {
     // create left arrow
     this.leftArrow = document.createElement('SPAN');
     this.leftArrow.id = this.containerId + '-arrow-left';
     this.leftArrow.classList.add('vanilla-slider-arrow');
     this.leftArrow.classList.add('vanilla-slider-arrow-left');
-    this.leftArrow.style.zIndex = 6;
-    this.leftArrow.style.color = '#fff';
-    this.leftArrow.style.fontSize = '2.5em';
-    this.leftArrow.style.fontWeight = 'bold';
+    this.leftArrow = addArrowStyles(this.leftArrow);
     this.leftArrow.style.margin = 'auto auto auto 10px';
-    this.leftArrow.style.cursor = 'pointer';
-    this.leftArrow.style.transition = 'all 0.3s linear';
-    this.leftArrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
     this.leftArrow.innerHTML = '&lt;';
     this.leftArrow.addEventListener('click', function (event) {
       _this.prevSlide();
@@ -279,14 +284,8 @@ function VanillaSlider(containerId) {
     this.rightArrow.id = this.containerId + '-arrow-right';
     this.rightArrow.classList.add('vanilla-slider-arrow');
     this.rightArrow.classList.add('vanilla-slider-arrow-right');
-    this.rightArrow.style.zIndex = 6;
-    this.rightArrow.style.color = '#fff';
-    this.rightArrow.style.fontSize = '2.5em';
-    this.rightArrow.style.fontWeight = 'bold';
+    this.rightArrow = addArrowStyles(this.rightArrow);
     this.rightArrow.style.margin = 'auto 10px auto auto';
-    this.rightArrow.style.cursor = 'pointer';
-    this.rightArrow.style.transition = 'all 0.3s linear';
-    this.rightArrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
     this.rightArrow.innerHTML = '&gt;';
     this.rightArrow.addEventListener('click', function (event) {
       _this.nextSlide();
