@@ -298,11 +298,8 @@ function VanillaSlider(containerId) {
     this.rightArrow.addEventListener('mouseout', function () {
       _this.rightArrow.style.transform = 'scale(1.0)';
     });
-    this.container.appendChild(this.rightArrow);
-  }
+    this.container.appendChild(this.rightArrow); // hide arrows
 
-  if (this.arrows) {
-    // hide arrows
     if (this.arrowsHide) {
       this.leftArrow.style.visibility = 'hidden';
       this.leftArrow.style.opacity = 0;

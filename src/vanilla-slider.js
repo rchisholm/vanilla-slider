@@ -273,9 +273,7 @@ class VanillaSlider {
                 this.rightArrow.style.transform = 'scale(1.0)';
             });
             this.container.appendChild(this.rightArrow);
-        }
 
-        if (this.arrows) {
             // hide arrows
             if (this.arrowsHide) {
                 this.leftArrow.style.visibility = 'hidden';
