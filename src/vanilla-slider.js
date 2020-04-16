@@ -177,10 +177,12 @@ class VanillaSlider {
             this.leftArrow.classList.add('vanilla-slider-arrow-left');
             this.leftArrow.style.zIndex = 6;
             this.leftArrow.style.color = '#fff';
-            this.leftArrow.style.fontSize = '2em';
+            this.leftArrow.style.fontSize = '2.5em';
+            this.leftArrow.style.fontWeight = 'bold';
             this.leftArrow.style.margin = 'auto auto auto 10px';
             this.leftArrow.style.cursor = 'pointer';
             this.leftArrow.style.transition = 'all 0.3s linear';
+            this.leftArrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
             this.leftArrow.innerHTML = '&lt;';
             this.leftArrow.addEventListener('click', (event) => {
                 this.prevSlide();
@@ -218,6 +220,7 @@ class VanillaSlider {
                 bullet.style.margin = '0 5px';
                 bullet.style.cursor = 'pointer';
                 bullet.style.transition = 'all ' + (this.transitionTime / 1000) + 's linear';
+                bullet.style.textShadow = '0px 0px 5px rgba(0,0,0,0.5)';
                 bullet.innerHTML = '&bull;';
                 bullet.addEventListener('click', (event) => {
                     this.goToSlide(index);
@@ -253,10 +256,12 @@ class VanillaSlider {
             this.rightArrow.classList.add('vanilla-slider-arrow-right');
             this.rightArrow.style.zIndex = 6;
             this.rightArrow.style.color = '#fff';
-            this.rightArrow.style.fontSize = '2em';
+            this.rightArrow.style.fontSize = '2.5em';
+            this.rightArrow.style.fontWeight = 'bold';
             this.rightArrow.style.margin = 'auto 10px auto auto';
             this.rightArrow.style.cursor = 'pointer';
             this.rightArrow.style.transition = 'all 0.3s linear';
+            this.rightArrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
             this.rightArrow.innerHTML = '&gt;';
             this.rightArrow.addEventListener('click', (event) => {
                 this.nextSlide();
