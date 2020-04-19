@@ -217,12 +217,12 @@ class VanillaSlider {
                 this.prevSlide();
                 event.stopPropagation();
             });
-            this.leftArrow.addEventListener('mouseover', () => {
-                this.leftArrow.style.transform = 'scale(1.2)';
-            });
-            this.leftArrow.addEventListener('mouseout', () => {
-                this.leftArrow.style.transform = 'scale(1.0)';
-            });
+            // this.leftArrow.addEventListener('mouseover', () => {
+            //     this.leftArrow.style.transform = 'scale(1.2)';
+            // });
+            // this.leftArrow.addEventListener('mouseout', () => {
+            //     this.leftArrow.style.transform = 'scale(1.0)';
+            // });
             this.container.appendChild(this.leftArrow);
         }
 
@@ -290,12 +290,12 @@ class VanillaSlider {
                 this.nextSlide();
                 event.stopPropagation();
             });
-            this.rightArrow.addEventListener('mouseover', () => {
-                this.rightArrow.style.transform = 'scale(1.2)';
-            });
-            this.rightArrow.addEventListener('mouseout', () => {
-                this.rightArrow.style.transform = 'scale(1.0)';
-            });
+            // this.rightArrow.addEventListener('mouseover', () => {
+            //     this.rightArrow.style.transform = 'scale(1.2)';
+            // });
+            // this.rightArrow.addEventListener('mouseout', () => {
+            //     this.rightArrow.style.transform = 'scale(1.0)';
+            // });
             this.container.appendChild(this.rightArrow);
 
             // hide arrows
