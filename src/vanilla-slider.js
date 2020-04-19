@@ -222,7 +222,7 @@ class VanillaSlider {
                 event.stopPropagation();
             });
             if(isIE()) {
-                this.leftArrow.style.marginTop = '45px';
+                this.leftArrow.style.marginTop = '45%';
                 this.leftArrow.style.transform = 'translateY(-55%)';
             }
             // this.leftArrow.addEventListener('mouseover', () => {
@@ -302,7 +302,7 @@ class VanillaSlider {
                 event.stopPropagation();
             });
             if(isIE()) {
-                this.rightArrow.style.marginTop = '45px';
+                this.rightArrow.style.marginTop = '45%';
                 this.rightArrow.style.transform = 'translateY(-55%)';
             }
             // this.rightArrow.addEventListener('mouseover', () => {

@@ -247,7 +247,7 @@ function VanillaSlider(containerId) {
     });
 
     if (isIE()) {
-      this.leftArrow.style.marginTop = '45px';
+      this.leftArrow.style.marginTop = '45%';
       this.leftArrow.style.transform = 'translateY(-55%)';
     } // this.leftArrow.addEventListener('mouseover', () => {
     //     this.leftArrow.style.transform = 'scale(1.2)';
@@ -336,7 +336,7 @@ function VanillaSlider(containerId) {
     });
 
     if (isIE()) {
-      this.rightArrow.style.marginTop = '45px';
+      this.rightArrow.style.marginTop = '45%';
       this.rightArrow.style.transform = 'translateY(-55%)';
     } // this.rightArrow.addEventListener('mouseover', () => {
     //     this.rightArrow.style.transform = 'scale(1.2)';
