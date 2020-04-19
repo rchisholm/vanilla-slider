@@ -59,7 +59,7 @@ class VanillaSlider {
         this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000;
         this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true;
         this.webp = typeof this.webp === 'boolean' ? this.webp : false;
-        if(this.webp) {
+        if (this.webp) {
             var ff = window.navigator.userAgent.match(/Firefox\/([0-9]+)\./);
             var ffVer = ff ? parseInt(ff[1]) : 0;
             var ffSupport = ffVer > 64;
@@ -71,10 +71,10 @@ class VanillaSlider {
             var webpTest;
             var elem = document.createElement('canvas');
             if (!!(elem.getContext && elem.getContext('2d'))) {
-              // was able or not to get WebP representation
-              webpTest = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+                // was able or not to get WebP representation
+                webpTest = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
             }
-            
+
             this.webp = (webpTest || ffSupport || ieSupport);
         }
 
@@ -95,8 +95,8 @@ class VanillaSlider {
             this.images = null;
         }
 
-        if(typeof this.containerId !== 'string') {
-            if(this.containerId.id) {
+        if (typeof this.containerId !== 'string') {
+            if (this.containerId.id) {
                 this.containerId = this.containerId.id;
             }
         }
@@ -127,9 +127,9 @@ class VanillaSlider {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
                     }
-                    if(containerChild.title) {
+                    if (containerChild.title) {
                         this.images[imagesIndex].textTitle = containerChild.title;
-                        if(containerChild.alt) {
+                        if (containerChild.alt) {
                             this.images[imagesIndex].textBody = containerChild.alt;
                         }
                     }
@@ -152,7 +152,7 @@ class VanillaSlider {
             }
             imageElement = document.createElement('IMG');
             imageElement.id = this.containerId + "-slide-" + index;
-            if(this.webp && image.webpUrl) {
+            if (this.webp && image.webpUrl) {
                 imageElement.src = image.webpUrl;
             } else {
                 imageElement.src = image.imageUrl;
@@ -552,7 +552,7 @@ class VanillaSlider {
          * pause automatic slide movement until slides move
          */
         this.pauseAuto = () => {
-            if(this.auto && !this.autoPaused) {
+            if (this.auto && !this.autoPaused) {
                 clearInterval(this.autoInterval);
                 this.autoPaused = true;
             }
@@ -562,7 +562,7 @@ class VanillaSlider {
          * pause automatic slide movement until slides move
          */
         this.resumeAuto = () => {
-            if(this.auto && this.autoPaused) {
+            if (this.auto && this.autoPaused) {
                 this.autoInterval = setInterval(this.nextSlide, this.autoTime);
                 this.autoPaused = false;
             }
@@ -631,14 +631,14 @@ class VanillaSlider {
                 this.textOverlay.style.opacity = 0;
                 this.textOverlay.style.transition = 'all 0.5s linear';
                 var textOverlayContent = '';
-                if(this.images[index].textTitle) {
+                if (this.images[index].textTitle) {
                     textOverlayContent += '<h1>' + this.images[index].textTitle + '</h1>';
                 }
-                if(this.images[index].textBody) {
+                if (this.images[index].textBody) {
                     textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
                 }
                 this.images[index].textPosition = typeof this.images[index].textPosition === 'string' ? this.images[index].textPosition : 'SW';
-                switch(this.images[index].textPosition) {
+                switch (this.images[index].textPosition) {
                     case 'NW':
                         this.textOverlay.style.top = '20px';
                         this.textOverlay.style.left = '20px';
@@ -658,7 +658,7 @@ class VanillaSlider {
                 }
 
                 this.textOverlay.innerHTML = textOverlayContent;
-                if(this.images[index].linkUrl) {
+                if (this.images[index].linkUrl) {
                     this.textOverlay.style.cursor = 'pointer';
                     if (this.images[index].linkNewTab) {
                         this.textOverlay.addEventListener('click', () => {
@@ -675,10 +675,10 @@ class VanillaSlider {
         };
 
         this.revealSlideText = (index) => {
-            if((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
+            if ((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
                 var revealEffect = setInterval(() => {
                     this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
-                    if(this.textOverlay.style.opacity >= 1) {
+                    if (this.textOverlay.style.opacity >= 1) {
                         clearInterval(revealEffect);
                     }
                 }, 5);
@@ -786,7 +786,7 @@ class VanillaSlider {
             this.startAuto();
 
             // place mouse listeners for auto pause/resume
-            if(this.autoPauseOnHover) {
+            if (this.autoPauseOnHover) {
                 this.container.addEventListener('mouseenter', () => {
                     this.pauseAuto();
                 });
@@ -824,12 +824,12 @@ function createSlider(containerId, options) {
  */
 if (!Array.prototype.includes) {
     Object.defineProperty(Array.prototype, "includes", {
-      enumerable: false,
-      value: function(obj) {
-          var newArr = this.filter(function(el) {
-            return el == obj;
-          });
-          return newArr.length > 0;
+        enumerable: false,
+        value: function (obj) {
+            var newArr = this.filter(function (el) {
+                return el == obj;
+            });
+            return newArr.length > 0;
         }
     });
-  }
+}
