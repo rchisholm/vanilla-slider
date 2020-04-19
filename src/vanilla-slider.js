@@ -204,6 +204,10 @@ class VanillaSlider {
             return arrow;
         };
 
+        const isIE = () => {
+            return navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1;
+        };
+
         if (this.arrows) {
             // create left arrow
             this.leftArrow = document.createElement('SPAN');
@@ -217,6 +221,10 @@ class VanillaSlider {
                 this.prevSlide();
                 event.stopPropagation();
             });
+            if(isIE()) {
+                this.leftArrow.style.marginTop = '45px';
+                this.leftArrow.style.transform = 'translateY(-55%)';
+            }
             // this.leftArrow.addEventListener('mouseover', () => {
             //     this.leftArrow.style.transform = 'scale(1.2)';
             // });
@@ -235,6 +243,9 @@ class VanillaSlider {
             this.bulletContainer.style.position = 'relative';
             this.bulletContainer.style.margin = 'auto auto 0';
             this.bulletContainer.style.textAlign = 'center';
+            if(isIE()) {
+                this.bulletContainer.style.marginTop = '65%';
+            }
             this.container.appendChild(this.bulletContainer);
             // create bullets
             this.bullets = [];
@@ -290,6 +301,10 @@ class VanillaSlider {
                 this.nextSlide();
                 event.stopPropagation();
             });
+            if(isIE()) {
+                this.rightArrow.style.marginTop = '45px';
+                this.rightArrow.style.transform = 'translateY(-55%)';
+            }
             // this.rightArrow.addEventListener('mouseover', () => {
             //     this.rightArrow.style.transform = 'scale(1.2)';
             // });
