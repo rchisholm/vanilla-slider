@@ -133,6 +133,9 @@ class VanillaSlider {
                             this.images[imagesIndex].textBody = containerChild.alt;
                         }
                     }
+                    if (containerChild.hasAttribute('webp-url')) {
+                        this.images[imagesIndex].webpUrl = containerChild.getAttribute('webp-url');
+                    }
                     imagesIndex++;
                 } else {
                     console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
