@@ -75,8 +75,8 @@ class VanillaSlider {
             this.images = null;
         }
 
-        if(typeof this.containerId !== 'string') {
-            if(this.containerId.id) {
+        if (typeof this.containerId !== 'string') {
+            if (this.containerId.id) {
                 this.containerId = this.containerId.id;
             }
         }
@@ -183,6 +183,10 @@ class VanillaSlider {
             return arrow;
         };
 
+        const isIE = () => {
+            return navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1;
+        };
+
         if (this.arrows) {
             // create left arrow
             this.leftArrow = document.createElement('SPAN');
@@ -196,12 +200,16 @@ class VanillaSlider {
                 this.prevSlide();
                 event.stopPropagation();
             });
-            this.leftArrow.addEventListener('mouseover', () => {
-                this.leftArrow.style.transform = 'scale(1.2)';
-            });
-            this.leftArrow.addEventListener('mouseout', () => {
-                this.leftArrow.style.transform = 'scale(1.0)';
-            });
+            if (isIE()) {
+                this.leftArrow.style.marginTop = '45%';
+                this.leftArrow.style.transform = 'translateY(-55%)';
+            }
+            // this.leftArrow.addEventListener('mouseover', () => {
+            //     this.leftArrow.style.transform = 'scale(1.2)';
+            // });
+            // this.leftArrow.addEventListener('mouseout', () => {
+            //     this.leftArrow.style.transform = 'scale(1.0)';
+            // });
             this.container.appendChild(this.leftArrow);
         }
 
@@ -214,6 +222,9 @@ class VanillaSlider {
             this.bulletContainer.style.position = 'relative';
             this.bulletContainer.style.margin = 'auto auto 0';
             this.bulletContainer.style.textAlign = 'center';
+            if (isIE()) {
+                this.bulletContainer.style.marginTop = '65%';
+            }
             this.container.appendChild(this.bulletContainer);
             // create bullets
             this.bullets = [];
@@ -269,12 +280,16 @@ class VanillaSlider {
                 this.nextSlide();
                 event.stopPropagation();
             });
-            this.rightArrow.addEventListener('mouseover', () => {
-                this.rightArrow.style.transform = 'scale(1.2)';
-            });
-            this.rightArrow.addEventListener('mouseout', () => {
-                this.rightArrow.style.transform = 'scale(1.0)';
-            });
+            if (isIE()) {
+                this.rightArrow.style.marginTop = '45%';
+                this.rightArrow.style.transform = 'translateY(-55%)';
+            }
+            // this.rightArrow.addEventListener('mouseover', () => {
+            //     this.rightArrow.style.transform = 'scale(1.2)';
+            // });
+            // this.rightArrow.addEventListener('mouseout', () => {
+            //     this.rightArrow.style.transform = 'scale(1.0)';
+            // });
             this.container.appendChild(this.rightArrow);
 
             // hide arrows
@@ -531,7 +546,7 @@ class VanillaSlider {
          * pause automatic slide movement until slides move
          */
         this.pauseAuto = () => {
-            if(this.auto && !this.autoPaused) {
+            if (this.auto && !this.autoPaused) {
                 clearInterval(this.autoInterval);
                 this.autoPaused = true;
             }
@@ -541,7 +556,7 @@ class VanillaSlider {
          * pause automatic slide movement until slides move
          */
         this.resumeAuto = () => {
-            if(this.auto && this.autoPaused) {
+            if (this.auto && this.autoPaused) {
                 this.autoInterval = setInterval(this.nextSlide, this.autoTime);
                 this.autoPaused = false;
             }
@@ -610,14 +625,14 @@ class VanillaSlider {
                 this.textOverlay.style.opacity = 0;
                 this.textOverlay.style.transition = 'all 0.5s linear';
                 var textOverlayContent = '';
-                if(this.images[index].textTitle) {
+                if (this.images[index].textTitle) {
                     textOverlayContent += '<h1>' + this.images[index].textTitle + '</h1>';
                 }
-                if(this.images[index].textBody) {
+                if (this.images[index].textBody) {
                     textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
                 }
                 this.images[index].textPosition = typeof this.images[index].textPosition === 'string' ? this.images[index].textPosition : 'SW';
-                switch(this.images[index].textPosition) {
+                switch (this.images[index].textPosition) {
                     case 'NW':
                         this.textOverlay.style.top = '20px';
                         this.textOverlay.style.left = '20px';
@@ -637,7 +652,7 @@ class VanillaSlider {
                 }
 
                 this.textOverlay.innerHTML = textOverlayContent;
-                if(this.images[index].linkUrl) {
+                if (this.images[index].linkUrl) {
                     this.textOverlay.style.cursor = 'pointer';
                     if (this.images[index].linkNewTab) {
                         this.textOverlay.addEventListener('click', () => {
@@ -654,10 +669,10 @@ class VanillaSlider {
         };
 
         this.revealSlideText = (index) => {
-            if((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
+            if ((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
                 var revealEffect = setInterval(() => {
                     this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
-                    if(this.textOverlay.style.opacity >= 1) {
+                    if (this.textOverlay.style.opacity >= 1) {
                         clearInterval(revealEffect);
                     }
                 }, 5);
@@ -765,7 +780,7 @@ class VanillaSlider {
             this.startAuto();
 
             // place mouse listeners for auto pause/resume
-            if(this.autoPauseOnHover) {
+            if (this.autoPauseOnHover) {
                 this.container.addEventListener('mouseenter', () => {
                     this.pauseAuto();
                 });
@@ -796,4 +811,19 @@ class VanillaSlider {
  */
 function createSlider(containerId, options) {
     return new VanillaSlider(containerId, options);
+}
+
+/**
+ * includes polyfill
+ */
+if (!Array.prototype.includes) {
+    Object.defineProperty(Array.prototype, "includes", {
+        enumerable: false,
+        value: function (obj) {
+            var newArr = this.filter(function (el) {
+                return el == obj;
+            });
+            return newArr.length > 0;
+        }
+    });
 }

@@ -200,6 +200,10 @@ function VanillaSlider(containerId) {
     return arrow;
   };
 
+  var isIE = function isIE() {
+    return navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1;
+  };
+
   if (this.arrows) {
     // create left arrow
     this.leftArrow = document.createElement('SPAN');
@@ -214,12 +218,18 @@ function VanillaSlider(containerId) {
 
       event.stopPropagation();
     });
-    this.leftArrow.addEventListener('mouseover', function () {
-      _this.leftArrow.style.transform = 'scale(1.2)';
-    });
-    this.leftArrow.addEventListener('mouseout', function () {
-      _this.leftArrow.style.transform = 'scale(1.0)';
-    });
+
+    if (isIE()) {
+      this.leftArrow.style.marginTop = '45%';
+      this.leftArrow.style.transform = 'translateY(-55%)';
+    } // this.leftArrow.addEventListener('mouseover', () => {
+    //     this.leftArrow.style.transform = 'scale(1.2)';
+    // });
+    // this.leftArrow.addEventListener('mouseout', () => {
+    //     this.leftArrow.style.transform = 'scale(1.0)';
+    // });
+
+
     this.container.appendChild(this.leftArrow);
   }
 
@@ -232,6 +242,11 @@ function VanillaSlider(containerId) {
     this.bulletContainer.style.position = 'relative';
     this.bulletContainer.style.margin = 'auto auto 0';
     this.bulletContainer.style.textAlign = 'center';
+
+    if (isIE()) {
+      this.bulletContainer.style.marginTop = '65%';
+    }
+
     this.container.appendChild(this.bulletContainer); // create bullets
 
     this.bullets = [];
@@ -292,12 +307,18 @@ function VanillaSlider(containerId) {
 
       event.stopPropagation();
     });
-    this.rightArrow.addEventListener('mouseover', function () {
-      _this.rightArrow.style.transform = 'scale(1.2)';
-    });
-    this.rightArrow.addEventListener('mouseout', function () {
-      _this.rightArrow.style.transform = 'scale(1.0)';
-    });
+
+    if (isIE()) {
+      this.rightArrow.style.marginTop = '45%';
+      this.rightArrow.style.transform = 'translateY(-55%)';
+    } // this.rightArrow.addEventListener('mouseover', () => {
+    //     this.rightArrow.style.transform = 'scale(1.2)';
+    // });
+    // this.rightArrow.addEventListener('mouseout', () => {
+    //     this.rightArrow.style.transform = 'scale(1.0)';
+    // });
+
+
     this.container.appendChild(this.rightArrow); // hide arrows
 
     if (this.arrowsHide) {
@@ -885,4 +906,20 @@ function VanillaSlider(containerId) {
 
 function createSlider(containerId, options) {
   return new VanillaSlider(containerId, options);
+}
+/**
+ * includes polyfill
+ */
+
+
+if (!Array.prototype.includes) {
+  Object.defineProperty(Array.prototype, "includes", {
+    enumerable: false,
+    value: function value(obj) {
+      var newArr = this.filter(function (el) {
+        return el == obj;
+      });
+      return newArr.length > 0;
+    }
+  });
 }
