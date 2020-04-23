@@ -127,11 +127,14 @@ class VanillaSlider {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
                     }
-                    if (containerChild.title) {
-                        this.images[imagesIndex].textTitle = containerChild.title;
-                        if (containerChild.alt) {
-                            this.images[imagesIndex].textBody = containerChild.alt;
-                        }
+                    if (containerChild.hasAttribute('text-title')) {
+                        this.images[imagesIndex].textTitle = containerChild.getAttribute('text-title');
+                    }
+                    if (containerChild.hasAttribute('text-body')) {
+                        this.images[imagesIndex].textBody = containerChild.getAttribute('text-body');
+                    }
+                    if (containerChild.hasAttribute('text-position')) {
+                        this.images[imagesIndex].textPosition = containerChild.getAttribute('text-position');
                     }
                     if (containerChild.hasAttribute('webp-url')) {
                         this.images[imagesIndex].webpUrl = containerChild.getAttribute('webp-url');
@@ -224,7 +227,7 @@ class VanillaSlider {
                 this.prevSlide();
                 event.stopPropagation();
             });
-            if(isIE()) {
+            if (isIE()) {
                 this.leftArrow.style.marginTop = '45%';
                 this.leftArrow.style.transform = 'translateY(-55%)';
             }
@@ -246,7 +249,7 @@ class VanillaSlider {
             this.bulletContainer.style.position = 'relative';
             this.bulletContainer.style.margin = 'auto auto 0';
             this.bulletContainer.style.textAlign = 'center';
-            if(isIE()) {
+            if (isIE()) {
                 this.bulletContainer.style.marginTop = '65%';
             }
             this.container.appendChild(this.bulletContainer);
@@ -304,7 +307,7 @@ class VanillaSlider {
                 this.nextSlide();
                 event.stopPropagation();
             });
-            if(isIE()) {
+            if (isIE()) {
                 this.rightArrow.style.marginTop = '45%';
                 this.rightArrow.style.transform = 'translateY(-55%)';
             }
