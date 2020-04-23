@@ -107,11 +107,14 @@ class VanillaSlider {
                         this.images[imagesIndex].linkUrl = imageAnchor.href;
                         this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
                     }
-                    if(containerChild.title) {
-                        this.images[imagesIndex].textTitle = containerChild.title;
-                        if(containerChild.alt) {
-                            this.images[imagesIndex].textBody = containerChild.alt;
-                        }
+                    if (containerChild.hasAttribute('text-title')) {
+                        this.images[imagesIndex].textTitle = containerChild.getAttribute('text-title');
+                    }
+                    if (containerChild.hasAttribute('text-body')) {
+                        this.images[imagesIndex].textBody = containerChild.getAttribute('text-body');
+                    }
+                    if (containerChild.hasAttribute('text-position')) {
+                        this.images[imagesIndex].textPosition = containerChild.getAttribute('text-position');
                     }
                     imagesIndex++;
                 } else {
