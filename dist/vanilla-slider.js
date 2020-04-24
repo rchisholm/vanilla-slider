@@ -120,12 +120,16 @@ function VanillaSlider(containerId) {
           _this.images[imagesIndex].linkNewTab = imageAnchor.target === '_blank';
         }
 
-        if (containerChild.title) {
-          _this.images[imagesIndex].textTitle = containerChild.title;
+        if (containerChild.hasAttribute('text-title')) {
+          _this.images[imagesIndex].textTitle = containerChild.getAttribute('text-title');
+        }
 
-          if (containerChild.alt) {
-            _this.images[imagesIndex].textBody = containerChild.alt;
-          }
+        if (containerChild.hasAttribute('text-body')) {
+          _this.images[imagesIndex].textBody = containerChild.getAttribute('text-body');
+        }
+
+        if (containerChild.hasAttribute('text-position')) {
+          _this.images[imagesIndex].textPosition = containerChild.getAttribute('text-position');
         }
 
         imagesIndex++;
