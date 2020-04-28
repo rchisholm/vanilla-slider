@@ -48,6 +48,7 @@ function VanillaSlider(containerId) {
   this.auto = options.auto;
   this.autoTime = options.autoTime;
   this.autoPauseOnHover = options.autoPauseOnHover;
+  this.webp = options.webp;
   this.currentIndex = 0; // index of currently shown image 
 
   this.sliderLock = false; // slider is locked and can't transition
@@ -66,7 +67,27 @@ function VanillaSlider(containerId) {
   this.swipe = typeof this.swipe === 'boolean' ? this.swipe : true;
   this.auto = typeof this.auto === 'boolean' ? this.auto : false;
   this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000;
-  this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true; // check color
+  this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true;
+  this.webp = typeof this.webp === 'boolean' ? this.webp : false;
+
+  if (this.webp) {
+    var ff = window.navigator.userAgent.match(/Firefox\/([0-9]+)\./);
+    var ffVer = ff ? parseInt(ff[1]) : 0;
+    var ffSupport = ffVer > 64;
+    var ua = window.navigator.userAgent;
+    var edge = ua.indexOf('Edge/');
+    var ieSupport = parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10) > 17;
+    var webpTest;
+    var elem = document.createElement('canvas');
+
+    if (!!(elem.getContext && elem.getContext('2d'))) {
+      // was able or not to get WebP representation
+      webpTest = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
+    }
+
+    this.webp = webpTest || ffSupport || ieSupport;
+  } // check color
+
 
   if (this.bulletColor) {
     var isColor = function isColor(strColor) {
@@ -132,6 +153,10 @@ function VanillaSlider(containerId) {
           _this.images[imagesIndex].textPosition = containerChild.getAttribute('text-position');
         }
 
+        if (containerChild.hasAttribute('webp-url')) {
+          _this.images[imagesIndex].webpUrl = containerChild.getAttribute('webp-url');
+        }
+
         imagesIndex++;
       } else {
         console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
@@ -151,7 +176,13 @@ function VanillaSlider(containerId) {
 
     imageElement = document.createElement('IMG');
     imageElement.id = _this.containerId + "-slide-" + index;
-    imageElement.src = image.imageUrl;
+
+    if (_this.webp && image.webpUrl) {
+      imageElement.src = image.webpUrl;
+    } else {
+      imageElement.src = image.imageUrl;
+    }
+
     imageElement.classList.add('vanilla-slider-image');
     imageElement.style.margin = 'auto';
     imageElement.style.maxWidth = '100%';
