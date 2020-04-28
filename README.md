@@ -2,6 +2,8 @@
 
 VanillaSlider is a simple, lightweight, responsive slider using vanilla JavaScript, requiring no third-party libraries.
 
+Now with smart/safe WebP support!
+
 ## Usage
 
 To use VanillaSlider, first, embed the script in HTML:
