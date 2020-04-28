@@ -68,6 +68,7 @@ var containerId = 'slider-1';
 | auto | boolean | whether to automatically move slides | false |
 | autoTime | number | time in ms for slides to automatically move | 10000 | 
 | autoPauseOnHover | boolean | whether to pause auto when hovering | true |  
+| webp | boolean | whether to support webp images | false |  
 
 ### options.images
 `options.images` is a property of the `options` parameter. It is an array of strings or objects, and can be used to determine the images used for the slider. Each element in the images array can either be a string (used for imageUrl) or an object with the following properties:
@@ -79,6 +80,7 @@ var containerId = 'slider-1';
 | textTitle | string | title for the text overlay placed on the slide | _no default - if omitted, title is not shown_ |
 | textBody | string | title for the text overlay placed on the slide | _no default - if omitted, body is not shown_ |
 | textPosition | string | position for text overlay; 'SW', 'NW', 'NE', or 'SE' | 'SW' |
+| webpUrl | string | URL of the webp image to be used as src if webp is supported | _no default - if omitted, webp will not be used_ |
 
 #### Sample of all options
 ```javascript
@@ -96,11 +98,13 @@ var options = {
     auto: true,
     autoTime: 5000,
     autoPauseOnHover: true,
+    webp: true,
     images: [
         'img/1.png',
         {
             imageUrl: 'img/2.png',
-            linkUrl: 'https://www.github.com/'
+            linkUrl: 'https://www.github.com/',
+            webpUrl: 'img/2.webp'
         },
         'img/3.png',
         {
@@ -113,7 +117,8 @@ var options = {
             imageUrl: 'img/6.jpg',
             textTitle: 'Hello World!',
             textBody: 'This is some body text for the slide.',
-            textPosition: 'NW'
+            textPosition: 'NW',
+            webpUrl: 'img/6.webp'
         }
     ]
 };
@@ -165,7 +170,7 @@ images: [
 ```
 
 ## Image Text
-Images can have a text overlay that appears when the slide is active.. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
+Images can have a text overlay that appears when the slide is active. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
 ```javascript
 images: [
     'img/1.jpg',
@@ -186,6 +191,32 @@ images: [
     <img src='img/1.jpg'>
     <img src='img/2.jpg' text-title='Title1' text-position='NE'>
     <img src='img/3.jpg' text-title='Title2' text-body='This is the text for slide 2.'>
+</div>
+```
+
+## WebP Support
+VanillaSlider offers WebP support (next-gen optimized image format). If `options.webp` is true, the slider will check if the browser supports the WebP image format, and use the WebP url for the image source if available. The WebP URL can be declared either by `webpUrl` in the `options.images` array or by the `webp-url` attribute on img tags inside the container div:
+```javascript
+images: [
+    {
+        imageUrl: 'img/1.jpg',
+        webpUrl: 'img/1.webp'
+    },
+    {
+        imageUrl: 'img/2.jpg',
+        webpUrl: 'img/2.webp'
+    },
+    {
+        imageUrl: 'img/3.jpg',
+        webpUrl: 'img/3.webp'
+    }
+]
+```
+```html
+<div id='slider-1'>
+    <img src='img/1.jpg' webp-url='img/1.webp'>
+    <img src='img/2.jpg' webp-url='img/2.webp'>
+    <img src='img/3.jpg' webp-url='img/3.webp'>
 </div>
 ```
 
