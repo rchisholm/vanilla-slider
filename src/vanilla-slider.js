@@ -139,6 +139,12 @@ class VanillaSlider {
                     if (containerChild.hasAttribute('webp-url')) {
                         this.images[imagesIndex].webpUrl = containerChild.getAttribute('webp-url');
                     }
+                    if (containerChild.hasAttribute('alt')) {
+                        this.images[imagesIndex].alt = containerChild.getAttribute('alt');
+                    }
+                    if (containerChild.hasAttribute('title')) {
+                        this.images[imagesIndex].title = containerChild.getAttribute('title');
+                    }
                     imagesIndex++;
                 } else {
                     console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
@@ -169,6 +175,12 @@ class VanillaSlider {
             imageElement.style.position = 'absolute';
             imageElement.style.top = 0;
             imageElement.style.left = 0;
+            if(image.alt) {
+                imageElement.alt = image.alt;
+            }
+            if(image.title) {
+                imageElement.title = image.title;
+            }
 
             if (index > 0) {
                 imageElement.style.visibility = 'hidden';

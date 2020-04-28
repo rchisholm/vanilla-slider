@@ -157,6 +157,14 @@ function VanillaSlider(containerId) {
           _this.images[imagesIndex].webpUrl = containerChild.getAttribute('webp-url');
         }
 
+        if (containerChild.hasAttribute('alt')) {
+          _this.images[imagesIndex].alt = containerChild.getAttribute('alt');
+        }
+
+        if (containerChild.hasAttribute('title')) {
+          _this.images[imagesIndex].title = containerChild.getAttribute('title');
+        }
+
         imagesIndex++;
       } else {
         console.log('Slider error: invalid container child tag name: ' + containerChild.tagName);
@@ -189,6 +197,14 @@ function VanillaSlider(containerId) {
     imageElement.style.position = 'absolute';
     imageElement.style.top = 0;
     imageElement.style.left = 0;
+
+    if (image.alt) {
+      imageElement.alt = image.alt;
+    }
+
+    if (image.title) {
+      imageElement.title = image.title;
+    }
 
     if (index > 0) {
       imageElement.style.visibility = 'hidden';
