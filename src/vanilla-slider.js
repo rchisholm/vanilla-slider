@@ -234,7 +234,7 @@ class VanillaSlider {
             this.leftArrow.classList.add('vanilla-slider-arrow-left');
             this.leftArrow = addArrowStyles(this.leftArrow);
             this.leftArrow.style.margin = 'auto auto auto 10px';
-            this.leftArrow.innerHTML = '❮';
+            this.leftArrow.innerHTML = '&#10094;';
             this.leftArrow.addEventListener('click', (event) => {
                 this.prevSlide();
                 event.stopPropagation();
@@ -314,7 +314,7 @@ class VanillaSlider {
             this.rightArrow.classList.add('vanilla-slider-arrow-right');
             this.rightArrow = addArrowStyles(this.rightArrow);
             this.rightArrow.style.margin = 'auto 10px auto auto';
-            this.rightArrow.innerHTML = '❯';
+            this.rightArrow.innerHTML = '&#10095;';
             this.rightArrow.addEventListener('click', (event) => {
                 this.nextSlide();
                 event.stopPropagation();

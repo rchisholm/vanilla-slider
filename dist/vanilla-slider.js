@@ -263,7 +263,7 @@ function VanillaSlider(containerId) {
     this.leftArrow.classList.add('vanilla-slider-arrow-left');
     this.leftArrow = addArrowStyles(this.leftArrow);
     this.leftArrow.style.margin = 'auto auto auto 10px';
-    this.leftArrow.innerHTML = '❮';
+    this.leftArrow.innerHTML = '&#10094;';
     this.leftArrow.addEventListener('click', function (event) {
       _this.prevSlide();
 
@@ -352,7 +352,7 @@ function VanillaSlider(containerId) {
     this.rightArrow.classList.add('vanilla-slider-arrow-right');
     this.rightArrow = addArrowStyles(this.rightArrow);
     this.rightArrow.style.margin = 'auto 10px auto auto';
-    this.rightArrow.innerHTML = '❯';
+    this.rightArrow.innerHTML = '&#10095;';
     this.rightArrow.addEventListener('click', function (event) {
       _this.nextSlide();
 
