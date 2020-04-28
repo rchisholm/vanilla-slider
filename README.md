@@ -142,7 +142,7 @@ Images can have links associated with them. These links have the option of openi
 images: [
     'img/1.jpg',
     {
-        imageUrl: 'img/2.jpg',
+        imageUrl: 'img/1.jpg',
         linkUrl: 'https://www.github.com/'
     },
     {
@@ -159,13 +159,13 @@ images: [
         <img src='img/2.jpg'>
     </a>
     <a href='https://www.github.com' target='_blank'>
-        <img src='img/3.jpg'>
+        <img src='img/2.jpg'>
     </a>
 </div>
 ```
 
 ## Image Text
-Images can have a text overlay that appears when the slide is active.. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array:
+Images can have a text overlay that appears when the slide is active.. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
 ```javascript
 images: [
     'img/1.jpg',
@@ -175,11 +175,18 @@ images: [
         textPosition: 'NE'
     },
     {
-        imageUrl: 'img/2.jpg',
+        imageUrl: 'img/3.jpg',
         textTitle: 'Title2',
         textBody: 'This is the text for slide 2.'
     }
 ]
+```
+```html
+<div id='slider-1'>
+    <img src='img/1.jpg'>
+    <img src='img/2.jpg' text-title='Title1' text-position='NE'>
+    <img src='img/3.jpg' text-title='Title2' text-body='This is the text for slide 2.'>
+</div>
 ```
 
 ## Methods
