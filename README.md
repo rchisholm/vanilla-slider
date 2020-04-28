@@ -83,6 +83,8 @@ var containerId = 'slider-1';
 | textBody | string | title for the text overlay placed on the slide | _no default - if omitted, body is not shown_ |
 | textPosition | string | position for text overlay; 'SW', 'NW', 'NE', or 'SE' | 'SW' |
 | webpUrl | string | URL of the webp image to be used as src if webp is supported | _no default - if omitted, webp will not be used_ |
+| alt | string | string to be used for the img 'alt' attribute | _no default_ |
+| title | string | string to be used for the img 'title' attribute | _no default_ |
 
 #### Sample of all options
 ```javascript
@@ -106,13 +108,16 @@ var options = {
         {
             imageUrl: 'img/2.png',
             linkUrl: 'https://www.github.com/',
-            webpUrl: 'img/2.webp'
+            webpUrl: 'img/2.webp',
+            alt: 'image 2',
+            title: 'image 2'
         },
         'img/3.png',
         {
             imageUrl: 'img/4.jpg',
             linkUrl: 'https://www.github.com',
-            linkNewTab: true
+            linkNewTab: true,
+            alt: 'image 4'
         },
         'img/5.jpg',
         {
@@ -193,6 +198,29 @@ images: [
     <img src='img/1.jpg'>
     <img src='img/2.jpg' text-title='Title1' text-position='NE'>
     <img src='img/3.jpg' text-title='Title2' text-body='This is the text for slide 2.'>
+</div>
+```
+
+## Default Image Attributes
+Images can have the default `img` attributes `alt` and `title` (for accessibility, etc.) This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
+```javascript
+images: [
+    {
+        imageUrl: 'img/2.jpg',
+        alt: 'image 2',
+        title: 'image 2'
+    },
+    {
+        imageUrl: 'img/3.jpg',
+        alt: 'image 3',
+        title: 'image 3'
+    }
+]
+```
+```html
+<div id='slider-1'>
+    <img src='img/2.jpg' alt='image 2' title='image 2'>
+    <img src='img/3.jpg' alt='image 3' title='image 3'>
 </div>
 ```
 
