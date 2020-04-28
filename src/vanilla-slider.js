@@ -202,6 +202,11 @@ class VanillaSlider {
         if (this.images.length < 1) {
             throw ('Slider error: no images found for slides.');
         }
+
+        const isIE = () => {
+            return navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1;
+        };
+
         // style container
         this.container.classList.add('vanilla-slider-container');
         this.container.style.marginLeft = 'auto';
@@ -210,6 +215,9 @@ class VanillaSlider {
         this.container.style.display = 'flex';
         this.container.style.overflow = 'hidden';
         this.container.style.position = 'relative';
+        if(isIE()) {
+            this.container.style.alignItems = 'flex-end';
+        }
 
         const addArrowStyles = (arrow) => {
             arrow.style.zIndex = 6;
@@ -220,10 +228,6 @@ class VanillaSlider {
             arrow.style.transition = 'all 0.3s linear';
             arrow.style.textShadow = '0px 0px 10px rgba(0,0,0,0.5)';
             return arrow;
-        };
-
-        const isIE = () => {
-            return navigator.userAgent.indexOf("MSIE ") > -1 || navigator.userAgent.indexOf("Trident/") > -1;
         };
 
         if (this.arrows) {
