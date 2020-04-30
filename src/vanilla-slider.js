@@ -47,6 +47,7 @@ class VanillaSlider {
         this.imageElements = []; // image elements
         this.hover = false; // true on mouse in, false on mouse out
         this.autoPaused = false;
+        this.touch = 'ontouchstart' in document.documentElement; // true if browser supports touch
 
         // adjusting values
         this.transitionTime = this.transitionTime ? this.transitionTime : 250;
@@ -74,10 +75,8 @@ class VanillaSlider {
                 // was able or not to get WebP representation
                 webpTest = elem.toDataURL('image/webp').indexOf('data:image/webp') == 0;
             }
-
             this.webp = (webpTest || ffSupport || ieSupport);
         }
-
 
         // check color
         if (this.bulletColor) {
@@ -566,7 +565,7 @@ class VanillaSlider {
                     if (typeof callback === 'function') {
                         callback();
                     }
-                    if (!this.autoPauseOnHover || !this.hover) {
+                    if (!this.autoPauseOnHover || !this.hover || this.touch) {
                         this.resumeAuto();
                     }
                 };
@@ -644,7 +643,6 @@ class VanillaSlider {
                 this.container.appendChild(this.linkOverlay);
             }
         };
-
 
         /**
          * clear the link div for the slide, and if the next slide has a link, create the link div
@@ -833,13 +831,15 @@ class VanillaSlider {
             }
         }
 
-        // set listeners for hover property
-        this.container.addEventListener('mouseenter', () => {
-            this.hover = true;
-        });
-        this.container.addEventListener('mouseleave', () => {
-            this.hover = false;
-        });
+        if(!this.touch) {
+            // set listeners for hover property
+            this.container.addEventListener('mouseenter', () => {
+                this.hover = true;
+            });
+            this.container.addEventListener('mouseleave', () => {
+                this.hover = false;
+            });
+        }
 
         // resize again to be safe
         this.resizeContainer();

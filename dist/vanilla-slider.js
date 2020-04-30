@@ -57,7 +57,9 @@ function VanillaSlider(containerId) {
 
   this.hover = false; // true on mouse in, false on mouse out
 
-  this.autoPaused = false; // adjusting values
+  this.autoPaused = false;
+  this.touch = 'ontouchstart' in document.documentElement; // true if browser supports touch
+  // adjusting values
 
   this.transitionTime = this.transitionTime ? this.transitionTime : 250;
   this.bullets = typeof this.bullets === 'boolean' ? this.bullets : false;
@@ -646,7 +648,7 @@ function VanillaSlider(containerId) {
           callback();
         }
 
-        if (!_this.autoPauseOnHover || !_this.hover) {
+        if (!_this.autoPauseOnHover || !_this.hover || _this.touch) {
           _this.resumeAuto();
         }
       };
@@ -940,15 +942,18 @@ function VanillaSlider(containerId) {
         _this.resumeAuto();
       });
     }
-  } // set listeners for hover property
+  }
 
+  if (!this.touch) {
+    // set listeners for hover property
+    this.container.addEventListener('mouseenter', function () {
+      _this.hover = true;
+    });
+    this.container.addEventListener('mouseleave', function () {
+      _this.hover = false;
+    });
+  } // resize again to be safe
 
-  this.container.addEventListener('mouseenter', function () {
-    _this.hover = true;
-  });
-  this.container.addEventListener('mouseleave', function () {
-    _this.hover = false;
-  }); // resize again to be safe
 
   this.resizeContainer();
 };
