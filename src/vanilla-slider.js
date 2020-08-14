@@ -188,14 +188,6 @@ class VanillaSlider {
                 imageElement.style.zIndex = 2;
             }
             this.container.appendChild(imageElement);
-            if (index === this.images.length - 1) {
-                imageElement.onload = () => {
-                    this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth) + 'px';
-                    this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight) + 'px';
-                    this.container.style.width = imageElement.clientWidth + 'px';
-                    this.container.style.height = imageElement.clientHeight + 'px';
-                };
-            }
             this.imageElements[index] = imageElement;
         });
         if (this.images.length < 1) {
@@ -841,8 +833,13 @@ class VanillaSlider {
             });
         }
 
-        // resize again to be safe
-        this.resizeContainer();
+        // resize once first image is loaded
+        if(this.imageElements[0]) {
+            this.imageElements[0].addEventListener(
+                'load', 
+                this.resizeContainer
+            );
+        }
 
     }
 }
