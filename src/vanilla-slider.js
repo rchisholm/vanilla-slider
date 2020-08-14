@@ -170,6 +170,7 @@ class VanillaSlider {
             }
             imageElement.classList.add('vanilla-slider-image');
             imageElement.style.margin = 'auto';
+            imageElement.style.width = '100%';
             imageElement.style.maxWidth = '100%';
             imageElement.style.position = 'absolute';
             imageElement.style.top = 0;
