@@ -217,15 +217,6 @@ function VanillaSlider(containerId) {
 
     _this.container.appendChild(imageElement);
 
-    if (index === _this.images.length - 1) {
-      imageElement.onload = function () {
-        _this.container.style.width = Math.min(imageElement.naturalWidth, window.innerWidth) + 'px';
-        _this.container.style.height = Math.min(imageElement.naturalHeight, window.innerHeight) + 'px';
-        _this.container.style.width = imageElement.clientWidth + 'px';
-        _this.container.style.height = imageElement.clientHeight + 'px';
-      };
-    }
-
     _this.imageElements[index] = imageElement;
   });
 
@@ -952,10 +943,12 @@ function VanillaSlider(containerId) {
     this.container.addEventListener('mouseleave', function () {
       _this.hover = false;
     });
-  } // resize again to be safe
+  } // resize once first image is loaded
 
 
-  this.resizeContainer();
+  if (this.imageElements[0]) {
+    this.imageElements[0].addEventListener('load', this.resizeContainer);
+  }
 };
 /**
  * Returns a VanillaSlider created from containerId and options
