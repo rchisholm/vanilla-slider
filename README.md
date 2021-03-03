@@ -263,7 +263,7 @@ console.log(slider.getNextIndex());
 #### getPrevIndex
 Get the index of the previous slide.
 ```javascript
-console.log(slider.getPrevSlide());
+console.log(slider.getPrevIndex());
 // output:
 // 3
 ```
