@@ -843,6 +843,18 @@ class VanillaSlider {
         }
 
     }
+
+    webpSupported(callback) {
+        var img = new Image();
+        img.onload = function () {
+            var result = (img.width > 0) && (img.height > 0);
+            callback(result);
+        };
+        img.onerror = function () {
+            callback(false);
+        };
+        img.src = "data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA";
+    }
 }
 
 /**
