@@ -54,6 +54,9 @@ var VanillaSlider = /*#__PURE__*/function () {
       _this.autoTime = options.autoTime;
       _this.autoPauseOnHover = options.autoPauseOnHover;
       _this.webp = options.webp;
+      _this.staticTextTitle = options.staticTextTitle;
+      _this.staticTextBody = options.staticTextBody;
+      _this.staticTextPosition = options.staticTextPosition;
       _this.currentIndex = 0; // index of currently shown image 
 
       _this.sliderLock = false; // slider is locked and can't transition
@@ -75,7 +78,8 @@ var VanillaSlider = /*#__PURE__*/function () {
       _this.auto = typeof _this.auto === 'boolean' ? _this.auto : false;
       _this.autoTime = typeof _this.autoTime === 'number' ? _this.autoTime : 10000;
       _this.autoPauseOnHover = typeof _this.autoPauseOnHover === 'boolean' ? _this.autoPauseOnHover : true;
-      _this.webp = (typeof _this.webp === 'boolean' ? _this.webp : false) && isWebpSupported; // check color
+      _this.webp = (typeof _this.webp === 'boolean' ? _this.webp : false) && isWebpSupported;
+      _this.staticTextPosition = typeof _this.staticTextPosition === 'string' ? _this.staticTextPosition : "SW"; // check color
 
       if (_this.bulletColor) {
         var isColor = function isColor(strColor) {
@@ -743,13 +747,7 @@ var VanillaSlider = /*#__PURE__*/function () {
 
 
       _this.setSlideText = function (index) {
-        if (_this.textOverlay) {
-          _this.container.removeChild(_this.textOverlay);
-
-          _this.textOverlay = null;
-        }
-
-        if (_this.images[index].textTitle || _this.images[index].textBody) {
+        var appendTextOverlay = function appendTextOverlay(title, body, position, index) {
           _this.textOverlay = document.createElement('DIV');
           _this.textOverlay.id = _this.containerId + '-text-overlay';
 
@@ -766,17 +764,17 @@ var VanillaSlider = /*#__PURE__*/function () {
           _this.textOverlay.style.transition = 'all 0.5s linear';
           var textOverlayContent = '';
 
-          if (_this.images[index].textTitle) {
-            textOverlayContent += '<h1>' + _this.images[index].textTitle + '</h1>';
+          if (title) {
+            textOverlayContent += '<h1>' + title + '</h1>';
           }
 
-          if (_this.images[index].textBody) {
-            textOverlayContent += '<h3>' + _this.images[index].textBody + '</h3>';
+          if (body) {
+            textOverlayContent += '<h3>' + body + '</h3>';
           }
 
-          _this.images[index].textPosition = typeof _this.images[index].textPosition === 'string' ? _this.images[index].textPosition : 'SW';
+          position = typeof position === 'string' ? position : 'SW';
 
-          switch (_this.images[index].textPosition) {
+          switch (position) {
             case 'NW':
               _this.textOverlay.style.top = '20px';
               _this.textOverlay.style.left = '20px';
@@ -801,21 +799,39 @@ var VanillaSlider = /*#__PURE__*/function () {
 
           _this.textOverlay.innerHTML = textOverlayContent;
 
-          if (_this.images[index].linkUrl) {
-            _this.textOverlay.style.cursor = 'pointer';
+          if (index) {
+            if (_this.images[index].linkUrl) {
+              _this.textOverlay.style.cursor = 'pointer';
 
-            if (_this.images[index].linkNewTab) {
-              _this.textOverlay.addEventListener('click', function () {
-                window.open(_this.images[index].linkUrl, '_blank');
-              });
-            } else {
-              _this.textOverlay.addEventListener('click', function () {
-                window.location.href = _this.images[index].linkUrl;
-              });
+              if (_this.images[index].linkNewTab) {
+                _this.textOverlay.addEventListener('click', function () {
+                  window.open(_this.images[index].linkUrl, '_blank');
+                });
+              } else {
+                _this.textOverlay.addEventListener('click', function () {
+                  window.location.href = _this.images[index].linkUrl;
+                });
+              }
             }
           }
 
           _this.container.appendChild(_this.textOverlay);
+        };
+
+        if (_this.staticTextBody || _this.staticTextTitle) {
+          if (!_this.textOverlay) {
+            appendTextOverlay(_this.staticTextTitle, _this.staticTextBody, _this.staticTextPosition, null);
+          }
+        } else {
+          if (_this.textOverlay) {
+            _this.container.removeChild(_this.textOverlay);
+
+            _this.textOverlay = null;
+          }
+
+          if (_this.images[index].textTitle || _this.images[index].textBody) {
+            appendTextOverlay(_this.images[index].textTitle, _this.images[index].textBody, _this.images[index].textPosition, index);
+          }
         }
       };
 

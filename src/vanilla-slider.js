@@ -43,6 +43,9 @@ class VanillaSlider {
             this.autoTime = options.autoTime;
             this.autoPauseOnHover = options.autoPauseOnHover;
             this.webp = options.webp;
+            this.staticTextTitle = options.staticTextTitle;
+            this.staticTextBody = options.staticTextBody;
+            this.staticTextPosition = options.staticTextPosition;
     
             this.currentIndex = 0; // index of currently shown image 
             this.sliderLock = false; // slider is locked and can't transition
@@ -62,6 +65,7 @@ class VanillaSlider {
             this.autoTime = typeof this.autoTime === 'number' ? this.autoTime : 10000;
             this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true;
             this.webp = (typeof this.webp === 'boolean' ? this.webp : false ) && isWebpSupported;
+            this.staticTextPosition = typeof this.staticTextPosition === 'string' ? this.staticTextPosition : "SW";
     
             // check color
             if (this.bulletColor) {
@@ -626,64 +630,78 @@ class VanillaSlider {
              * clear the link div for the slide, and if the next slide has a link, create the link div
              */
             this.setSlideText = (index) => {
-                if (this.textOverlay) {
-                    this.container.removeChild(this.textOverlay);
-                    this.textOverlay = null;
-                }
-                if (this.images[index].textTitle || this.images[index].textBody) {
+
+                var appendTextOverlay = (title, body, position, index) => {
                     this.textOverlay = document.createElement('DIV');
-                    this.textOverlay.id = this.containerId + '-text-overlay';
-                    this.textOverlay.classList.add('vanilla-slider-text-overlay');
-                    this.textOverlay.style.zIndex = 6;
-                    this.textOverlay.style.position = 'absolute';
-                    this.textOverlay.style.padding = "0 20px";
-                    this.textOverlay.style.textAlign = 'left';
-                    this.textOverlay.style.color = '#fff';
-                    this.textOverlay.style.textShadow = '0 0 20px black';
-                    this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
-                    this.textOverlay.style.opacity = 0;
-                    this.textOverlay.style.transition = 'all 0.5s linear';
-                    var textOverlayContent = '';
-                    if (this.images[index].textTitle) {
-                        textOverlayContent += '<h1>' + this.images[index].textTitle + '</h1>';
-                    }
-                    if (this.images[index].textBody) {
-                        textOverlayContent += '<h3>' + this.images[index].textBody + '</h3>';
-                    }
-                    this.images[index].textPosition = typeof this.images[index].textPosition === 'string' ? this.images[index].textPosition : 'SW';
-                    switch (this.images[index].textPosition) {
-                        case 'NW':
-                            this.textOverlay.style.top = '20px';
-                            this.textOverlay.style.left = '20px';
-                            break;
-                        case 'NE':
-                            this.textOverlay.style.top = '20px';
-                            this.textOverlay.style.right = '20px';
-                            break;
-                        case 'SE':
-                            this.textOverlay.style.bottom = '20px';
-                            this.textOverlay.style.right = '20px';
-                            break;
-                        default: // SW
-                            this.textOverlay.style.bottom = '20px';
-                            this.textOverlay.style.left = '20px';
-                            break;
-                    }
-    
-                    this.textOverlay.innerHTML = textOverlayContent;
-                    if (this.images[index].linkUrl) {
-                        this.textOverlay.style.cursor = 'pointer';
-                        if (this.images[index].linkNewTab) {
-                            this.textOverlay.addEventListener('click', () => {
-                                window.open(this.images[index].linkUrl, '_blank');
-                            });
-                        } else {
-                            this.textOverlay.addEventListener('click', () => {
-                                window.location.href = this.images[index].linkUrl;
-                            });
+                        this.textOverlay.id = this.containerId + '-text-overlay';
+                        this.textOverlay.classList.add('vanilla-slider-text-overlay');
+                        this.textOverlay.style.zIndex = 6;
+                        this.textOverlay.style.position = 'absolute';
+                        this.textOverlay.style.padding = "0 20px";
+                        this.textOverlay.style.textAlign = 'left';
+                        this.textOverlay.style.color = '#fff';
+                        this.textOverlay.style.textShadow = '0 0 20px black';
+                        this.textOverlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                        this.textOverlay.style.opacity = 0;
+                        this.textOverlay.style.transition = 'all 0.5s linear';
+                        var textOverlayContent = '';
+                        if (title) {
+                            textOverlayContent += '<h1>' + title + '</h1>';
                         }
+                        if (body) {
+                            textOverlayContent += '<h3>' + body + '</h3>';
+                        }
+                        position = typeof position === 'string' ? position : 'SW';
+                        switch (position) {
+                            case 'NW':
+                                this.textOverlay.style.top = '20px';
+                                this.textOverlay.style.left = '20px';
+                                break;
+                            case 'NE':
+                                this.textOverlay.style.top = '20px';
+                                this.textOverlay.style.right = '20px';
+                                break;
+                            case 'SE':
+                                this.textOverlay.style.bottom = '20px';
+                                this.textOverlay.style.right = '20px';
+                                break;
+                            default: // SW
+                                this.textOverlay.style.bottom = '20px';
+                                this.textOverlay.style.left = '20px';
+                                break;
+                        }
+        
+                        this.textOverlay.innerHTML = textOverlayContent;
+                        if(index) {
+                            if (this.images[index].linkUrl) {
+                                this.textOverlay.style.cursor = 'pointer';
+                                if (this.images[index].linkNewTab) {
+                                    this.textOverlay.addEventListener('click', () => {
+                                        window.open(this.images[index].linkUrl, '_blank');
+                                    });
+                                } else {
+                                    this.textOverlay.addEventListener('click', () => {
+                                        window.location.href = this.images[index].linkUrl;
+                                    });
+                                }
+                            }
+                        }
+                        this.container.appendChild(this.textOverlay);
+                };
+
+                if(this.staticTextBody || this.staticTextTitle) {
+                    if(!this.textOverlay) {
+                        appendTextOverlay(this.staticTextTitle, this.staticTextBody, this.staticTextPosition, null);
                     }
-                    this.container.appendChild(this.textOverlay);
+
+                } else {
+                    if (this.textOverlay) {
+                        this.container.removeChild(this.textOverlay);
+                        this.textOverlay = null;
+                    }
+                    if (this.images[index].textTitle || this.images[index].textBody) {
+                        appendTextOverlay(this.images[index].textTitle, this.images[index].textBody, this.images[index].textPosition, index);
+                    }
                 }
             };
     
