@@ -66,6 +66,9 @@ var containerId = 'slider-1';
 | bulletColor | string | color of active bullet | 'red' |
 | arrows | boolean | whether to show arrows | true |
 | arrowsHide | boolean | whether to hide arrow on mouse out | true |
+| staticTextTitle | string | static text title to overlay on slider (if any) | null |  
+| staticTextBody | string | static text body to overlay on slider (if any) | null |  
+| staticTextPosition | string | position for static text - 'SW', 'NW', 'NE', or 'SE' | 'SW' |
 | swipe | boolean | whether to allow swipe support | true |
 | auto | boolean | whether to automatically move slides | false |
 | autoTime | number | time in ms for slides to automatically move | 10000 | 
@@ -98,6 +101,9 @@ var options = {
     bulletsHide: true,
     arrows: true,
     arrowsHide: true,
+    staticTextTitle: 'Hello World!',
+    staticTextBody: 'This is the static text.',
+    staticTextPosition: 'NW',
     swipe: true,
     auto: true,
     autoTime: 5000,
@@ -177,7 +183,7 @@ images: [
 ```
 
 ## Image Text
-Images can have a text overlay that appears when the slide is active. This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
+Images can have a text overlay that appears when the slide is active. _This is overridden by static text if present._ This text can be positioned in any of the four corners of the slide (default is bottom-left). This can be declared either by properties in the `options.images` array or by attributes on img tags inside the container div:
 ```javascript
 images: [
     'img/1.jpg',
