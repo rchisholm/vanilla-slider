@@ -835,8 +835,8 @@ var VanillaSlider = /*#__PURE__*/function () {
         }
       };
 
-      _this.revealSlideText = function (index) {
-        if ((_this.images[index].textTitle || _this.images[index].textBody) && _this.textOverlay) {
+      _this.revealSlideText = function () {
+        if (_this.textOverlay) {
           var revealEffect = setInterval(function () {
             _this.textOverlay.style.opacity = parseFloat(_this.textOverlay.style.opacity) + parseFloat(0.1);
 

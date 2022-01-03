@@ -630,7 +630,6 @@ class VanillaSlider {
              * clear the link div for the slide, and if the next slide has a link, create the link div
              */
             this.setSlideText = (index) => {
-
                 var appendTextOverlay = (title, body, position, index) => {
                     this.textOverlay = document.createElement('DIV');
                         this.textOverlay.id = this.containerId + '-text-overlay';
@@ -693,7 +692,6 @@ class VanillaSlider {
                     if(!this.textOverlay) {
                         appendTextOverlay(this.staticTextTitle, this.staticTextBody, this.staticTextPosition, null);
                     }
-
                 } else {
                     if (this.textOverlay) {
                         this.container.removeChild(this.textOverlay);
@@ -705,8 +703,8 @@ class VanillaSlider {
                 }
             };
     
-            this.revealSlideText = (index) => {
-                if ((this.images[index].textTitle || this.images[index].textBody) && this.textOverlay) {
+            this.revealSlideText = () => {
+                if (this.textOverlay) {
                     var revealEffect = setInterval(() => {
                         this.textOverlay.style.opacity = parseFloat(this.textOverlay.style.opacity) + parseFloat(0.1);
                         if (this.textOverlay.style.opacity >= 1) {
