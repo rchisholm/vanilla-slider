@@ -28,7 +28,7 @@
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
-    "@node-minify/cli": "^6.2.0",
+    "@node-minify/cli": "^7.1.0",
     "@node-minify/uglify-js": "^5.3.0",
     "cpy-cli": "^3.1.1"
   },
