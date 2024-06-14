@@ -46,6 +46,7 @@ class VanillaSlider {
             this.staticTextTitle = options.staticTextTitle;
             this.staticTextBody = options.staticTextBody;
             this.staticTextPosition = options.staticTextPosition;
+            this.textOverlayClasses = options.textOverlayClasses;
     
             this.currentIndex = 0; // index of currently shown image 
             this.sliderLock = false; // slider is locked and can't transition
@@ -66,6 +67,7 @@ class VanillaSlider {
             this.autoPauseOnHover = typeof this.autoPauseOnHover === 'boolean' ? this.autoPauseOnHover : true;
             this.webp = (typeof this.webp === 'boolean' ? this.webp : false ) && isWebpSupported;
             this.staticTextPosition = typeof this.staticTextPosition === 'string' ? this.staticTextPosition : "SW";
+            this.textOverlayClasses = Array.isArray(this.textOverlayClasses) ? this.textOverlayClasses : null;
     
             // check color
             if (this.bulletColor) {
@@ -684,6 +686,11 @@ class VanillaSlider {
                                     });
                                 }
                             }
+                        }
+                        if(this.textOverlayClasses) {
+                            this.textOverlayClasses.forEach(textOverlayClass => {
+                                this.textOverlay.classList.add(textOverlayClass);
+                            });
                         }
                         this.container.appendChild(this.textOverlay);
                 };

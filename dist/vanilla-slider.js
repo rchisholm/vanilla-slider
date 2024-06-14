@@ -57,6 +57,7 @@ var VanillaSlider = /*#__PURE__*/function () {
       _this.staticTextTitle = options.staticTextTitle;
       _this.staticTextBody = options.staticTextBody;
       _this.staticTextPosition = options.staticTextPosition;
+      _this.textOverlayClasses = options.textOverlayClasses;
       _this.currentIndex = 0; // index of currently shown image 
 
       _this.sliderLock = false; // slider is locked and can't transition
@@ -79,7 +80,8 @@ var VanillaSlider = /*#__PURE__*/function () {
       _this.autoTime = typeof _this.autoTime === 'number' ? _this.autoTime : 10000;
       _this.autoPauseOnHover = typeof _this.autoPauseOnHover === 'boolean' ? _this.autoPauseOnHover : true;
       _this.webp = (typeof _this.webp === 'boolean' ? _this.webp : false) && isWebpSupported;
-      _this.staticTextPosition = typeof _this.staticTextPosition === 'string' ? _this.staticTextPosition : "SW"; // check color
+      _this.staticTextPosition = typeof _this.staticTextPosition === 'string' ? _this.staticTextPosition : "SW";
+      _this.textOverlayClasses = Array.isArray(_this.textOverlayClasses) ? _this.textOverlayClasses : null; // check color
 
       if (_this.bulletColor) {
         var isColor = function isColor(strColor) {
@@ -813,6 +815,12 @@ var VanillaSlider = /*#__PURE__*/function () {
                 });
               }
             }
+          }
+
+          if (_this.textOverlayClasses) {
+            _this.textOverlayClasses.forEach(function (textOverlayClass) {
+              _this.textOverlay.classList.add(textOverlayClass);
+            });
           }
 
           _this.container.appendChild(_this.textOverlay);
