@@ -167,6 +167,8 @@ var VanillaSlider = /*#__PURE__*/function () {
       }
 
       _this.container.innerHTML = '';
+      _this.linkAnchor = document.createElement('A');
+      _this.linkAnchor.id = _this.containerId + '-link-anchor';
 
       _this.images.forEach(function (image, index) {
         if (typeof image === 'string') {
@@ -209,10 +211,12 @@ var VanillaSlider = /*#__PURE__*/function () {
           imageElement.style.zIndex = 2;
         }
 
-        _this.container.appendChild(imageElement);
+        _this.linkAnchor.appendChild(imageElement);
 
         _this.imageElements[index] = imageElement;
       });
+
+      _this.container.appendChild(_this.linkAnchor);
 
       if (_this.images.length < 1) {
         throw 'Slider error: no images found for slides.';
@@ -710,37 +714,14 @@ var VanillaSlider = /*#__PURE__*/function () {
 
 
       _this.setSlideLink = function (index) {
-        if (_this.linkOverlay) {
-          _this.container.removeChild(_this.linkOverlay);
+        _this.linkAnchor.removeAttribute('href');
 
-          _this.linkOverlay = null;
-        }
+        _this.linkAnchor.removeAttribute('target');
 
         if (_this.images[index].linkUrl) {
-          _this.linkOverlay = document.createElement('DIV');
-          _this.linkOverlay.id = _this.containerId + '-link-overlay';
+          _this.linkAnchor.setAttribute('href', _this.images[index].linkUrl);
 
-          _this.linkOverlay.classList.add('vanilla-slider-link-overlay');
-
-          _this.linkOverlay.style.zIndex = 5;
-          _this.linkOverlay.style.position = 'absolute';
-          _this.linkOverlay.style.top = 0;
-          _this.linkOverlay.style.left = 0;
-          _this.linkOverlay.style.width = '100%';
-          _this.linkOverlay.style.height = '100%';
-          _this.linkOverlay.style.cursor = 'pointer';
-
-          if (_this.images[index].linkNewTab) {
-            _this.linkOverlay.addEventListener('click', function () {
-              window.open(_this.images[index].linkUrl, '_blank');
-            });
-          } else {
-            _this.linkOverlay.addEventListener('click', function () {
-              window.location.href = _this.images[index].linkUrl;
-            });
-          }
-
-          _this.container.appendChild(_this.linkOverlay);
+          _this.linkAnchor.setAttribute('target', _this.images[index].linkNewTab ? '_blank' : '_self');
         }
       };
       /**

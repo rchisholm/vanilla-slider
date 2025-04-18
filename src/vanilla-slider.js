@@ -182,7 +182,7 @@ class VanillaSlider {
                 } else {
                     imageElement.style.zIndex = 2;
                 }
-                linkAnchor.appendChild(imageElement);
+                this.linkAnchor.appendChild(imageElement);
                 this.imageElements[index] = imageElement;
             });
             this.container.appendChild(this.linkAnchor);
