@@ -143,7 +143,10 @@ class VanillaSlider {
             }
     
             this.container.innerHTML = '';
-    
+
+            this.linkAnchor = document.createElement('A');
+            this.linkAnchor.id = this.containerId + '-link-anchor';
+
             this.images.forEach((image, index) => {
                 if (typeof image === 'string') {
                     image = {
@@ -179,9 +182,11 @@ class VanillaSlider {
                 } else {
                     imageElement.style.zIndex = 2;
                 }
-                this.container.appendChild(imageElement);
+                linkAnchor.appendChild(imageElement);
                 this.imageElements[index] = imageElement;
             });
+            this.container.appendChild(this.linkAnchor);
+            
             if (this.images.length < 1) {
                 throw ('Slider error: no images found for slides.');
             }
@@ -600,31 +605,11 @@ class VanillaSlider {
              * clear the link div for the slide, and if the next slide has a link, create the link div
              */
             this.setSlideLink = (index) => {
-                if (this.linkOverlay) {
-                    this.container.removeChild(this.linkOverlay);
-                    this.linkOverlay = null;
-                }
+                this.linkAnchor.removeAttribute('href');
+                this.linkAnchor.removeAttribute('target');
                 if (this.images[index].linkUrl) {
-                    this.linkOverlay = document.createElement('DIV');
-                    this.linkOverlay.id = this.containerId + '-link-overlay';
-                    this.linkOverlay.classList.add('vanilla-slider-link-overlay');
-                    this.linkOverlay.style.zIndex = 5;
-                    this.linkOverlay.style.position = 'absolute';
-                    this.linkOverlay.style.top = 0;
-                    this.linkOverlay.style.left = 0;
-                    this.linkOverlay.style.width = '100%';
-                    this.linkOverlay.style.height = '100%';
-                    this.linkOverlay.style.cursor = 'pointer';
-                    if (this.images[index].linkNewTab) {
-                        this.linkOverlay.addEventListener('click', () => {
-                            window.open(this.images[index].linkUrl, '_blank');
-                        });
-                    } else {
-                        this.linkOverlay.addEventListener('click', () => {
-                            window.location.href = this.images[index].linkUrl;
-                        });
-                    }
-                    this.container.appendChild(this.linkOverlay);
+                    this.linkAnchor.setAttribute('href', this.images[index].linkUrl);
+                    this.linkAnchor.setAttribute('target', this.images[index].linkNewTab ? '_blank' : '_self');
                 }
             };
     
