@@ -278,6 +278,7 @@ class VanillaSlider {
                     });
                     if (index === 0) {
                         bullet.style.color = this.bulletColor;
+                        bullet.classList.add('vanilla-slider-bullet-active');
                     }
                     this.bullets[index] = bullet;
                     this.bulletContainer.appendChild(bullet);

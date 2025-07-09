@@ -326,6 +326,7 @@ var VanillaSlider = /*#__PURE__*/function () {
 
           if (index === 0) {
             bullet.style.color = _this.bulletColor;
+            bullet.classList.add('vanilla-slider-bullet-active');
           }
 
           _this.bullets[index] = bullet;
