@@ -640,7 +640,16 @@ var VanillaSlider = /*#__PURE__*/function () {
 
           if (_this.bullets) {
             _this.bullets[_this.currentIndex].style.color = '#fff';
+
+            if (_this.bullets[_this.currentIndex].classList.contains('vanilla-slider-bullet-active')) {
+              _this.bullets[_this.currentIndex].classList.remove('vanilla-slider-bullet-active');
+            }
+
             _this.bullets[newIndex].style.color = _this.bulletColor;
+
+            if (!_this.bullets[newIndex].classList.contains('vanilla-slider-bullet-active')) {
+              _this.bullets[newIndex].classList.add('vanilla-slider-bullet-active');
+            }
           }
 
           var finishSlide = function finishSlide() {
