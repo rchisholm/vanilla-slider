@@ -544,7 +544,13 @@ class VanillaSlider {
                     this.pauseAuto();
                     if (this.bullets) {
                         this.bullets[this.currentIndex].style.color = '#fff';
+                        if (this.bullets[this.currentIndex].classList.contains('vanilla-slider-bullet-active')) {
+                            this.bullets[this.currentIndex].classList.remove('vanilla-slider-bullet-active');
+                        }
                         this.bullets[newIndex].style.color = this.bulletColor;
+                        if (!this.bullets[newIndex].classList.contains('vanilla-slider-bullet-active')) {
+                            this.bullets[newIndex].classList.add('vanilla-slider-bullet-active');
+                        }
                     }
                     var finishSlide = () => {
                         this.currentIndex = newIndex;
